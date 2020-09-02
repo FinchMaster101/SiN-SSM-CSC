@@ -88,7 +88,7 @@ function FixAIDirectionVectors()
 			if(v.lastHitTime and (_time - v.lastHitTime < 25))then
 				local aimPos = System.GetEntity(v.AI.lastHitTarget);
 				if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
-					v:SetDirectionVector(GetDir(v:GetPos(), aimPos:GetPos()));
+					v:SetDirectionVector(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true));
 					updated=updated+1;
 				else
 					if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>2)then
