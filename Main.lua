@@ -9,6 +9,10 @@ function GetDirectionVector(a, b, normalize)
   return p1;
 end;
 
+function round(x)
+     return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
+end
+
 SIN_AI_UPDAREDELAY = 50;
 UPDATE_AI_ENTITIES=true;
 
