@@ -15,7 +15,9 @@ end
 -- Reply client position back to server, used for AntiGhostHack, etc ...
 if(not RPC.ReplyPosition)then
 	function RPC:ReplyPosition()
-		g_gameRules.game:SendChatMessage(ChatToTarget,g_localActor.id,g_localActor.id,"!serversync 1                                                                                                        ".. g_localActor:GetPos().x .." " ..g_localActor:GetPos().y.. " " ..g_localActor:GetPos().z.. " - - - - - " ..(g_localActor.currHashCode or "abcd1234:4321dcba"));
+		local pos = g_localActor:GetPos();
+		pos.x,pos.y,pos.z = round(pos.z),round(pos.y),round(pos.z);
+		g_gameRules.game:RenamePlayer(g_localActorId, g_localActor.currHashCode:sub(1,4)..":"..tostring(pos.x)..","..tostring(pos.y)..","..tostring(pos.z))
 	end;
 end;
 
