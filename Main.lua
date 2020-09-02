@@ -1,7 +1,7 @@
 printf("$9[$4SiN$9] AISystem: Starting to install ..")
 ------------------------------------------------------
 function GetDirectionVector(a, b, normalize)
-  local p1, p2 = (not a.id and a or aGetPos()),(not b.id and b or b:GetPos());
+  local p1, p2 = (not a.id and a or a:GetPos()),(not b.id and b or b:GetPos());
   p1.x, p1.y, p1.z = (p1.x - p2.x), (p1.y - p2.y), (p1.z - p2.z);
   if(normalize)then
     NormalizeVector(p1)
