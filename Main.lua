@@ -13,6 +13,10 @@ function round(x)
      return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end
 
+function GNV(vec3)
+	return {x=vec3.x*-1,y=vec3.y*-1,z=vec3.z*-1};
+end;
+
 SIN_AI_UPDAREDELAY = 50;
 UPDATE_AI_ENTITIES=true;
 
@@ -92,7 +96,7 @@ function FixAIDirectionVectors()
 			if(v.lastHitTime and (_time - v.lastHitTime < 25))then
 				local aimPos = System.GetEntity(v.AI.lastHitTarget);
 				if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
-					v:SetDirectionVector(vecScale(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true),-1));
+					v:SetDirectionVector(GNV(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true)));
 					updated=updated+1;
 				else
 					if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>2)then
