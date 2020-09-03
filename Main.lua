@@ -83,6 +83,7 @@ function TryGetDir(entity)
 end;
 
 function FixAIDirectionVectors()
+	if(PerformanceControl)then PerformanceControl:Update() end;
 	local allScouts=System.GetEntitiesByClass("Scout");
 	local allGrunts=System.GetEntitiesByClass("Grunt");
 	local allAIEntities = {};
