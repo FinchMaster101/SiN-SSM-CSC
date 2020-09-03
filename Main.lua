@@ -19,6 +19,7 @@ end;
 
 SIN_AI_UPDATE_DELAY = 50;
 UPDATE_AI_ENTITIES=true;
+SIN_LOG_VERBOSITY=0
 
 if(not BasicAlien)then Script.ReloadScript("Scripts/Entities/Actor/BasicAlien.lua") end;
 function BasicAlien.Client:OnHit(hit, remote)
@@ -97,7 +98,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 	if(LAST_UPDATE)then LAST_UPDATE = tonumber(LAST_UPDATE); end;
 	LAST_UPDATE = LAST_UPDATE or _time - SIN_AI_UPDATE_DELAY;
 	
-	if(_time - LAST_UPDATE >= SIN_AI_UPDATEDELAY)then
+	if(_time - LAST_UPDATE >= SIN_AI_UPDATE_DELAY)then
 		if(UPDATE_AI_ENTITIES)then
 		LAST_UPDATE = _time;
 		local allScouts=System.GetEntitiesByClass("Scout");
@@ -153,9 +154,8 @@ end
         
         
 
-UPDATE_AI_ENTITIES=true
-SIN_LOG_VERBOSITY=0
-FixAIDirectionVectors()
+
+
 				
 function SetAILogVerbosity(number)
 	if(not number)then
