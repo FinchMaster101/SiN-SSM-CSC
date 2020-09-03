@@ -17,7 +17,7 @@ function GNV(vec3)
 	return {x=vec3.x*-1,y=vec3.y*-1,z=vec3.z*-1};
 end;
 
-SIN_AI_UPDAREDELAY = 50;
+SIN_AI_UPDATEDELAY = 50;
 UPDATE_AI_ENTITIES=true;
 
 if(not BasicAlien)then Script.ReloadScript("Scripts/Entities/Actor/BasicAlien.lua") end;
@@ -169,14 +169,14 @@ function SetAILogVerbosity(number)
 end;
 function SetAIUpdateRate(number)
 	if(not number)then
-		printf("$9[$4SiN$9] AISystem: update delay is " ..SIN_AI_UPDAREDELAY );
+		printf("$9[$4SiN$9] AISystem: update delay is " ..SIN_AI_UPDATEDELAY );
 		return true;
 	end;
-	SIN_AI_UPDAREDELAY = tonumber(number);
-	if(SIN_AI_UPDAREDELAY<1)then
-		SIN_AI_UPDAREDELAY=1;
+	SIN_AI_UPDATEDELAY = tonumber(number);
+	if(SIN_AI_UPDATEDELAY<1)then
+		SIN_AI_UPDATEDELAY=1;
 	end;
-	printf("$9[$4SiN$9] AISystem: new update delay is " ..SIN_AI_UPDAREDELAY );
+	printf("$9[$4SiN$9] AISystem: new update delay is " ..SIN_AI_UPDATEDELAY );
 	return true;
 end;
 function ToggleAIUpdate()
