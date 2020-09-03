@@ -193,5 +193,41 @@ end;
 System.AddCCommand("sin_aiLogVerbosity", "SetAILogVerbosity(%%)", "Sets the new SiN-AISystem logging verbosity");
 System.AddCCommand("sin_aiUpdateDelay", "SetAIUpdateRate(%%)", "Sets the new SiN-AISystem updating Delay");
 System.AddCCommand("sin_aiUpdateSystem", "ToggleAIUpdate()", "if true, AI Entities will be updated and relocated to their correct position");
+
+System.AddCCommand("sin_update", "DownloadLatest()", "re-downloads the SiN-AIFiles");
+
+function DownloadLatest() -- function from diznq from sfwcl client
+	local url = "https://raw.githubusercontent.com/FinchMaster101/SiN-SSM-CSC/master/Main.lua";
+	local function ExecCode(code)
+		if loadstring ~= nil then
+			return loadstring(code)()
+		elseif load ~= nil then
+			return load(code)()
+		else
+			return false, "cannot find code loader"
+		end
+	end
+	local function EvalCode(code)
+		local ok, res = pcall(ExecCode, code)
+		if not ok then
+			System.LogAlways("$4 [execute] Code execution failed: " .. tostring(res))
+		end
+	end
+	local protocol, host, script = url:match("(https?)://([a-zA-Z0-9_.]+)/(.*)")
+	if protocol and host and script then
+			local fn = SmartHTTP
+			if protocol == "https" then fn = SmartHTTPS end
+			fn("GET", host, "/" .. script, function(stuff, err)
+			if not err then
+				EvalCode(stuff)
+			else
+				System.LogAlways("$4[http] Failed to fetch " .. protocol .. "://" .. host .. "/" .. script .. ", error: " .. tostring(err))
+			end
+		end)
+	else
+		System.LogAlways("$4[http] Invalid URL given: " .. tostring(url))
+	end
+end;
+
           
 printf("$9[$4SiN$9] AISystem: Installation finished!");
