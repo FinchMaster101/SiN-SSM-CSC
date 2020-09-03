@@ -52,8 +52,8 @@ function BasicAlien.Client:OnHit(hit, remote)
 		self.hit_dir = hit.dir;
 	end
 
-	CopyVector(alienEnt.lastHit.dir,hit.dir);
-	CopyVector(alienEnt.lastHit.pos,hit.pos);
+	CopyVector(self.lastHit.dir,hit.dir);
+	CopyVector(self.lastHit.pos,hit.pos);
 	self.lastHit.partId = hit.partId;
 	self:GetVelocity(self.lastHit.velocity);
 	self:AddImpulse(hit.partId,hit.pos,hit.dir,hit.damage *  self:GetDamageImpulseMultiplier(hit),2);
@@ -62,14 +62,14 @@ function BasicAlien.Client:OnHit(hit, remote)
 		local oldRatio = health/maxHealth;
 		local newRatio = __max(0, (health-damage)/maxHealth);
 		if (newRatio ~= 0) then	    
-			for i,stage in ipairs(alienEnt.Vulnerability.DamageEffects) do  	    
+			for i,stage in ipairs(self.Vulnerability.DamageEffects) do  	    
 				if (oldRatio >= stage.health and newRatio < stage.health) then
 					self:SetAttachmentEffect(0, stage.attachment, stage.effect, g_Vectors.v000, g_Vectors.v010, 1, 0);  	    
 				end
 			end  	    	  
 		end
 	end
-	if (not alienEnt.painSoundTriggered) then
+	if (not self.painSoundTriggered) then
 		self:SetTimer(PAIN_TIMER,0.15 * 1000);
 		self.painSoundTriggered = true;
 	end
