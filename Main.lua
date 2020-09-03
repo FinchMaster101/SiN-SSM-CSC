@@ -94,6 +94,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 
 	end
 	
+	if(LAST_UPDATE)then LAST_UPDATE = tonumber(LAST_UPDATE); end;
 	LAST_UPDATE = LAST_UPDATE or _time - SIN_AI_UPDATE_DELAY;
 	
 	if(_time - LAST_UPDATE >= SIN_AI_UPDATEDELAY)then
