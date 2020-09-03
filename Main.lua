@@ -92,20 +92,20 @@ function FixAIDirectionVectors()
 	end;
 	local updated=0
 	for i,v in ipairs(allAIEntities or {}) do
-		if(v.AI and v.AI.lastHitTarget)then
-			if(v.lastHitTime and (_time - v.lastHitTime < 25))then
-				local aimPos = System.GetEntity(v.AI.lastHitTarget);
-				if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
-					if(v.hit_dir)then v:SetDirectionVector(v.hit_dir) end;
+		--if(v.AI and v.AI.lastHitTarget)then
+		--	if(v.lastHitTime and (_time - v.lastHitTime < 25))then
+		--		local aimPos = System.GetEntity(v.AI.lastHitTarget);
+		--		if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
+					if(v.hit_dir)then v:SetDirectionVector(GNV(v.hit_dir)) end;
 					--v:SetDirectionVector(GNV(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true)));
 					updated=updated+1;
-				else
-					if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>2)then
-						printf("$9[$4SiN$9] AISystem: AimTarget not found for " .. v:GetName())
-					end;
-				end;
-			end;
-		end;
+		--		else
+		--			if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>2)then
+		--				printf("$9[$4SiN$9] AISystem: AimTarget not found for " .. v:GetName())
+		--			end;
+		--		end;
+		--	end;
+		--end;
 	end;
 	if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>3)then
 		if(#allAIEntities==0)then
