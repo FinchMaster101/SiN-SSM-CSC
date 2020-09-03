@@ -17,7 +17,7 @@ function GNV(vec3)
 	return {x=vec3.x*-1,y=vec3.y*-1,z=vec3.z*-1};
 end;
 
-SIN_AI_UPDATEDELAY = 50;
+SIN_AI_UPDATE_DELAY = 50;
 UPDATE_AI_ENTITIES=true;
 
 if(not BasicAlien)then Script.ReloadScript("Scripts/Entities/Actor/BasicAlien.lua") end;
@@ -94,7 +94,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 
 	end
 	
-	LAST_UPDATE = LAST_UPDATE or _time - SIN_AI_UPDATEDELAY;
+	LAST_UPDATE = LAST_UPDATE or _time - SIN_AI_UPDATE_DELAY;
 	
 	if(_time - LAST_UPDATE >= SIN_AI_UPDATEDELAY)then
 		if(UPDATE_AI_ENTITIES)then
@@ -116,7 +116,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 			--		local aimPos = System.GetEntity(v.AI.lastHitTarget);
 			--		if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
 
-						v:SetDirectionVector(TryGetDir(v)); -- mike cause strange directions if SIN_AI_UPDAREDELAY isn't low enough.
+						v:SetDirectionVector(TryGetDir(v)); -- mike cause strange directions if SIN_AI_UPDATE_DELAY isn't low enough.
 
 						--if(v.hit_dir)then v:SetDirectionVector(GNV(v.hit_dir)) end; -- didnt work too :s
 						--v:SetDirectionVector(GNV(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true))); -- does weird bugs after some time :s
@@ -169,14 +169,14 @@ function SetAILogVerbosity(number)
 end;
 function SetAIUpdateRate(number)
 	if(not number)then
-		printf("$9[$4SiN$9] AISystem: update delay is " ..SIN_AI_UPDATEDELAY );
+		printf("$9[$4SiN$9] AISystem: update delay is " ..SIN_AI_UPDATE_DELAY );
 		return true;
 	end;
-	SIN_AI_UPDATEDELAY = tonumber(number);
-	if(SIN_AI_UPDATEDELAY<1)then
-		SIN_AI_UPDATEDELAY=1;
+	SIN_AI_UPDATE_DELAY = tonumber(number);
+	if(SIN_AI_UPDATE_DELAY<1)then
+		SIN_AI_UPDATE_DELAY=1;
 	end;
-	printf("$9[$4SiN$9] AISystem: new update delay is " ..SIN_AI_UPDATEDELAY );
+	printf("$9[$4SiN$9] AISystem: new update delay is " ..SIN_AI_UPDATE_DELAY );
 	return true;
 end;
 function ToggleAIUpdate()
