@@ -40,7 +40,7 @@ end;
 
 function TryGetDir(entity)
 	entity.lastPos = entity.lastPos or entity:GetPos();
-	if(cmpvec(entity:GetPos(), entity.lastPos, 0.1, 0.1, 0.1))then
+	if(cmpvec(entity:GetPos(), entity.lastPos, 0.05, 0.05, 0.01))then
 		return GetDirectionVector(entity:GetPos(), entity.lastPos, true)
 	else
 		return nil;
