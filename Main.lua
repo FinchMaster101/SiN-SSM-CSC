@@ -231,13 +231,13 @@ end;
 PerformanceControl = {
 	enabled = true;
 	limits = {
-		{ 20, 500; };
-		{ 30, 300; };
-		{ 50, 200; };
-		{ 80, 100; };
-		{ 120, 50; };
-		{ 150, 10; };
-		{ 200, 1; };
+		{ 20, 500 };
+		{ 30, 300 };
+		{ 50, 200 };
+		{ 80, 100 };
+		{ 120, 50 };
+		{ 150, 10 };
+		{ 200, 1 };
 	};
 	Update = function(self)
 		if(not self.enabled)then return; end;
@@ -252,7 +252,7 @@ PerformanceControl = {
 		if(newRate~=SIN_AI_UPDATEDELAY)then
 			SIN_AI_UPDATEDELAY = newRate;
 			if(SIN_LOG_VERBOSITY > 2)then
-				printf("$9[$4SiN$9] AI: PerformanceControl set update delay to " .. SIN_AI_UPDATEDELAY .. " (fps lower than " .. lower .. ")");
+				printf("$9[$4SiN$9] AI: PerformanceControl set update delay to " .. SIN_AI_UPDATEDELAY);
 			end;
 		end;
 	end;
@@ -268,6 +268,11 @@ PerformanceControl = {
 		printf("$9[$4SiN$9] AI: PerformanceControl has been " .. (self:Toggle() and "enabled" or "disabled"))
 	end;
 };
-System.AddCCommand("sin_performanceControl", "PerformanceControl:SetMode()", "toggles the automatic performance control");
+
+function SetPerformanceMode()
+	return PerformanceControl:SetMode()
+end;
+
+System.AddCCommand("sin_performanceControl", "SetPerformanceMode()", "toggles the automatic performance control");
           
 printf("$9[$4SiN$9] AISystem: Installation finished!");
