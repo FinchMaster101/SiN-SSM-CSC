@@ -229,7 +229,7 @@ function DownloadLatest() -- function from diznq from sfwcl client
 	end
 end;
 PerformanceControl = {
-	enabled = true
+	enabled = true;
 	limits = {
 		{ 20, 500; };
 		{ 30, 300; };
