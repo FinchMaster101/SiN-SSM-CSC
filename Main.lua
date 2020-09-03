@@ -82,74 +82,72 @@ function TryGetDir(entity)
 	return GetDirectionVector(entity:GetPos(), entity.lastPos, true)
 end;
 
-function FixAIDirectionVectors()
-	if(PerformanceControl)then PerformanceControl:Update() end;
-	local allScouts=System.GetEntitiesByClass("Scout");
-	local allGrunts=System.GetEntitiesByClass("Grunt");
-	local allAIEntities = {};
-	local allAIEntities = {};
-	for i,v in ipairs(allScouts or {}) do
-		table.insert(allAIEntities, v);
-	end;
-	for i,v in ipairs(allGrunts or {}) do
-		table.insert(allAIEntities, v);
-	end;
-	local updated=0
-	for i,v in ipairs(allAIEntities or {}) do
-		--if(v.AI and v.AI.lastHitTarget)then
-		--	if(v.lastHitTime and (_time - v.lastHitTime < 25))then
-		--		local aimPos = System.GetEntity(v.AI.lastHitTarget);
-		--		if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
-		
-					v:SetDirectionVector(TryGetDir(v)); -- mike cause strange directions if SIN_AI_UPDAREDELAY isn't low enough.
-		
-					--if(v.hit_dir)then v:SetDirectionVector(GNV(v.hit_dir)) end; -- didnt work too :s
-					--v:SetDirectionVector(GNV(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true))); -- does weird bugs after some time :s
-					updated=updated+1;
-		--		else
-		--			if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>2)then
-		--				printf("$9[$4SiN$9] AISystem: AimTarget not found for " .. v:GetName())
-		--			end;
-		--		end;
-		--	end;
-		--end;
-		v.lastPos = v:GetPos();
-	end;
-	if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>3)then
-		if(#allAIEntities==0)then
-			printf("$9[$4SiN$9] AISystem: no entities found to relocate directions ...")
-		elseif(#allAIEntities>0 and updated==0)then
-			printf("$9[$4SiN$9] AISystem: WARNING: all AI entities are missing lastHitTarget; skipping relocate")
-		elseif(updated~=#allAIEntities)then
-			printf("$9[$4SiN$9] AISystem: WARNING: " .. (#allAIEntities-updated).." entities are missing lastHitTarget; skipping relocate")
+if not OldPatchedSP then OldPatchedSP = SinglePlayer.Client.OnUpdate end
+
+SinglePlayer.Client.OnUpdate = function(self, dt)
+
+	OldPatchedSP(self, dt)
+
+	if not (g_gameRules.class == "InstantAction" or g_gameRules.class == "PowerStruggle") then
+
+		return;
+
+	end
+	
+	LAST_UPDATE = LAST_UPDATE or _time - SIN_AI_UPDATEDELAY;
+	
+	if(_time - LAST_UPDATE >= SIN_AI_UPDATEDELAY)then
+		if(UPDATE_AI_ENTITIES)then
+		LAST_UPDATE = _time;
+		local allScouts=System.GetEntitiesByClass("Scout");
+		local allGrunts=System.GetEntitiesByClass("Grunt");
+		local allAIEntities = {};
+		local allAIEntities = {};
+		for i,v in ipairs(allScouts or {}) do
+			table.insert(allAIEntities, v);
+		end;
+		for i,v in ipairs(allGrunts or {}) do
+			table.insert(allAIEntities, v);
+		end;
+		local updated=0
+		for i,v in ipairs(allAIEntities or {}) do
+			--if(v.AI and v.AI.lastHitTarget)then
+			--	if(v.lastHitTime and (_time - v.lastHitTime < 25))then
+			--		local aimPos = System.GetEntity(v.AI.lastHitTarget);
+			--		if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
+
+						v:SetDirectionVector(TryGetDir(v)); -- mike cause strange directions if SIN_AI_UPDAREDELAY isn't low enough.
+
+						--if(v.hit_dir)then v:SetDirectionVector(GNV(v.hit_dir)) end; -- didnt work too :s
+						--v:SetDirectionVector(GNV(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true))); -- does weird bugs after some time :s
+						updated=updated+1;
+			--		else
+			--			if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>2)then
+			--				printf("$9[$4SiN$9] AISystem: AimTarget not found for " .. v:GetName())
+			--			end;
+			--		end;
+			--	end;
+			--end;
+			v.lastPos = v:GetPos();
+		end;
+		if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>3)then
+			if(#allAIEntities==0)then
+				printf("$9[$4SiN$9] AISystem: no entities found to relocate directions ...")
+			elseif(#allAIEntities>0 and updated==0)then
+				printf("$9[$4SiN$9] AISystem: WARNING: all AI entities are missing lastHitTarget; skipping relocate")
+			elseif(updated~=#allAIEntities)then
+				printf("$9[$4SiN$9] AISystem: WARNING: " .. (#allAIEntities-updated).." entities are missing lastHitTarget; skipping relocate")
+			else
+				printf("$9[$4SiN$9] AISystem: relocated " .. updated .. " AIEntities")
+			end;
+		end;
 		else
-			printf("$9[$4SiN$9] AISystem: relocated " .. updated .. " AIEntities")
+			-- dont print error like in old function -> else OVERFLOW :D
 		end;
 	end;
-	Script.SetTimer(tonumber(SIN_AI_UPDAREDELAY or 0),function() if(UPDATE_AI_ENTITIES==true)then FixAIDirectionVectors(); else printf("$9[$4SiN$9] AISystem: WARNING: AIUpdating is disabled, failed to relocate entities") end; end);
-end;
-        
-if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
-function Player.Client:OnHit(hit, remote)
-	BasicActor.Client.OnHit(self,hit,remote);
-	local t, s = hit.target, hit.shooter;
-	if(t and s and t~=s and (s.isAlien or s.class=="Grunt"))then
-		s.AI = s.AI or {};
-		s.AI.lastHitTarget = t.id;
-		s.lastHitTime = _time;
-		if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>3)then
-			printf("$9[$4SiN$9] AISystem: setting new lastHitTarget for " .. s:GetName())
-		end;
-	end;
-	if(t and s and t~=s and (s.isAlien or s.class=="Grunt"))then
-		t.AI = s.AI or {};
-		t.AI.lastHitTarget = s.id;
-		t.lastHitTime = _time;
-		if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>3)then
-			printf("$9[$4SiN$9] AISystem: setting new lastHitTarget for " .. t:GetName())
-		end;
-	end;
-end;
+end
+
+
         
         
         
@@ -184,7 +182,7 @@ end;
 function ToggleAIUpdate()
 	if not UPDATE_AI_ENTITIES then
 			UPDATE_AI_ENTITIES = true;
-			FixAIDirectionVectors()
+			--FixAIDirectionVectors()
 			printf("$9[$4SiN$9] AISystem: enabeling AISystem");
 	else
 		UPDATE_AI_ENTITIES = false;
