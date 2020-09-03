@@ -26,13 +26,13 @@ function cmpvec(v1,v2,a,b,c)
 	local x, y, z = (v1.x - v2.x), (v1.y - v2.y), (v1.z - v2.z);
 	local xD, yD, zD = math.sqrt(x * x), math.sqrt(y * y), math.sqrt(z * z);
 	local isOk = true;	
-	if(a and xD < a)then
+	if(a and xD and xD < a)then
 		isOk = false;
 	end;
-	if(b and yD < b)then
+	if(b and yD and yD < b)then
 		isOk = false;
 	end;
-	if(c and zD < c)then
+	if(c and zD and zD < c)then
 		isOk = false;
 	end;
 	return isOk;
