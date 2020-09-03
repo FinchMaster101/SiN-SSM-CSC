@@ -228,6 +228,46 @@ function DownloadLatest() -- function from diznq from sfwcl client
 		System.LogAlways("$4[http] Invalid URL given: " .. tostring(url))
 	end
 end;
-
+PerformanceControl = {
+	enabled = true
+	limits = {
+		{ 20, 500; };
+		{ 30, 300; };
+		{ 50, 200; };
+		{ 80, 100; };
+		{ 120, 50; };
+		{ 150, 10; };
+		{ 200, 1; };
+	};
+	Update = function(self)
+		if(not self.enabled)then return; end;
+		self.current = 1/(System.GetFrameTime() or 0.0)
+		local newRate, lower = SIN_AI_UPDATEDELAY, 0;
+		for i,limit in pairs(self.limits) do
+			if(self.current<limit[1])then
+				newRate=limit[2];
+				lower=limit[1]
+			end;
+		end;
+		if(newRate~=SIN_AI_UPDATEDELAY)then
+			SIN_AI_UPDATEDELAY = newRate;
+			if(SIN_LOG_VERBOSITY > 2)then
+				printf("$9[$4SiN$9] AI: PerformanceControl set update delay to " .. SIN_AI_UPDATEDELAY .. " (fps lower than " .. lower .. ")");
+			end;
+		end;
+	end;
+	Toggle = function(self)
+		if(not self.enabled)then
+			self.enabled=true;
+		else
+			self.enabled=false;
+		end;
+		return self.enabled;
+	end;
+	SetMode = function(self)
+		printf("$9[$4SiN$9] AI: PerformanceControl has been " .. (self:Toggle() and "enabled" or "disabled"))
+	end;
+};
+System.AddCCommand("sin_performanceControl", "PerformanceControl:SetMode()", "toggles the automatic performance control");
           
 printf("$9[$4SiN$9] AISystem: Installation finished!");
