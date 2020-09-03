@@ -22,9 +22,29 @@ UPDATE_AI_ENTITIES=true;
 SIN_LOG_VERBOSITY=0
 
 
+function cmpvec(v1,v2,a,b,c)
+	local x, y, z = (v1.x - v2.x), (v1.y - v2.y), (v1.z - v2.z);
+	local xD, yD, zD = math.sqrt(xD * xD), math.sqrt(yD * yD), math.sqrt(zD * zD);
+	local isOk = true;	
+	if(a and xD < a)then
+		isOk = false;
+	end;
+	if(b and yD < b)then
+		isOk = false;
+	end;
+	if(c and zD < c)then
+		isOk = false;
+	end;
+	return isOk;
+end;
+
 function TryGetDir(entity)
 	entity.lastPos = entity.lastPos or entity:GetPos();
-	return GetDirectionVector(entity:GetPos(), entity.lastPos, true)
+	if(cmpvec(entity:GetPos(), entity.lastPos, 0.1, 0.1, 0.1))then
+		return GetDirectionVector(entity:GetPos(), entity.lastPos, true)
+	else
+		return nil;
+	end;
 end;
 
 if not OldPatchedSP then OldPatchedSP = SinglePlayer.Client.OnUpdate end
@@ -39,7 +59,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 		--local allGrunts=System.GetEntitiesByClass("Grunt");
 		local allAIEntities = {};
 		for i,v in ipairs(allScouts or {}) do
-			if(v.actor and v.actor:GetHealth() > 0)then -- for the sake of performance DONT update dead entities (looks weird anyway)
+			if(v.actor and v.actor:GetHealth() > 0)then -- for the sake of performance DONT update dead entities
 				table.insert(allAIEntities, v);
 			end;
 		end;
@@ -48,8 +68,11 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 		--end;
 		local updated=0
 		for i,v in ipairs(allAIEntities or {}) do
-			v:SetDirectionVector(TryGetDir(v)); -- 
-			v.lastPos = v:GetPos();
+			local newDir = TryGetDir(v);
+			if(newDir)then
+				v:SetDirectionVector(TryGetDir(v)); -- 
+				v.lastPos = v:GetPos();
+			end;
 		end;
 	else
 		
