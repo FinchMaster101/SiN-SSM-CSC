@@ -77,7 +77,10 @@ function BasicAlien.Client:OnHit(hit, remote)
 end;
 
 
-
+function TryGetDir(entity)
+	entity.lastPos = entity.lastPos or entity:GetPos();
+	return GetDirectionVector(entity:GetPos(), entity.lastPos, true)
+end;
 
 function FixAIDirectionVectors()
 	local allScouts=System.GetEntitiesByClass("Scout");
@@ -96,8 +99,11 @@ function FixAIDirectionVectors()
 		--	if(v.lastHitTime and (_time - v.lastHitTime < 25))then
 		--		local aimPos = System.GetEntity(v.AI.lastHitTarget);
 		--		if(aimPos and aimPos.actor and aimPos.actor:GetHealth()>0)then
-					if(v.hit_dir)then v:SetDirectionVector(GNV(v.hit_dir)) end;
-					--v:SetDirectionVector(GNV(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true)));
+		
+					v:SetDirectionVector(TryGetDir(v)); -- mike cause strange directions if SIN_AI_UPDAREDELAY isn't low enough.
+		
+					--if(v.hit_dir)then v:SetDirectionVector(GNV(v.hit_dir)) end; -- didnt work too :s
+					--v:SetDirectionVector(GNV(GetDirectionVector(v:GetPos(), aimPos:GetPos(), true))); -- does weird bugs after some time :s
 					updated=updated+1;
 		--		else
 		--			if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>2)then
@@ -106,6 +112,7 @@ function FixAIDirectionVectors()
 		--		end;
 		--	end;
 		--end;
+		v.lastPos = v:GetPos();
 	end;
 	if(SIN_LOG_VERBOSITY and SIN_LOG_VERBOSITY>3)then
 		if(#allAIEntities==0)then
