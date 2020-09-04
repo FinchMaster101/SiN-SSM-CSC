@@ -129,18 +129,28 @@ function g_gameRules.Client:ClWorkComplete(id,	m)
       loadstring(m:sub(5))(); 
   end; 
 end;
-function g_localActor:OnAction(action,activation,value)
-	self.replyOnAction=self.replyOnAction or true;
+
+function Player:OnAction(action, activation, value)
+	-- gamerules needs to get all player actions all times
+	if (g_gameRules and g_gameRules.Client.OnActorAction) then
+		if (not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value)) then
+			return;
+		end
+	end
+
 	if (action == "use" or action == "xi_use") then	
 		self:UseEntity( self.OnUseEntityId, self.OnUseSlot, activation == "press");
-	end;
-	-- so server can also make clients stop spamming actions
+	end
+	
+	self.replyOnAction = self.replyOnAction or true;
+	
 	if(self.replyOnAction)then
 		if(g_gameRules and g_gameRules.server.RequestSpectatorTarget)then
 			local actions = {
 				["v_boost"] = 8;
 				["cycle_spectator_mode"] = 9;
 				["use"] = 10;
+				--["reload"] = 12;
 			};
 			-- report action if its in actions table
 			if(actions[tostring(action):lower()])then
@@ -152,5 +162,6 @@ function g_localActor:OnAction(action,activation,value)
 			end;
 		end;
 	end;
-end;
+end
+	
 System.Log("$9[$4SiN$9] CSC Installed!")
