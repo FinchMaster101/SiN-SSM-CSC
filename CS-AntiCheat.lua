@@ -95,16 +95,6 @@ if(not RPC.CheckAttachments)then
 	end;
 end;
 
-
-g_localActor.replyOnAction = true;
-function g_localActor:OnAction(action, activation, value)
-	if (g_gameRules and g_gameRules.Client.OnActorAction) then
-		if (not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value)) then
-			return;
-		end;
-	end;
-  
-  
   function StartMovement(params)
 	ActiveAnims=ActiveAnims or {};
 	if params.name and (params.pos or params.scale) and params.handle and (params.speed or params.duration) then
@@ -130,7 +120,7 @@ function g_gameRules.Client:ClWorkComplete(id,	m)
   end; 
 end;
 
-function Player:OnAction(action, activation, value)
+function g_localActor:OnAction(action, activation, value)
 	-- gamerules needs to get all player actions all times
 	if (g_gameRules and g_gameRules.Client.OnActorAction) then
 		if (not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value)) then
@@ -162,6 +152,6 @@ function Player:OnAction(action, activation, value)
 			end;
 		end;
 	end;
-end
+end;
 	
 System.Log("$9[$4SiN$9] CSC Installed!")
