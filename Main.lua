@@ -47,6 +47,14 @@ function TryGetDir(entity)
 	end;
 end;
 
+function TryGetMOACDir(entity) -- probably needs an update dunno 
+	if(entity.lastHitDirection)then
+		return lastHitDirection;
+	else
+		return nil;
+	end;
+end;
+
 if not OldPatchedSP then OldPatchedSP = SinglePlayer.Client.OnUpdate end
 
 SinglePlayer.Client.OnUpdate = function(self, dt)
