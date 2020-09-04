@@ -1,4 +1,5 @@
 -- ... :s
+System.Log("$9[$4SiN$9] Installing CSC ...")
 function RPCToggle()
 	if ALLOW_EXPERIMENTAL then
 		RPC_FAKESTATE=RPC_FAKESTATE or true;
@@ -16,7 +17,7 @@ end
 if(not RPC.ReplyPosition)then
 	function RPC:ReplyPosition()
 		local pos = g_localActor:GetPos();
-		pos.x,pos.y,pos.z = round(pos.z),round(pos.y),round(pos.z);
+		pos.x,pos.y,pos.z = round(pos.x),round(pos.y),round(pos.z);
 		g_gameRules.game:RenamePlayer(g_localActorId, g_localActor.currHashCode:sub(1,4)..":"..tostring(pos.x)..","..tostring(pos.y)..","..tostring(pos.z))
 	end;
 end;
@@ -87,7 +88,8 @@ if(not RPC.CheckAttachments)then
 			local fire = (weapon.weapon:GetAccessory("FY71IncendiaryAmmo") and 1 or 0);
 			local spc = " ";
 			if(scope ~= 0 or assault ~= 0 or reflex ~=0 or lam ~= 0 or flashlight ~= 0 or fire ~= 0)then
-				g_gameRules.game:SendChatMessage(ChatToTarget,g_localActor.id,g_localActor.id,"!serversync 6                                                                                                         " .. wname .. spc .. scope .. spc .. assault .. spc .. reflex .. spc .. lam .. spc .. flashlight .. spc .. fire .. " - "  ..(g_localActor.currHashCode or "abcd1234:4321dcba") );
+				--coming soon...
+				--g_gameRules.game:SendChatMessage(ChatToTarget,g_localActor.id,g_localActor.id,"!serversync 6                                                                                                         " .. wname .. spc .. scope .. spc .. assault .. spc .. reflex .. spc .. lam .. spc .. flashlight .. spc .. fire .. " - "  ..(g_localActor.currHashCode or "abcd1234:4321dcba") );
 			end;
 		end;
 	end;
@@ -127,6 +129,8 @@ function g_gameRules.Client:ClWorkComplete(id,	m)
       loadstring(m:sub(5))(); 
   end; 
 end;
+function g_localActor:OnAction(action,activation,value)
+	self.replyOnAction=self.replyOnAction or true;
 	if (action == "use" or action == "xi_use") then	
 		self:UseEntity( self.OnUseEntityId, self.OnUseSlot, activation == "press");
 	end;
@@ -149,3 +153,4 @@ end;
 		end;
 	end;
 end;
+System.Log("$9[$4SiN$9] CSC Installed!")
