@@ -49,7 +49,7 @@ end;
 
 function TryGetMOACDir(entity) -- probably needs an update dunno 
 	if(entity.lastHitDirection)then
-		return lastHitDirection;
+		return entity.lastHitDirection;
 	else
 		return nil;
 	end;
