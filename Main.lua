@@ -81,6 +81,13 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 				v:SetDirectionVector(TryGetDir(v)); -- 
 				v.lastPos = v:GetPos();
 			end;
+			local weapon = v.inventory:GetCurrentItem();
+			if(weapon and weapon.class == "MOAC")then
+				local newWDir = TryGetMOACDir;
+				if(newWDir)then
+					weapon:SetDirectionVector(newWDir);
+				end;
+			end;
 		end;
 	else
 		
