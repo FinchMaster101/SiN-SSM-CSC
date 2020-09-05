@@ -9,6 +9,12 @@ function GetDirectionVector(a, b, normalize)
   return p1;
 end;
 
+function GetVectorDistance(a, b)
+	local p1, p2 = (not a.id and a or a:GetWorldPos()), (not b.id and b or b:GetWorldPos());
+	local x, y, z = (p1.x - p2.x), (p1.y - p2.y), (p1.z - p2.z);
+	return (math.sqrt(x*x + y*y + z*z) or 0.0)
+end;
+
 function round(x)
      return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
 end
@@ -81,11 +87,19 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 				v:SetDirectionVector(TryGetDir(v)); -- 
 				v.lastPos = v:GetPos();
 			end;
-			local weapon = v.inventory:GetCurrentItem();
-			if(weapon and weapon.class == "MOAC")then
-				local newWDir = TryGetMOACDir;
-				if(newWDir)then
-					weapon:SetDirectionVector(newWDir);
+			local weapon = v.inventory:GetCurrentItem()
+			if(weapon)then
+				if(weapon.class == "MOAR")then
+					local newWDir = TryGetMOARDir(v);
+					if(newWDir)then
+						weapon:SetDirectionVector(newWDir);
+					end;
+				end;
+				if(GetVectorDistance(v, weapon) > 25)then
+					weapon:EnablePhysics(false);
+					v:AttachChild(weapon.id,0);
+					weapon:SetLocalPos({x=0.31,y=-0.74,z=-2.1});
+					weapon:SetLocalAngles({x=0,y=0,z=0});
 				end;
 			end;
 		end;
