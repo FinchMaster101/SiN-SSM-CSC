@@ -15,7 +15,7 @@ if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patchi
 
 if(not OLD.Scout_OldCLHit)then OLD.Scout_OldCLHit = Scout.Client:OnHit; end;
 
-function Scout_x.Client:OnHit(hit, remote)
+function Scout.Client:OnHit(hit, remote)
 
   local success, error = pcall(function() OLD.Scout_CLHit(hit, remote); end);
   if(not success)then
