@@ -53,7 +53,7 @@ function TryGetDir(entity)
 	end;
 end;
 
-function TryGetMOACDir(entity) -- probably needs an update dunno 
+function TryGetMOARDir(entity) -- probably needs an update dunno 
 	if(entity.lastHitDirection)then
 		return entity.lastHitDirection;
 	else
