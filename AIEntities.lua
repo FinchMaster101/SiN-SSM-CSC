@@ -40,7 +40,7 @@ end;
 
 -------------------------------------------------------------
 
-if(not OLD.Scout_OldCLUpdate)then OLD.Scout_OldCLUpdate = Scout.Cient.OnUpdate; end;
+if(not OLD.Scout_OldCLUpdate)then OLD.Scout_OldCLUpdate = Scout.Client.OnUpdate; end;
 function Scout.Client:OnUpdate(frameTime)
   if(OLD.Scout_OldCLUpdate)then
      OLD.Scout_OldCLUpdate(self, frameTime);
