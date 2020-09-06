@@ -89,7 +89,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 			end;
 			local weapon = v.inventory:GetCurrentItem()
 			if(weapon)then
-				if(weapon.class == "MOAR")then
+				if(weapon.class == "Scout_MOAR")then
 					local newWDir = TryGetMOARDir(v);
 					if(newWDir)then
 						weapon:SetDirectionVector(newWDir);
