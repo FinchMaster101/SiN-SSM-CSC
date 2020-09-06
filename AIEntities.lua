@@ -1,4 +1,3 @@
-System.Log("$9[$4SiN$9] Installing entity function patch ..")
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
 if(not Scout)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Scout.lua") end;
@@ -24,4 +23,3 @@ function Scout.Client:OnHit(hit, remote)
   self.lastHitDirection = hit.dir;
   
 end;
-System.Log("$9[$4SiN$9] Entity function patch installed")
