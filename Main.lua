@@ -89,13 +89,12 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 			end;
 			local weapon = v.inventory:GetCurrentItem()
 			if(weapon)then
-				printf("[DEBuG] " .. weapon.class)
 				if(weapon.class == "Scout_MOAR")then
 					--local newWDir = TryGetMOARDir(v);
-					--if(newWDir)then
+					if(v.lastHitDirection)then
 						weapon:SetDirectionVector(v.lastHitDirection);
-						printf("[DEBuG] reorientated MOAR world position ")
-					--end;
+						--printf("[DEBuG] reorientated MOAR world position ")
+					end;
 				end;
 				if(GetVectorDistance(v, weapon) > 25)then
 					weapon:SetWorldPos(v:GetWorldPos());
@@ -103,7 +102,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 					v:AttachChild(weapon.id,0);
 					weapon:SetLocalPos({x=0.31,y=-0.74,z=-2.1});
 					weapon:SetLocalAngles({x=0,y=0,z=0});
-					printf("[DEBuG] fixed unattached error for MOAR")
+					--printf("[DEBuG] fixed unattached error for MOAR")
 				end;
 			end;
 		end;
