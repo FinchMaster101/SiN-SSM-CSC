@@ -93,13 +93,16 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 					local newWDir = TryGetMOARDir(v);
 					if(newWDir)then
 						weapon:SetDirectionVector(newWDir);
+						printf("[DEBuG] reorientated MOAR world position ")
 					end;
 				end;
 				if(GetVectorDistance(v, weapon) > 25)then
+					weapon:SetWorldPos(v:GetWorldPos());
 					weapon:EnablePhysics(false);
 					v:AttachChild(weapon.id,0);
 					weapon:SetLocalPos({x=0.31,y=-0.74,z=-2.1});
 					weapon:SetLocalAngles({x=0,y=0,z=0});
+					printf("[DEBuG] fixed unattached error for MOAR")
 				end;
 			end;
 		end;
