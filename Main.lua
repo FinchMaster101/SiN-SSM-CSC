@@ -89,12 +89,13 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 			end;
 			local weapon = v.inventory:GetCurrentItem()
 			if(weapon)then
+				printf("[DEBuG] " .. weapon.class)
 				if(weapon.class == "Scout_MOAR")then
-					local newWDir = TryGetMOARDir(v);
-					if(newWDir)then
-						weapon:SetDirectionVector(newWDir);
+					--local newWDir = TryGetMOARDir(v);
+					--if(newWDir)then
+						weapon:SetDirectionVector(v.lastHitDirection);
 						printf("[DEBuG] reorientated MOAR world position ")
-					end;
+					--end;
 				end;
 				if(GetVectorDistance(v, weapon) > 25)then
 					weapon:SetWorldPos(v:GetWorldPos());
