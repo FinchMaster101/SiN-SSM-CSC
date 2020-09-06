@@ -17,7 +17,7 @@ if(not OLD.Scout_OldCLHit)then OLD.Scout_OldCLHit = Scout.Client.OnHit; end;
 
 function Scout.Client:OnHit(hit, remote)
 
-  OLD.Scout_OldCLHit(hit, remote);
+  OLD.Scout_OldCLHit(self, hit, remote);
 
   -- used for "Fix MOAC"-test
   self.lastHitDirection = hit.dir;
