@@ -1,4 +1,4 @@
-printf("$9[$4SiN$9] AISystem: Starting to install ..")
+if(printf)then printf("$9[$4SiN$9] AISystem: Starting to install .."); end;
 ------------------------------------------------------
 function GetDirectionVector(a, b, normalize)
   local p1, p2 = (not a.id and a or a:GetPos()),(not b.id and b or b:GetPos());
@@ -44,22 +44,7 @@ function cmpvec(v1,v2,a,b,c)
 	return isOk;
 end;
 
-function TryGetDir(entity)
-	entity.lastPos = entity.lastPos or entity:GetPos();
-	if(cmpvec(entity:GetPos(), entity.lastPos, 0.05, 0.05, 0.01))then
-		return GetDirectionVector(entity:GetPos(), entity.lastPos, true)
-	else
-		return nil;
-	end;
-end;
 
-function TryGetMOARDir(entity) -- not used anymore
-	if(entity.lastHitDirection)then
-		return entity.lastHitDirection;
-	else
-		return nil;
-	end;
-end;
 
 if not OldPatchedSP then OldPatchedSP = SinglePlayer.Client.OnUpdate end
 
@@ -68,47 +53,6 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 	if not (g_gameRules.class == "InstantAction" or g_gameRules.class == "PowerStruggle") then
 		return;
 	end
-	if(UPDATE_AI_ENTITIES)then
-		local allScouts=System.GetEntitiesByClass("Scout");
-		--local allGrunts=System.GetEntitiesByClass("Grunt");
-		local allAIEntities = {};
-		for i,v in ipairs(allScouts or {}) do
-			if(v.actor and v.actor:GetHealth() > 0)then -- for the sake of performance DONT update dead entities
-				table.insert(allAIEntities, v);
-			end;
-		end;
-		--for i,v in ipairs(allGrunts or {}) do
-		--	table.insert(allAIEntities, v); -- didnt work too well on Grunts
-		--end;
-		local updated=0
-		for i,v in ipairs(allAIEntities or {}) do
-			local newDir = TryGetDir(v);
-			if(newDir)then
-				v:SetDirectionVector(TryGetDir(v)); -- 
-				v.lastPos = v:GetPos();
-			end;
-			local weapon = v.inventory:GetCurrentItem()
-			if(weapon)then
-				if(weapon.class == "Scout_MOAR")then
-					--local newWDir = TryGetMOARDir(v);
-					if(v.lastHitDirection)then
-						weapon:SetDirectionVector(v.lastHitDirection);
-						--printf("[DEBuG] reorientated MOAR world position ")
-					end;
-				end;
-				if(GetVectorDistance(v, weapon) > 25)then
-					weapon:SetWorldPos(v:GetWorldPos());
-					weapon:EnablePhysics(false);
-					v:AttachChild(weapon.id,0);
-					weapon:SetLocalPos({x=0.31,y=-0.74,z=-2.1});
-					weapon:SetLocalAngles({x=0,y=0,z=0});
-					--printf("[DEBuG] fixed unattached error for MOAR")
-				end;
-			end;
-		end;
-	else
-		
-	end;
 end
 			
 function SetAILogVerbosity(number)
@@ -124,14 +68,14 @@ function SetAILogVerbosity(number)
 end;
 function ToggleAIUpdate()
 	if not UPDATE_AI_ENTITIES then
-			UPDATE_AI_ENTITIES = true;
-			--FixAIDirectionVectors()
-			printf("$9[$4SiN$9] AISystem: enabeling AISystem");
+		UPDATE_AI_ENTITIES = true;
+		printf("$9[$4SiN$9] AISystem: enabeling AISystem");
 	else
 		UPDATE_AI_ENTITIES = false;
 		printf("$9[$4SiN$9] AISystem: disabeling AISystem");
 	end;
 end;
+
 System.AddCCommand("sin_aiLogVerbosity", "SetAILogVerbosity(%%)", "Sets the new SiN-AISystem logging verbosity");
 System.AddCCommand("sin_aiUpdateSystem", "ToggleAIUpdate()", "if true, AI Entities will be updated and relocated to their correct position");
 System.AddCCommand("sin_update", "DownloadLatest()", "re-downloads the SiN-AIFiles");
@@ -168,4 +112,4 @@ function DownloadLatest() -- function from diznq from sfwcl client
 		System.LogAlways("$4[http] Invalid URL given: " .. tostring(url))
 	end
 end;
-printf("$9[$4SiN$9] AISystem: Installation finished!");
+if(printf)then printf("$9[$4SiN$9] AISystem: Installation finished!"); end;
