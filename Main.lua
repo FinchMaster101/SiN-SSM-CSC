@@ -24,8 +24,8 @@ function GNV(vec3)
 end;
 
 SIN_AI_UPDATE_DELAY = 50;
-UPDATE_AI_ENTITIES=true;
-SIN_LOG_VERBOSITY=0
+UPDATE_AI_ENTITIES = true;
+SIN_LOG_VERBOSITY = 0
 
 
 function cmpvec(v1,v2,a,b,c)
@@ -53,7 +53,7 @@ function TryGetDir(entity)
 	end;
 end;
 
-function TryGetMOARDir(entity) -- probably needs an update dunno 
+function TryGetMOARDir(entity) -- not used anymore
 	if(entity.lastHitDirection)then
 		return entity.lastHitDirection;
 	else
@@ -133,9 +133,7 @@ function ToggleAIUpdate()
 	end;
 end;
 System.AddCCommand("sin_aiLogVerbosity", "SetAILogVerbosity(%%)", "Sets the new SiN-AISystem logging verbosity");
---System.AddCCommand("sin_aiUpdateDelay", "SetAIUpdateRate(%%)", "Sets the new SiN-AISystem updating Delay");
 System.AddCCommand("sin_aiUpdateSystem", "ToggleAIUpdate()", "if true, AI Entities will be updated and relocated to their correct position");
-
 System.AddCCommand("sin_update", "DownloadLatest()", "re-downloads the SiN-AIFiles");
 
 function DownloadLatest() -- function from diznq from sfwcl client
@@ -170,51 +168,4 @@ function DownloadLatest() -- function from diznq from sfwcl client
 		System.LogAlways("$4[http] Invalid URL given: " .. tostring(url))
 	end
 end;
-PerformanceControl = {
-	enabled = true;
-	limits = {
-		{ 20, 500 };
-		{ 30, 300 };
-		{ 50, 200 };
-		{ 80, 100 };
-		{ 120, 50 };
-		{ 150, 10 };
-		{ 200, 1 };
-	};
-	Update = function(self)
-		if(not self.enabled)then return; end;
-		self.current = 1/(System.GetFrameTime() or 0.0)
-		local newRate, lower = SIN_AI_UPDATEDELAY, 0;
-		for i,limit in pairs(self.limits) do
-			if(self.current<limit[1])then
-				newRate=limit[2];
-				lower=limit[1]
-			end;
-		end;
-		if(newRate~=SIN_AI_UPDATEDELAY)then
-			SIN_AI_UPDATEDELAY = newRate;
-			if(SIN_LOG_VERBOSITY > 2)then
-				printf("$9[$4SiN$9] AI: PerformanceControl set update delay to " .. SIN_AI_UPDATEDELAY);
-			end;
-		end;
-	end;
-	Toggle = function(self)
-		if(not self.enabled)then
-			self.enabled=true;
-		else
-			self.enabled=false;
-		end;
-		return self.enabled;
-	end;
-	SetMode = function(self)
-		printf("$9[$4SiN$9] AI: PerformanceControl has been " .. (self:Toggle() and "enabled" or "disabled"))
-	end;
-};
-
-function SetPerformanceMode()
-	return PerformanceControl:SetMode()
-end;
-
-System.AddCCommand("sin_performanceControl", "SetPerformanceMode()", "toggles the automatic performance control");
-          
 printf("$9[$4SiN$9] AISystem: Installation finished!");
