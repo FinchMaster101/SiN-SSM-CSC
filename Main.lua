@@ -53,7 +53,7 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 	if not (g_gameRules.class == "InstantAction" or g_gameRules.class == "PowerStruggle") then
 		return;
 	end
-	if(g_localActor)then
+	if(g_localActor and g_localActor.Client.OnUpdateNew)then
 		g_localActor.Client:OnUpdateNew(dt)
 	end;
 end
