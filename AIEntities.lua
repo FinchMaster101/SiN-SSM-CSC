@@ -162,4 +162,4 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.07)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.08)")
