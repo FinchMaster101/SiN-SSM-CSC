@@ -197,15 +197,13 @@ function g_localActor:OnAction(action, activation, value)
 			if(ALLOW_EXPERIMENTAL)then
 				--printf("[DEBuG] v = " ..tostring(v))
 			end;
-			if(self.BetaFlyMode and v:GetDriverId()==self.id)then
-				local props = v.BetaAirCraftProperties;
-				
+			if(v.isBetaPlane and v:GetDriverId()==self.id)then
 				if(action=="v_moveforward" and activation=="press")then
-					self.BetaFlyMode = true;
+					v.BetaFlyMode = true;
 				elseif(action=="v_moveforward" and activation=="release")then
-					self.BetaFlyMode = false;
+					v.BetaFlyMode = false;
 				end;
-				if(action=="v_boost" and self.BetaFlyMode)then
+				if(action=="v_boost" and v.BetaFlyMode)then
 					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 100000, 1);
 				end;
 			end;
@@ -213,7 +211,7 @@ function g_localActor:OnAction(action, activation, value)
 	end;
 	
 	if(ALLOW_EXPERIMENTAL)then
-		printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value..")")
+		printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value.."), BetaMode: " .. tostring((v and v.BetaFlyMode or "not in vehicle")));
 	end;
 
 end;
@@ -233,6 +231,7 @@ function g_localActor.Client:OnUpdate(frameTime)
 				end;
 			end;
 		end;
+		printf("Vehicle: " .. tostring(v).." | " .. frameTime)
 	end;
 end
 
