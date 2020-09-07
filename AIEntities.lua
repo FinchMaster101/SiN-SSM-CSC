@@ -111,6 +111,7 @@ function g_localActor:OnAction(action, activation, value)
 			end;
 			--]]
 			vehicle.impMode=nil;
+			vehicle.impDir=nil;
 			if(action=="v_brake")then -- start
 				if(vehicle.plMode==0)then
 					vehicle.plMode=1;
@@ -119,17 +120,17 @@ function g_localActor:OnAction(action, activation, value)
 				end;
 			elseif(action=="v_moveforward")then
 				if(vehicle.plMode==1)then
-					v.impMode=1;
+					vehicle.impMode=1;
 				end;
 			elseif(action=="v_moveback")then
 				if(vehicle.plMode==1)then
 					vehicle.impMode=2;
 				end;
-			elseif(action=="v_rolleft")then
+			elseif(action=="v_rollleft")then
 				if(vehicle.plMode==1)then
 					vehicle.impDir=value+2;
 				end;
-			elseif(action=="v_rolright")then
+			elseif(action=="v_rollright")then
 				if(vehicle.plMode==1)then
 					vehicle.impDir=value;
 				end;
@@ -198,4 +199,4 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.09)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.091)")
