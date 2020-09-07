@@ -34,3 +34,31 @@ SiN=SiN or{
 		end;
 	end;
 };
+
+
+function VehicleLoadModel(vehicleName, modelName, position, angles)
+	local v = System.GetEntityByName(vehicleName);
+	if(v and modelName)then
+		if not v.actor then
+			local model = tostring(modelName);
+			if (string.len(model) > 0) then
+				v:LoadObject(0, "null");
+				local newModel = System.SpawnEntity({class="OffHand", position = v:GetPos(), orientation = v:GetAngles(), name = v:GetName() .. math.random(999) "_" .. math.random(999)});
+				local ext = string.lower(string.sub(model, -4));
+				if ((ext == ".chr") or (ext == ".cdf") or (ext == ".cga")) then
+					newModel:LoadCharacter(0, modelName);
+				else
+					newModel:LoadObject(0, modelName);
+				end
+				newModel:EnablePhysics(false)
+				v:AttachChild(newModel.id, 1);
+				if(position)then
+					newModel:SetLocalPos(position);
+				end;
+				if(angles)then
+					newModel:SetLocalAngles(angles);
+				end;
+			end
+		end
+	end;
+end;
