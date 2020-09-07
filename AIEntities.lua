@@ -96,6 +96,7 @@ function g_localActor:OnAction(action, activation, value)
 	if(vehicleId)then
 		local vehicle = System.GetEntity(vehicleId);
 		if(vehicle)then
+			--[[
 			if(action=="v_moveforward")then
 				if(activation=="press")then
 					vehicle.plMode = 1	
@@ -108,6 +109,31 @@ function g_localActor:OnAction(action, activation, value)
 			else
 				--vehicle.upImp=nil	
 			end;
+			--]]
+			vehicle.impMode=nil;
+			if(action=="v_brake")then -- start
+				if(vehicle.plMode==0)then
+					vehicle.plMode=1;
+				else
+					vehicle.plMode=0;
+				end;
+			elseif(action=="v_moveforward")then
+				if(vehicle.plMode==1)then
+					v.impMode=1;
+				end;
+			elseif(action=="v_moveback")then
+				if(vehicle.plMode==1)then
+					vehicle.impMode=2;
+				end;
+			elseif(action=="v_rolleft")then
+				if(vehicle.plMode==1)then
+					vehicle.impDir=value+2;
+				end;
+			elseif(action=="v_rolright")then
+				if(vehicle.plMode==1)then
+					vehicle.impDir=value;
+				end;
+			end;
 		end;
 		--printf("Vehicle found")
 	end;
@@ -117,15 +143,19 @@ PL_MODE = PL_MODE or 0
 
 function g_localActor:SetPlMode()
 	
-	if(self.plMode == 1)then
+	if(PL_MODE == 1)then
 		PL_MODE = 0;
 	else
 		PL_MODE = 1;
 	end;
-	printf("PLMODE "..PL_MODE)
+	
+	if(ALLOW_EXPERIMENTAL)then
+		printf("PL_MODE = " .. PL_MODE)
+	end;
 end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
+
 function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
 		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
@@ -137,7 +167,13 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - 0.1);
 						if(_time - vehicle.lastImpulseTime >= 0.1)then
 							local dir = vehicle:GetDirectionVector();
-							--if(vehicle.upImp)then dir.z=dir.z+0.5 end;
+							if(vehicle.impMode)then
+								if(vehicle.impMode==1)then
+									dir.z=dir.z-1
+								else
+									dir.z=dir.z+1
+								end;
+							end;
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, 15000, 1);
 							vehicle.lastImpulseTime = _time;
 							--printf("Impulse added !");
@@ -162,4 +198,4 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.08)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.09)")
