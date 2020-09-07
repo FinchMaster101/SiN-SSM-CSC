@@ -113,7 +113,7 @@ end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 function g_localActor.Client:OnUpdateNew(frameTime)
-	if(self.plMode and self.plMode == 1)then
+	if(self.plMode~=nil)then
 		local vehicleId = self.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
