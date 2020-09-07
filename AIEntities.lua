@@ -63,7 +63,7 @@ end
 -- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ::  PLAYER UPDATES  :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
-function g_localActor:OnAction(action, activation, value)
+function Player:OnAction(action, activation, value)
 	-- gamerules needs to get all player actions all times
 	if (g_gameRules and g_gameRules.Client.OnActorAction) then
 		if (not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value)) then
@@ -110,7 +110,7 @@ function g_localActor:OnAction(action, activation, value)
 end;
 
 
-g_localActor:SetPlMode()
+function Player:SetPlMode()
 	if(self.plMode or self.plMode == 1)then
 		self.plMode = 0;
 	else
@@ -120,7 +120,7 @@ printf("PLMODE "..self.plMode)
 end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
-function g_localActor.Client:OnUpdateNew(frameTime)
+function Player.Client:OnUpdateNew(frameTime)
 	if(self.plMode~=nil)then
 		local vehicleId = self.actor:GetLinkedVehicleId();
 		if(vehicleId)then
@@ -150,4 +150,4 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.02)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.03)")
