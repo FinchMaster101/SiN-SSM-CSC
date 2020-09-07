@@ -218,8 +218,8 @@ function g_localActor:OnAction(action, activation, value)
 
 end;
 
-if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = Player.Client.OnUpdate; end;
-function Player.Client:OnUpdate(frameTime)
+if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
+function g_localActor.Client:OnUpdate(frameTime)
 	OLD.Player_ClUpdate(self,frameTime)
 	-- Beta AirCraft testing stuff
 	if(self.actor:GetLinkedVehicleId())then
