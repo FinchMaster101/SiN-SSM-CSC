@@ -196,7 +196,7 @@ function Player:OnAction(action, activation, value)
 		if(v)then
 			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
 				local props = v.BetaAirCraftProperties;
-				if(ALLOW_EXPERIMENTL)then
+				if(ALLOW_EXPERIMENTAL)then
 					printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value..")")
 				end;
 				if(action=="reload" and activation=="press")then
