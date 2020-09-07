@@ -120,11 +120,19 @@ function g_localActor:OnAction(action, activation, value)
 				end;
 			elseif(action=="v_moveforward")then
 				if(vehicle.plMode==1)then
-					vehicle.impMode=1;
+					if(activation=="press")then
+						vehicle.impMode=1;
+					else
+						vehicle.impMode=nil;	
+					end;
 				end;
 			elseif(action=="v_moveback")then
 				if(vehicle.plMode==1)then
-					vehicle.impMode=2;
+					if(activation=="press")then
+						vehicle.impMode=2;
+					else
+						vehicle.impMode=nil;
+					end;
 				end;
 			elseif(action=="v_rollleft" or action=="v_turnleft")then
 				if(vehicle.plMode==1)then
