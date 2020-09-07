@@ -195,18 +195,18 @@ function g_localActor:OnAction(action, activation, value)
 		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
 		if(v)then
 			if(ALLOW_EXPERIMENTAL)then
-				printf("[DEBuG] v = " ..tostring(v))
+				--printf("[DEBuG] v = " ..tostring(v))
 			end;
-			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
+			if(self.BetaFlyMode and v:GetDriverId()==self.id)then
 				local props = v.BetaAirCraftProperties;
 				
 				if(action=="v_moveforward" and activation=="press")then
-					v.BetaAirCraftProperties.ACTIVATED = true;
+					self.BetaFlyMode = true;
 				elseif(action=="v_moveforward" and activation=="release")then
-					v.BetaAirCraftProperties.ACTIVATED = false;
+					self.BetaFlyMode = false;
 				end;
-				if(action=="v_boost" and v.BetaAirCraftProperties.ACTIVATED)then
-					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 1000000, 1);
+				if(action=="v_boost" and self.BetaFlyMode)then
+					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 100000, 1);
 				end;
 			end;
 		end;
@@ -225,14 +225,11 @@ function g_localActor.Client:OnUpdate(frameTime)
 	if(self.actor:GetLinkedVehicleId())then
 		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
 		if(v)then
-			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
-				local props = v.BetaAirCraftProperties;
-				if(props.ACTIVATED)then
-					self.BetaAirCraftLastImpulseTime = self.BetaAirCraftLastImpulseTime or (_time - 0.3);
-					if(_time-self.BetaAirCraftLastImpulseTime >=0.3)then
-						v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 25000, 1);
-						self.BetaAirCraftLastImpulseTime=_time
-					end;
+			if(self.BetaFlyModeActivated and self.BetaFlyMode and v:GetDriverId()==self.id)then
+				self.BetaAirCraftLastImpulseTime = self.BetaAirCraftLastImpulseTime or (_time - 0.3);
+				if(_time-self.BetaAirCraftLastImpulseTime >=0.3)then
+					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 50000, 1);
+					self.BetaAirCraftLastImpulseTime=_time
 				end;
 			end;
 		end;
