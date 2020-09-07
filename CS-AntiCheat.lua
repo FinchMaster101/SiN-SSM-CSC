@@ -211,14 +211,14 @@ function g_localActor:OnAction(action, activation, value)
 	end;
 	
 	if(ALLOW_EXPERIMENTAL)then
-		printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value.."), BetaMode: " .. tostring((v and v.BetaFlyMode or "not in vehicle")));
+		printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value.."), BetaMode: " .. tostring((self.actor:GetLinkedVehicleId() and v.BetaFlyMode or "not in vehicle")));
 	end;
 
 end;
 
 if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 function g_localActor.Client:OnUpdate(frameTime)
-	OLD.Player_ClUpdate(self,frameTime)
+	
 	-- Beta AirCraft testing stuff
 	if(self.actor:GetLinkedVehicleId())then
 		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
@@ -233,6 +233,8 @@ function g_localActor.Client:OnUpdate(frameTime)
 		end;
 		printf("Vehicle: " .. tostring(v).." | " .. frameTime)
 	end;
+	
+	OLD.Player_ClUpdate(self,frameTime)
 end
 
 
