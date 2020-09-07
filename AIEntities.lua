@@ -124,7 +124,7 @@ end;
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
-		local vehicleId = self.actor:GetLinkedVehicleId();
+		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle)then
@@ -156,4 +156,4 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.051)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.061)")
