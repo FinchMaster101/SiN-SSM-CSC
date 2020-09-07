@@ -124,11 +124,15 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 						if(_time - vehicle.lastImpulseTime >= 0.3)then
 							vehicle:AddImpulse(0, vehicle:GetPos(), vehicle:GetDirectionVector(1), 100000, 1);
 							vehicle.lastImpulseTime = _time;
-							printf("Impulse added !")
+							printf("Impulse added !");
 						end;
 					end;
+				else
+					printf("vehicle not in plMode");
 				end;
-			end
+			else
+				printf("vehicle not found");
+			end;
 		else
 		end;
 	else
@@ -138,4 +142,4 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.01)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.02)")
