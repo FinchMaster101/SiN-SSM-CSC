@@ -43,7 +43,7 @@ function VehicleLoadModel(vehicleName, modelName, position, angles)
 			local model = tostring(modelName);
 			if (string.len(model) > 0) then
 				v:LoadObject(0, "null");
-				local newModel = System.SpawnEntity({class="OffHand", position = v:GetPos(), orientation = v:GetAngles(), name = v:GetName() .. math.random(999) "_" .. math.random(999)});
+				local newModel = System.SpawnEntity({class="OffHand", position = v:GetPos(), orientation = v:GetAngles(), name = v:GetName() .. math.random(999) .. "_" .. math.random(999)});
 				local ext = string.lower(string.sub(model, -4));
 				if ((ext == ".chr") or (ext == ".cdf") or (ext == ".cga")) then
 					newModel:LoadCharacter(0, modelName);
