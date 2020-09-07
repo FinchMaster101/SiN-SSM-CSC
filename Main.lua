@@ -53,6 +53,9 @@ SinglePlayer.Client.OnUpdate = function(self, dt)
 	if not (g_gameRules.class == "InstantAction" or g_gameRules.class == "PowerStruggle") then
 		return;
 	end
+	if(g_localActor)then
+		g_localActor.Client:OnUpdateNew(dt)
+	end;
 end
 			
 function SetAILogVerbosity(number)
