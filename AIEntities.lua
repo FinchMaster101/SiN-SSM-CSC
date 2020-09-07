@@ -158,6 +158,8 @@ end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 
+PL_MODE_UPDATE_DELAY = 0.3
+
 function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
 		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
@@ -166,8 +168,8 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 			if(vehicle)then
 				if(vehicle.plMode)then
 					if(vehicle.plMode == 1)then
-						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - 0.1);
-						if(_time - vehicle.lastImpulseTime >= 0.1)then
+						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_UPDATE_DELAY);
+						if(_time - vehicle.lastImpulseTime >= PL_MODE_UPDATE_DELAY)then
 							local dir = vehicle:GetDirectionVector();
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
