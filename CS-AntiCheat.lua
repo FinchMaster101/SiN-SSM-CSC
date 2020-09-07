@@ -191,27 +191,20 @@ function g_localActor:OnAction(action, activation, value)
 	end;
 	
 	
-	if(self.actor:GetLinkedVehicleId())then
-		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
-		if(v)then
-			if(ALLOW_EXPERIMENTAL)then
-				--printf("[DEBuG] v = " ..tostring(v))
-			end;
-			if(v.isBetaPlane and v:GetDriverId()==self.id)then
-				if(action=="v_moveforward" and activation=="press")then
-					v.BetaFlyMode = true;
-				elseif(action=="v_moveforward" and activation=="release")then
-					v.BetaFlyMode = false;
+	local vehicleId = self.actor:GetLinkedVehicleId();
+	if(vehicleId)then
+		local vehicle = System.GetEntity(vehicleId);
+		if(vehicle)then
+			if(action=="v_moveforward")then
+				if(activarion=="press")then
+					v.plMode = 1	
+				else
+					v.plMode = 0;
 				end;
-				if(action=="v_boost" and v.BetaFlyMode)then
-					--v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 300000, 1);
-				end;
+				printf("mode set to " .. v.plMode)
 			end;
 		end;
-	end;
-	
-	if(ALLOW_EXPERIMENTAL)then
-		printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value.."), BetaMode: " .. tostring((self.actor:GetLinkedVehicleId() and v.BetaFlyMode or "not in vehicle")));
+		printf("Vehicle found")
 	end;
 
 end;
@@ -219,21 +212,27 @@ end;
 if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 function g_localActor.Client:OnUpdate(frameTime)
 	
-	-- Beta AirCraft testing stuff
-	if(self.actor:GetLinkedVehicleId())then
-		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
-		if(v)then
-			if(v.isBetaPlane and v.BetaFlyMode and v:GetDriverId()==self.id)then
-				self.BetaAirCraftLastImpulseTime = self.BetaAirCraftLastImpulseTime or (_time - 0.3);
-				if(_time-self.BetaAirCraftLastImpulseTime >=0.3)then
-					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 150000, 1);
-					self.BetaAirCraftLastImpulseTime=_time
+	if(self.plMode and self.plMode == 1)then
+		local vehicleId = self.actor:GetLinkedVehicleId();
+		if(vehicleId)then
+			local vehicle = System.GetEntity(vehicleId);
+			if(vehicle)then
+				if(v.plMode)then
+					if(v.plMode == 1)then
+						v.lastImpulseTime = v.lastImpulseTime or (_time - 0.3);
+						if(_time - v.lastImpulseTime >= 0.3)then
+							v:AddImpulse(0, v:GetPos(), v:GetDirectionVector(1), 100000, 1);
+							v.lastImpulseTime = _time;
+
+							printf("Impulse added !")
+						end;
+					end;
 				end;
 			end;
 		end;
-		
+	else
+		printf("plMode == 0")
 	end;
-	printf("Vehicle: " .. tostring(v).." | " .. frameTime)
 	OLD.Player_ClUpdate(self,frameTime)
 end
 
