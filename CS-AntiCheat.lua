@@ -204,7 +204,7 @@ function g_localActor:OnAction(action, activation, value)
 					v.BetaFlyMode = false;
 				end;
 				if(action=="v_boost" and v.BetaFlyMode)then
-					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 100000, 1);
+					--v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 300000, 1);
 				end;
 			end;
 		end;
@@ -223,10 +223,10 @@ function g_localActor.Client:OnUpdate(frameTime)
 	if(self.actor:GetLinkedVehicleId())then
 		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
 		if(v)then
-			if(self.BetaFlyModeActivated and self.BetaFlyMode and v:GetDriverId()==self.id)then
+			if(v.isBetaPlane and v.BetaFlyMode and v:GetDriverId()==self.id)then
 				self.BetaAirCraftLastImpulseTime = self.BetaAirCraftLastImpulseTime or (_time - 0.3);
 				if(_time-self.BetaAirCraftLastImpulseTime >=0.3)then
-					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 50000, 1);
+					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 150000, 1);
 					self.BetaAirCraftLastImpulseTime=_time
 				end;
 			end;
