@@ -138,7 +138,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 						if(_time - vehicle.lastImpulseTime >= 0.1)then
 							local dir = vehicle:GetDirectionVector();
 							--if(vehicle.upImp)then dir.z=dir.z+0.5 end;
-							vehicle:AddImpulse(0, vehicle:GetPos(), dir, 15000, 1);
+							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, 15000, 1);
 							vehicle.lastImpulseTime = _time;
 							--printf("Impulse added !");
 						end;
