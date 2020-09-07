@@ -132,7 +132,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 					if(vehicle.plMode == 1)then
 						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - 0.3);
 						if(_time - vehicle.lastImpulseTime >= 0.3)then
-							vehicle:AddImpulse(0, vehicle:GetPos(), vehicle:GetDirectionVector(1), 100000, 1);
+							vehicle:AddImpulse(0, vehicle:GetPos(), vehicle:GetDirectionVector(1), 15000, 1);
 							vehicle.lastImpulseTime = _time;
 							printf("Impulse added !");
 						end;
