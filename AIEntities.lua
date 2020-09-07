@@ -105,7 +105,7 @@ function g_localActor:OnAction(action, activation, value)
 				printf("mode set to " .. vehicle.plMode)
 			end;
 		end;
-		printf("Vehicle found")
+		--printf("Vehicle found")
 	end;
 end;
 
@@ -130,10 +130,9 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 				end;
 			end
 		else
-			printf("No vehicle found for :Update()")
 		end;
 	else
-		printf("plMode == 0")
+		printf("plMode == "..self.plMode)
 	end;
 	--OLD.Player_ClUpdate(self,frameTime)
 end
