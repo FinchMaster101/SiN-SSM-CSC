@@ -144,7 +144,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		else
 		end;
 	else
-		printf("plMode == "..tostring(self.plMode or "nil"))
+		--printf("plMode == "..tostring(self.plMode or "nil"))
 	end;
 	--OLD.Player_ClUpdate(self,frameTime)
 end
