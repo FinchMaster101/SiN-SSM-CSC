@@ -197,11 +197,11 @@ function g_localActor:OnAction(action, activation, value)
 		if(vehicle)then
 			if(action=="v_moveforward")then
 				if(activarion=="press")then
-					v.plMode = 1	
+					vehicle.plMode = 1	
 				else
-					v.plMode = 0;
+					vehicle.plMode = 0;
 				end;
-				printf("mode set to " .. v.plMode)
+				printf("mode set to " .. vehicle.plMode)
 			end;
 		end;
 		printf("Vehicle found")
@@ -217,18 +217,20 @@ function g_localActor.Client:OnUpdate(frameTime)
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle)then
-				if(v.plMode)then
-					if(v.plMode == 1)then
-						v.lastImpulseTime = v.lastImpulseTime or (_time - 0.3);
-						if(_time - v.lastImpulseTime >= 0.3)then
-							v:AddImpulse(0, v:GetPos(), v:GetDirectionVector(1), 100000, 1);
-							v.lastImpulseTime = _time;
+				if(vehicle.plMode)then
+					if(vehicle.plMode == 1)then
+						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - 0.3);
+						if(_time - vehicle.lastImpulseTime >= 0.3)then
+							vehicle:AddImpulse(0, vehicle:GetPos(), vehicle:GetDirectionVector(1), 100000, 1);
+							vehicle.lastImpulseTime = _time;
 
 							printf("Impulse added !")
 						end;
 					end;
 				end;
 			end;
+		else
+			printf("No vehicle found for :Update()")
 		end;
 	else
 		printf("plMode == 0")
@@ -240,4 +242,4 @@ end
 
 
 
-System.Log("$9[$4SiN$9] CSC Installed!")
+System.Log("$9[$4SiN$9] CSC Installed! (1.01)")
