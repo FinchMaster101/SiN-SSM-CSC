@@ -197,9 +197,9 @@ function g_localActor:OnAction(action, activation, value)
 			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
 				local props = v.BetaAirCraftProperties;
 				
-				if(action=="reload" and activation=="press")then
+				if(action=="v_moveforward" and activation=="press")then
 					v.BetaAirCraftProperties.ACTIVATED = true;
-				elseif(action=="reload")then
+				elseif(action=="v_moveforward" and activation=="release")then
 					v.BetaAirCraftProperties.ACTIVATED = false;
 				end;
 				if(action=="v_boost" and v.BetaAirCraftProperties.ACTIVATED)then
