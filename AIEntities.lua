@@ -158,7 +158,7 @@ end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 
-PL_MODE_UPDATE_DELAY = 0.5
+PL_MODE_UPDATE_DELAY = 0.3
 
 function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
@@ -202,6 +202,13 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 	--OLD.Player_ClUpdate(self,frameTime)
 end
 
+function table.copy(orig)
+	local copied = {};
+	for key, value in pairs(orig) do
+		copied[key] = value;
+	end;
+	return copied;
+end;
 
 function CalcPosInFront(entity, distance, height)
 
@@ -218,4 +225,4 @@ function CalcPosInFront(entity, distance, height)
 end;
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.13)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.14)")
