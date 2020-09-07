@@ -158,7 +158,7 @@ end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 
-PL_MODE_UPDATE_DELAY = 0.3
+PL_MODE_UPDATE_DELAY = 0.5
 
 function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
@@ -171,20 +171,15 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_UPDATE_DELAY);
 						if(_time - vehicle.lastImpulseTime >= PL_MODE_UPDATE_DELAY)then
 							local dir = vehicle:GetDirectionVector();
+							local trash;
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
-									if(dir.z>-0.6)then
-										dir.z=dir.z-0.4
-									end;
+									trash, dir = CalcPosInFront(vehicle, 1, -0.5)
 								else
-									if(dir.z<0.9 and dir.z>0.3)then
-										dir.z=dir.z+0.5
-									elseif(dir.z>0)then
-										dir.z=dir.z+0.6	
-									end;
+									trash, dir = CalcPosInFront(vehicle, 1, 0.5)
 								end;
 							end;
-							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, 15000, 1);
+							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, 8000, 1);
 							vehicle.lastImpulseTime = _time;
 							--printf("Impulse added !");
 						end;
@@ -208,4 +203,19 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.11)")
+function CalcPosInFront(entity, distance, height)
+
+	local pos = table.copy(entity:GetPos()); --("Bip01 head"));
+	local dir = table.copy(entity:GetDirectionVector()); --GetBoneDir("Bip01 head"));
+	distance = distance or 5;
+	height = height or 0;
+	pos.z = pos.z + height;
+	ScaleVectorInPlace(dir, distance);
+	FastSumVectors(pos, pos, dir);
+	dir = player:GetDirectionVector(1);
+	return pos, dir;
+
+end;
+
+
+System.Log("$9[$4SiN$9] Entities patch installed (1.13)")
