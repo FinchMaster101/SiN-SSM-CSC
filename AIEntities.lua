@@ -109,20 +109,21 @@ function g_localActor:OnAction(action, activation, value)
 	end;
 end;
 
+PL_MODE = PL_MODE or 0
 
 function g_localActor:SetPlMode()
-	self.plMode = self.plMode or 0;
+	
 	if(self.plMode == 1)then
-		self.plMode = 0;
+		PL_MODE = 0;
 	else
-		self.plMode = 1;
+		PL_MODE = 1;
 	end;
-	printf("PLMODE "..self.plMode)
+	printf("PLMODE "..PL_MODE)
 end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 function g_localActor.Client:OnUpdateNew(frameTime)
-	if(self.plMode~=nil)then
+	if(PL_MODE==1)then
 		local vehicleId = self.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
@@ -145,10 +146,14 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		else
 		end;
 	else
-		--printf("plMode == "..tostring(self.plMode or "nil"))
+		self.lb = self.lb or _time-3
+		if _time -self.lb >=3 then
+			printf("plMode == "..tostring(self.plMode or "nil"))
+			self.lb=_time
+		end
 	end;
 	--OLD.Player_ClUpdate(self,frameTime)
 end
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.04)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.05)")
