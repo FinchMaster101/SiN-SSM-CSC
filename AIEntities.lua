@@ -110,6 +110,14 @@ function g_localActor:OnAction(action, activation, value)
 end;
 
 
+g_localActor:SetPlMode()
+	if(self.plMode or self.plMode == 1)then
+		self.plMode = 0;
+	else
+		self.plMode = 1;
+	end;
+printf("PLMODE "..self.plMode)
+end;
 
 --if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
 function g_localActor.Client:OnUpdateNew(frameTime)
