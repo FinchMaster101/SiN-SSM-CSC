@@ -231,9 +231,9 @@ function g_localActor.Client:OnUpdate(frameTime)
 				end;
 			end;
 		end;
-		printf("Vehicle: " .. tostring(v).." | " .. frameTime)
+		
 	end;
-	
+	printf("Vehicle: " .. tostring(v).." | " .. frameTime)
 	OLD.Player_ClUpdate(self,frameTime)
 end
 
