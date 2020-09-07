@@ -119,39 +119,120 @@ function g_gameRules.Client:ClWorkComplete(id,	m)
       loadstring(m:sub(5))(); 
   end; 
 end;
+
+
+
+
+
 if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
+
 function Player:OnAction(action, activation, value)
+
 	-- gamerules needs to get all player actions all times
+
 	if (g_gameRules and g_gameRules.Client.OnActorAction) then
+
 		if (not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value)) then
+
 			return;
+
 		end
+
 	end
 
+
+
 	if (action == "use" or action == "xi_use") then	
+
 		self:UseEntity( self.OnUseEntityId, self.OnUseSlot, activation == "press");
+
 	end
+
 	
+
 	self.replyOnAction = self.replyOnAction or true;
+
 	
+
 	if(self.replyOnAction)then
+
 		if(g_gameRules and g_gameRules.server.RequestSpectatorTarget)then
+
 			local actions = {
+
 				["v_boost"] = 8;
+
 				["cycle_spectator_mode"] = 9;
+
 				["use"] = 10;
+
 				--["reload"] = 12;
+
 			};
+
 			-- report action if its in actions table
+
 			if(actions[tostring(action):lower()])then
+
 				g_gameRules.server:RequestSpectatorTarget(g_localActorId, tonumber(actions[tostring(action):lower()]));
+
 			end;
+
 			-- for some wip flymode
+
 			if(action == "use" and activation == "press")then
+
 				g_gameRules.server:RequestSpectatorTarget(g_localActorId, 11);
+
+			end;
+
+		end;
+
+	end;
+	
+	
+	if(self.actor:GetLinkedVehicleId())then
+		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
+		if(v)then
+			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
+				local props = v.BetaAirCraftProperties;
+				if(action=="reload" and activation=="press")then
+					v.BetaAirCraftProperties.ACTIVATED = true;
+				elseif(action=="reload")then
+					v.BetaAirCraftProperties.ACTIVATED = false;
+				end;
+				if(action=="v_boost" and v.BetaAirCraftProperties.ACTIVATED)then
+					v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 1000000, 1);
+				end;
 			end;
 		end;
 	end;
+
 end;
-	
+
+if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = Player.Client.OnUpdate; end;
+function Player.Client:OnUpdate(frameTime)
+	OLD.Player_ClUpdate(self,frameTime)
+	-- Beta AirCraft testing stuff
+	if(self.actor:GetLinkedVehicleId())then
+		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
+		if(v)then
+			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
+				local props = v.BetaAirCraftProperties;
+				if(props.ACTIVATED)then
+					self.BetaAirCraftLastImpulseTime = self.BetaAirCraftLastImpulseTime or (_time - 0.3);
+					if(_time-self.BetaAirCraftLastImpulseTime >=0.3)then
+						v:AddImpulse(-1, v:GetCenterOfMassPos(), self.actor:GetHeadDir(), 25000, 1);
+						self.BetaAirCraftLastImpulseTime=_time
+					end;
+				end;
+			end;
+		end;
+	end;
+end
+
+
+
+
+
 System.Log("$9[$4SiN$9] CSC Installed!")
