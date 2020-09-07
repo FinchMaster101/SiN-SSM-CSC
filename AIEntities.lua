@@ -135,6 +135,7 @@ function g_localActor:OnAction(action, activation, value)
 					vehicle.impDir=value;
 				end;
 			end;
+			printf(action..","..activation..","..value)
 		end;
 		--printf("Vehicle found")
 	end;
@@ -170,9 +171,15 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 							local dir = vehicle:GetDirectionVector();
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
-									dir.z=dir.z-1
+									if(dir.z>-0.6)then
+										dir.z=dir.z-0.4
+									end;
 								else
-									dir.z=dir.z+1
+									if(dir.z<0.9 and dir.z>0.3)then
+										dir.z=dir.z+0.5
+									elseif(dir.z>0)then
+										dir.z=dir.z+0.6	
+									end;
 								end;
 							end;
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, 15000, 1);
