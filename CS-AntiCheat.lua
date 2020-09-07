@@ -126,7 +126,7 @@ end;
 
 if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
 
-function Player:OnAction(action, activation, value)
+function g_localActor:OnAction(action, activation, value)
 
 	-- gamerules needs to get all player actions all times
 
@@ -196,9 +196,7 @@ function Player:OnAction(action, activation, value)
 		if(v)then
 			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
 				local props = v.BetaAirCraftProperties;
-				if(ALLOW_EXPERIMENTAL)then
-					printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value..")")
-				end;
+				
 				if(action=="reload" and activation=="press")then
 					v.BetaAirCraftProperties.ACTIVATED = true;
 				elseif(action=="reload")then
@@ -209,6 +207,10 @@ function Player:OnAction(action, activation, value)
 				end;
 			end;
 		end;
+	end;
+	
+	if(ALLOW_EXPERIMENTAL)then
+		printf("[DEBuG] Player:OnAction("..action..", "..activation..", "..value..")")
 	end;
 
 end;
