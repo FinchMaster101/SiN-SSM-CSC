@@ -36,7 +36,7 @@ SiN=SiN or{
 };
 
 
-function VehicleLoadModel(vehicleName, modelName, position, angles)
+function VehicleLoadModel(vehicleName, modelName, position, angles,physics)
 	local v = System.GetEntityByName(vehicleName);
 	if(v and modelName)then
 		if not v.actor then
@@ -54,7 +54,7 @@ function VehicleLoadModel(vehicleName, modelName, position, angles)
 					System.RemoveEntity(v.cModel);
 				end;
 				v.cModel = newModel.id;
-				newModel:EnablePhysics(false)
+				if(not physics)then newModel:EnablePhysics(false); end;
 				v:AttachChild(newModel.id, 1);
 				if(position)then
 					newModel:SetLocalPos(position);
