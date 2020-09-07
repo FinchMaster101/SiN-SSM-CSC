@@ -219,10 +219,10 @@ function CalcPosInFront(entity, distance, height)
 	pos.z = pos.z + height;
 	ScaleVectorInPlace(dir, distance);
 	FastSumVectors(pos, pos, dir);
-	dir = player:GetDirectionVector(1);
+	dir = entity:GetDirectionVector(1);
 	return pos, dir;
 
 end;
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.14)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.15)")
