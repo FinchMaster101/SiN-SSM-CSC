@@ -174,9 +174,9 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 							local trash;
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
-									trash, dir = CalcPosInFront(vehicle, 1, -0.5)
+									dir.z = dir.z - 0.5
 								else
-									trash, dir = CalcPosInFront(vehicle, 1, 0.5)
+									dir.z = dir.z + 0.5
 								end;
 							end;
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, 8000, 1);
@@ -225,4 +225,4 @@ function CalcPosInFront(entity, distance, height)
 end;
 
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.15)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.151)")
