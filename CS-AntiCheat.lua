@@ -194,6 +194,9 @@ function g_localActor:OnAction(action, activation, value)
 	if(self.actor:GetLinkedVehicleId())then
 		local v = System.GetEntity(self.actor:GetLinkedVehicleId());
 		if(v)then
+			if(ALLOW_EXPERIMENTAL)then
+				printf("[DEBuG] v = " ..tostring(v))
+			end;
 			if(v.IsBetaAircraft and v:GetDriverId()==self.id)then
 				local props = v.BetaAirCraftProperties;
 				
