@@ -5,7 +5,7 @@ if(not Scout)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Scout.lua") en
 if(not Observer)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Observer.lua") end;
 if(not Trooper)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Trooper.lua") end;
 
-if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier.
+if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier. 
 
 function TryGetDir(entity)
 	entity.lastPos = entity.lastPos or entity:GetPos();
