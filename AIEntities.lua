@@ -280,4 +280,30 @@ function SetPLModeDir(a, b)
 end;
 System.AddCCommand("plm_dirVectors","SetPLModeDir(%%)","")
 ---------------------------------------------------------------------
-System.Log("$9[$4SiN$9] Entities patch installed (1.25)")
+if(not PL_MODE_USE_PLAYER_DIR)then
+	PL_MODE_USE_PLAYER_DIR = false;
+end;
+---------------------------------------------------------------------
+function ToggleUsePlayerDir()
+	if(PL_MODE_USE_PLAYER_DIR)then
+		PL_MODE_USE_PLAYER_DIR = false;
+	else
+		PL_MODE_USE_PLAYER_DIR = true;
+	end;
+	printf("$9[$8PlMode$9] Impulse: Using now " .. (PL_MODE_USE_PLAYER_DIR and "Player head" or "default") .. " direction");
+	return true;
+end;
+System.AddCCommand("plm_impMode","ToggleUsePlayerDir()","")
+---------------------------------------------------------------------
+function TogglePLMode()
+	if(PL_MODE==1)then
+		PL_MODE = 0;
+	else
+		PL_MODE = 1;
+	end;
+	printf("$9[$8PlMode$9] " .. (PL_MODE==1 and "activated" or "deactivated"));
+	return true;
+end;
+System.AddCCommand("plm_toggle","TogglePLMode()","")
+---------------------------------------------------------------------
+System.Log("$9[$4SiN$9] Entities patch installed (1.31)")
