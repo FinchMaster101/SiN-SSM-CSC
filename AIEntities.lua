@@ -265,7 +265,7 @@ function SetPLModeDir(a, b)
 	a = tonumber(a);
 	b = tonumber(b);
 	if(not a)then
-		printf("$9[$8PlMode$9] DirU: " .. PL_MODE_DIR_UP .. " DirD: " .. pl_MODE_DIR_DOWN)
+		printf("$9[$8PlMode$9] DirU: " .. PL_MODE_DIR_UP .. " DirD: " .. PL_MODE_DIR_DOWN)
 		return true;
 	end;
 	if(a)then 
@@ -280,4 +280,4 @@ function SetPLModeDir(a, b)
 end;
 System.AddCCommand("plm_dirVectors","SetPLModeDir(%%)","")
 ---------------------------------------------------------------------
-System.Log("$9[$4SiN$9] Entities patch installed (1.24)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.25)")
