@@ -213,10 +213,6 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 									--dir.z = dir.z + PL_MODE_DIR_UP; -- unused
 								end;
 							end;
-							if(PL_MODE_REORIENTATE_VEHICLE and PL_MODE_USE_PLAYER_DIR)then
-								-- !!TODO!! add something to smoothen the movement
-								vehicle:SetDirectionVector(dir);
-							end;
 							
 							-- >> so it wont instantly have full speed :)
 							PL_MODE_CURR_IMPULSE_AMOUNT = (PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME); -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
@@ -228,6 +224,12 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 									
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_CURR_IMPULSE_AMOUNT, 1);
 							vehicle.lastImpulseTime = _time;
+							
+							
+							if(PL_MODE_REORIENTATE_VEHICLE and PL_MODE_USE_PLAYER_DIR)then
+								-- !!TODO!! add something to smoothen the movement
+								vehicle:SetDirectionVector(dir);
+							end;
 							--printf("Impulse added !");
 						end;
 					end;
@@ -349,4 +351,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.8a)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8.1a)")
