@@ -148,14 +148,24 @@ function g_localActor:SetPlMode()
 	end;
 	
 	if(ALLOW_EXPERIMENTAL)then
-		printf("PL_MODE = " .. PL_MODE)
+		printf("$9[$8PlMode$9] PL_MODE = " .. PL_MODE);
 	end;
 end;
 ---------------------------------------------------------------------
-if(not PL_MODE_BASE_RATE)then PL_MODE_UPDATE_DELAY = 0.3 end;
+if(not PL_MODE_BASE_RATE)then 
+	PL_MODE_UPDATE_DELAY = 0.3;
+end;
 ---------------------------------------------------------------------
 if(not PL_MODE_BASE_SPEED)then
 	PL_MODE_BASE_SPEED = 10000;
+end;
+---------------------------------------------------------------------
+if(not PL_MODE_DIR_UP)then
+	PL_MODE_DIR_UP = 0.5;
+end;
+---------------------------------------------------------------------
+if(not PL_MODE_DIR_DOWN)then
+	PL_MODE_DIR_DOWN = 0.5;
 end;
 ---------------------------------------------------------------------
 function g_localActor.Client:OnUpdateNew(frameTime)
@@ -172,12 +182,12 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 							local trash;
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
-									dir.z = dir.z - 0.5
+									dir.z = dir.z - PL_MODE_DIR_DOWN;
 								elseif(vehicle.impMode==2)then
-									dir.z = dir.z + 0.5
+									dir.z = dir.z + PL_MODE_DIR_UP;
 								end;
 							end;
-							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, 8000, 1);
+							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_BASE_SPEED, 1);
 							vehicle.lastImpulseTime = _time;
 							--printf("Impulse added !");
 						end;
@@ -251,4 +261,23 @@ function SetPLModeRate(a)
 end;
 System.AddCCommand("plm_updateRate","SetPLModeRate(%%)","")
 ---------------------------------------------------------------------
-System.Log("$9[$4SiN$9] Entities patch installed (1.21)")
+function SetPLModeDir(a, b)
+	a = tonumber(a);
+	b = tonumber(b);
+	if(not a)then
+		printf("$9[$8PlMode$9] DirU: " .. PL_MODE_DIR_UP .. " DirD: " .. pl_MODE_DIR_DOWN)
+		return true;
+	end;
+	if(a)then 
+		PL_MODE_DIR_UP = ((a>-3 and a<3) and a or 0.0); 
+		printf("$9[$8PlMode$9] DirU: " .. PL_MODE_DIR_UP)
+	end;
+	if(b)then 
+		PL_MODE_DIR_DOWN = ((b>-3 and b<3) and b or 0.0); 
+		printf("$9[$8PlMode$9] DirD: " .. PL_MODE_DIR_DOWN)
+	end;
+	return true;
+end;
+System.AddCCommand("plm_dirVectors","SetPLModeDir(%%)","")
+---------------------------------------------------------------------
+System.Log("$9[$4SiN$9] Entities patch installed (1.24)")
