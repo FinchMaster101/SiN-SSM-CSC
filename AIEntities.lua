@@ -159,7 +159,7 @@ function g_localActor:SetPlMode()
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_BASE_RATE)then 
-	PL_MODE_UPDATE_DELAY = 0.3; -- update delay (in seconds)
+	PL_MODE_BASE_RATE = 0.3; -- update delay (in seconds)
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_BASE_SPEED)then
@@ -360,4 +360,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.8.4a)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8.5a)")
