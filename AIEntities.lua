@@ -298,7 +298,7 @@ function ToggleUsePlayerDir()
 	printf("$9[$8PlMode$9] Impulse: Using now " .. (PL_MODE_USE_PLAYER_DIR and "Player head" or "default") .. " direction");
 	return true;
 end;
-System.AddCCommand("plm_impMode","ToggleUsePlayerDir()","")
+System.AddCCommand("plm_usePlayerHeadDir","ToggleUsePlayerDir()","")
 ---------------------------------------------------------------------
 function TogglePLMode()
 	if(PL_MODE==1)then
@@ -323,4 +323,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.341)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.343)")
