@@ -98,16 +98,20 @@ function g_localActor:OnAction(action, activation, value)
 		if(vehicle)then
 			--vehicle.impMode=nil;
 			--vehicle.impDir=nil;
+			
+			PL_MODE_TIME = _time; -- not sure where to place this.
+			
 			if(action=="v_brake")then -- start
 				if(vehicle.plMode==0)then
 					vehicle.plMode=1;
+					
 				else
 					vehicle.plMode=0;
 				end;
 			elseif(action=="v_moveforward")then
 				if(vehicle.plMode==1)then
 					if(activation=="press")then
-						printf("Mode=1 | DOWN");
+						--printf("Mode=1 | DOWN");
 						vehicle.impMode=1;
 					else
 						vehicle.impMode=nil;	
@@ -116,7 +120,7 @@ function g_localActor:OnAction(action, activation, value)
 			elseif(action=="v_moveback")then
 				if(vehicle.plMode==1)then
 					if(activation=="press")then
-						printf("Mode=2 | UP");
+						--printf("Mode=2 | UP");
 						vehicle.impMode=2;
 					else
 						vehicle.impMode=nil;
@@ -155,27 +159,39 @@ function g_localActor:SetPlMode()
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_BASE_RATE)then 
-	PL_MODE_UPDATE_DELAY = 0.3;
+	PL_MODE_UPDATE_DELAY = 0.3; -- update delay (in seconds)
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_BASE_SPEED)then
-	PL_MODE_BASE_SPEED = 10000;
+	PL_MODE_BASE_SPEED = 10000; -- base speed
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_DIR_UP)then
-	PL_MODE_DIR_UP = 0.5;
+	PL_MODE_DIR_UP = 0.5; -- unused
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_DIR_DOWN)then
-	PL_MODE_DIR_DOWN = 0.5;
+	PL_MODE_DIR_DOWN = 0.5; -- unused
 end;
 ---------------------------------------------------------------------
 if(PL_MODE_REORIENTATE_VEHICLE==nil)then
-	PL_MODE_REORIENTATE_VEHICLE = false;
+	PL_MODE_REORIENTATE_VEHICLE = false; -- reorientate vehicle?
 end;
 ---------------------------------------------------------------------
 if(PL_MODE_USE_PLAYER_DIR==nil)then
-	PL_MODE_USE_PLAYER_DIR = false;
+	PL_MODE_USE_PLAYER_DIR = false; -- if true, uses player head dir instead of vehicle dir.
+end;
+---------------------------------------------------------------------
+if(not PL_MODE_STARTUP_TIME)then
+	PL_MODE_STARTUP_TIME = 10; -- maybe cvar?
+end;
+---------------------------------------------------------------------
+if(not PL_MODE_TIME)then
+	PL_MODE_TIME = 0; -- time when PlMode was enabled on vehicle
+end;
+---------------------------------------------------------------------
+if(not PL_MODE_STARTUP_ADDTIME)then
+	PL_MODE_STARTUP_ADDTIME = 10; -- maybe cvar?
 end;
 ---------------------------------------------------------------------
 function g_localActor.Client:OnUpdateNew(frameTime)
@@ -192,15 +208,25 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 							local trash;
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
-									dir.z = dir.z - PL_MODE_DIR_DOWN;
+									--dir.z = dir.z - PL_MODE_DIR_DOWN; -- unused
 								elseif(vehicle.impMode==2)then
-									dir.z = dir.z + PL_MODE_DIR_UP;
+									--dir.z = dir.z + PL_MODE_DIR_UP; -- unused
 								end;
 							end;
 							if(PL_MODE_REORIENTATE_VEHICLE and PL_MODE_USE_PLAYER_DIR)then
+								-- !!TODO!! add something to smoothen the movement
 								vehicle:SetDirectionVector(dir);
 							end;
-							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_BASE_SPEED, 1);
+							
+							-- >> so it wont instantly have full speed :)
+							PL_MODE_CURR_IMPULSE_AMOUNT = (PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME); -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
+							PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
+							if(_time - PL_MODE_TIME > PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME and not PL_MODE_CURR_IMPULSE_AMOUNT>=PL_MODE_BASE_SPEED)then -- !!prevent Infinite impulseadd
+								PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
+							end;
+							-- <<
+									
+							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_CURR_IMPULSE_AMOUNT, 1);
 							vehicle.lastImpulseTime = _time;
 							--printf("Impulse added !");
 						end;
@@ -323,4 +349,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.5)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8a)")
