@@ -96,22 +96,8 @@ function g_localActor:OnAction(action, activation, value)
 	if(vehicleId)then
 		local vehicle = System.GetEntity(vehicleId);
 		if(vehicle)then
-			--[[
-			if(action=="v_moveforward")then
-				if(activation=="press")then
-					vehicle.plMode = 1	
-				else
-					vehicle.plMode = 0;
-				end;
-				--printf("mode set to " .. vehicle.plMode)
-			elseif(action=="v_brake")then
-				--vehicle.upImp=true
-			else
-				--vehicle.upImp=nil	
-			end;
-			--]]
-			vehicle.impMode=nil;
-			vehicle.impDir=nil;
+			--vehicle.impMode=nil;
+			--vehicle.impDir=nil;
 			if(action=="v_brake")then -- start
 				if(vehicle.plMode==0)then
 					vehicle.plMode=1;
@@ -121,6 +107,7 @@ function g_localActor:OnAction(action, activation, value)
 			elseif(action=="v_moveforward")then
 				if(vehicle.plMode==1)then
 					if(activation=="press")then
+						printf("Mode=1 | DOWN
 						vehicle.impMode=1;
 					else
 						vehicle.impMode=nil;	
@@ -129,6 +116,7 @@ function g_localActor:OnAction(action, activation, value)
 			elseif(action=="v_moveback")then
 				if(vehicle.plMode==1)then
 					if(activation=="press")then
+						printf("Mode=2 | UP")
 						vehicle.impMode=2;
 					else
 						vehicle.impMode=nil;
@@ -143,14 +131,14 @@ function g_localActor:OnAction(action, activation, value)
 					vehicle.impDir=value;
 				end;
 			end;
-			printf(action..","..activation..","..value)
+			--printf(action..","..activation..","..value)
 		end;
 		--printf("Vehicle found")
 	end;
 end;
-
-PL_MODE = PL_MODE or 0
-
+---------------------------------------------------------------------
+if(not PL_MODE)then PL_MODE = 0; end;
+---------------------------------------------------------------------
 function g_localActor:SetPlMode()
 	
 	if(PL_MODE == 1)then
@@ -163,11 +151,13 @@ function g_localActor:SetPlMode()
 		printf("PL_MODE = " .. PL_MODE)
 	end;
 end;
-
---if(not OLD.Player_ClUpdate)then OLD.Player_CLUpdate = g_localActor.Client.OnUpdate; end;
-
-PL_MODE_UPDATE_DELAY = 0.3
-
+---------------------------------------------------------------------
+if(not PL_MODE_BASE_RATE)then PL_MODE_UPDATE_DELAY = 0.3 end;
+---------------------------------------------------------------------
+if(not PL_MODE_BASE_SPEED)then
+	PL_MODE_BASE_SPEED = 10000;
+end;
+---------------------------------------------------------------------
 function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
 		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
@@ -176,14 +166,14 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 			if(vehicle)then
 				if(vehicle.plMode)then
 					if(vehicle.plMode == 1)then
-						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_UPDATE_DELAY);
-						if(_time - vehicle.lastImpulseTime >= PL_MODE_UPDATE_DELAY)then
+						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_BASE_RATE);
+						if(_time - vehicle.lastImpulseTime >= PL_MODE_BASE_RATE)then
 							local dir = vehicle:GetDirectionVector();
 							local trash;
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
 									dir.z = dir.z - 0.5
-								else
+								elseif(vehicle.impMode==2)then
 									dir.z = dir.z + 0.5
 								end;
 							end;
@@ -209,7 +199,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 	end;
 	--OLD.Player_ClUpdate(self,frameTime)
 end
-
+---------------------------------------------------------------------
 function table.copy(orig)
 	local copied = {};
 	for key, value in pairs(orig) do
@@ -217,7 +207,7 @@ function table.copy(orig)
 	end;
 	return copied;
 end;
-
+---------------------------------------------------------------------
 function CalcPosInFront(entity, distance, height)
 
 	local pos = table.copy(entity:GetPos()); --("Bip01 head"));
@@ -232,5 +222,33 @@ function CalcPosInFront(entity, distance, height)
 
 end;
 
-
+---------------------------------------------------------------------
+if(not PL_MODE_BASE_RATE)then
+	PL_MODE_BASE_RATE = 0.3;
+end;
+---------------------------------------------------------------------
+function SetPLModeSpeed(a)
+	a = tonumber(a);
+	if(not a)then
+		printf("$9[$8PlMode$9] BaseSpeed: " .. PL_MODE_BASE_SPEED)
+		return true;
+	end;
+	PL_MODE_BASE_SPEED = (a>1 and a or 1);
+	printf("$9[$8PlMode$9] BaseSpeed: " .. PL_MODE_BASE_SPEED)
+	return true;
+end;
+System.AddCCommand("plm_speed","SetPLModeSpeed(%%)","")
+---------------------------------------------------------------------
+function SetPLModeRate(a)
+	a = tonumber(a);
+	if(not a)then
+		printf("$9[$8PlMode$9] BaseRate: " .. PL_MODE_BASE_RATE)
+		return true;
+	end;
+	PL_MODE_BASE_RATE = (a>0.0 and a or 0.0);
+	printf("$9[$8PlMode$9] BaseRate: " .. PL_MODE_BASE_RATE)
+	return true;
+end;
+System.AddCCommand("plm_updateRate","SetPLModeRate(%%)","")
+---------------------------------------------------------------------
 System.Log("$9[$4SiN$9] Entities patch installed (1.151)")
