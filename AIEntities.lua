@@ -183,15 +183,15 @@ if(PL_MODE_USE_PLAYER_DIR==nil)then
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_STARTUP_TIME)then
-	PL_MODE_STARTUP_TIME = 10; -- maybe cvar?
+	PL_MODE_STARTUP_TIME = 10.0; -- maybe cvar?
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_TIME)then
-	PL_MODE_TIME = 0; -- time when PlMode was enabled on vehicle
+	PL_MODE_TIME = 0.0; -- time when PlMode was enabled on vehicle
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE_STARTUP_ADDTIME)then
-	PL_MODE_STARTUP_ADDTIME = 10; -- maybe cvar?
+	PL_MODE_STARTUP_ADDTIME = 10.0; -- maybe cvar?
 end;
 ---------------------------------------------------------------------
 function g_localActor.Client:OnUpdateNew(frameTime)
@@ -217,10 +217,11 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 							printf("if("..tostring(_time).." - "..tostring(PL_MODE_TIME).." > "..tostring(PL_MODE_STARTUP_TIME).."/"..tostring(PL_MODE_STARTUP_ADDTIME).." and not "..tostring(PL_MODE_CURR_IMPULSE_AMOUNT)..">="..tostring(PL_MODE_BASE_SPEED)..")then")
 							
 							-- >> so it wont instantly have full speed :)
-							PL_MODE_CURR_IMPULSE_AMOUNT = (PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME); -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
+							PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME; -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
 							PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
-							if(_time - PL_MODE_TIME > PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME and not PL_MODE_CURR_IMPULSE_AMOUNT>=PL_MODE_BASE_SPEED)then -- !!prevent Infinite impulseadd
+							if(((_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)) and (not tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)>=tonumber(PL_MODE_BASE_SPEED)))then -- !!prevent Infinite impulseadd
 								PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
+								PL_MODE_TIME = _time;
 							end;
 							-- <<
 									
@@ -353,4 +354,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.8.2a)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8.3a)")
