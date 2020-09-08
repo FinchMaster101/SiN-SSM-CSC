@@ -280,6 +280,8 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 				--printf("vehicle not found");
 			end;
 		else
+			PL_MODE_TIME = 0;
+			PL_MODE_CURR_IMPULSE_AMOUNT = 0;
 		end;
 	else
 		--self.lb = self.lb or _time-3
@@ -391,4 +393,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.8.83)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8.85)")
