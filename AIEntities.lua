@@ -234,13 +234,17 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 								PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
 								PL_MODE_TIME = _time;
 							end;
+							
+							printf(PL_MODE_CURR_IMPULSE_AMOUNT.."/"..PL_MODE_BASE_SPEED);
+							
 							-- <<
 									
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_CURR_IMPULSE_AMOUNT, 1);
 							vehicle.lastImpulseTime = _time;
 							
+							vehicle.lastDir = vehicle.lastDir or dir;
 							
-							if(PL_MODE_REORIENTATE_VEHICLE and PL_MODE_USE_PLAYER_DIR)then
+							if(not cmpvec(dir,vehicle.lastDir,0.3,0.3,0.3))then
 								-- !!TODO!! add something to smoothen the movement
 								vehicle:SetDirectionVector(dir);
 							end;
@@ -365,4 +369,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.8.6b)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8.8)")
