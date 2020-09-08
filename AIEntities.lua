@@ -101,6 +101,7 @@ function g_localActor:OnAction(action, activation, value)
 			
 			PL_MODE_TIME = _time; -- not sure where to place this.
 			
+			
 			if(action=="v_brake")then -- start
 				if(vehicle.plMode==0)then
 					vehicle.plMode=1;
@@ -250,6 +251,27 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 							end;
 							--printf("Impulse added !");
 						end;
+					else
+						-- >> so it wont instantly have full speed :)
+						PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME; -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
+						PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
+							
+						--printf(type(PL_MODE_CURR_IMPULSE_AMOUNT).. ", " .. type(PL_MODE_TIME))
+							
+						if(
+							(
+								(_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)
+							) and (
+									tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)>=tonumber(PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME)
+							)
+						)then -- !!prevent Infinite impulseadd
+							PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT - (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
+							PL_MODE_TIME = _time;
+						end;
+							
+						printf(PL_MODE_CURR_IMPULSE_AMOUNT.."/"..PL_MODE_BASE_SPEED);
+							
+						-- <<
 					end;
 				else
 					--printf("vehicle not in plMode");
@@ -369,4 +391,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.8.8)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8.83)")
