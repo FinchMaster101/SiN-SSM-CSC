@@ -107,7 +107,7 @@ function g_localActor:OnAction(action, activation, value)
 			elseif(action=="v_moveforward")then
 				if(vehicle.plMode==1)then
 					if(activation=="press")then
-						printf("Mode=1 | DOWN
+						printf("Mode=1 | DOWN");
 						vehicle.impMode=1;
 					else
 						vehicle.impMode=nil;	
@@ -116,7 +116,7 @@ function g_localActor:OnAction(action, activation, value)
 			elseif(action=="v_moveback")then
 				if(vehicle.plMode==1)then
 					if(activation=="press")then
-						printf("Mode=2 | UP")
+						printf("Mode=2 | UP");
 						vehicle.impMode=2;
 					else
 						vehicle.impMode=nil;
@@ -251,4 +251,4 @@ function SetPLModeRate(a)
 end;
 System.AddCCommand("plm_updateRate","SetPLModeRate(%%)","")
 ---------------------------------------------------------------------
-System.Log("$9[$4SiN$9] Entities patch installed (1.2)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.21)")
