@@ -251,4 +251,4 @@ function SetPLModeRate(a)
 end;
 System.AddCCommand("plm_updateRate","SetPLModeRate(%%)","")
 ---------------------------------------------------------------------
-System.Log("$9[$4SiN$9] Entities patch installed (1.151)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.2)")
