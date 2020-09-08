@@ -137,7 +137,9 @@ function g_localActor:OnAction(action, activation, value)
 	end;
 end;
 ---------------------------------------------------------------------
-if(not PL_MODE)then PL_MODE = 0; end;
+if(not PL_MODE)then 
+	PL_MODE = 0;
+end;
 ---------------------------------------------------------------------
 function g_localActor:SetPlMode()
 	
@@ -148,7 +150,7 @@ function g_localActor:SetPlMode()
 	end;
 	
 	if(ALLOW_EXPERIMENTAL)then
-		printf("$9[$8PlMode$9] PL_MODE = " .. PL_MODE);
+		printf("$9[$8PlMode$9] " .. (PL_MODE==1 and "activated" or "deactivated"));
 	end;
 end;
 ---------------------------------------------------------------------
@@ -168,6 +170,14 @@ if(not PL_MODE_DIR_DOWN)then
 	PL_MODE_DIR_DOWN = 0.5;
 end;
 ---------------------------------------------------------------------
+if(not PL_MODE_REORIENTATE_VEHICLE==nil)then
+	PL_MODE_REORIENTATE_VEHICLE = false;
+end;
+---------------------------------------------------------------------
+if(PL_MODE_USE_PLAYER_DIR==nil)then
+	PL_MODE_USE_PLAYER_DIR = false;
+end;
+---------------------------------------------------------------------
 function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
 		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
@@ -178,7 +188,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 					if(vehicle.plMode == 1)then
 						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_BASE_RATE);
 						if(_time - vehicle.lastImpulseTime >= PL_MODE_BASE_RATE)then
-							local dir = vehicle:GetDirectionVector();
+							local dir = (not PL_MODE_USE_PLAYER_DIR and vehicle:GetDirectionVector() or self.actor:GetHeadDir());
 							local trash;
 							if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
@@ -186,6 +196,9 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 								elseif(vehicle.impMode==2)then
 									dir.z = dir.z + PL_MODE_DIR_UP;
 								end;
+							end;
+							if(PL_MODE_REORIENTATE_VEHICLE and not PL_MODE_USE_PLAYER_DIR)
+								vehicle:SetDirectionVector(dir);
 							end;
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_BASE_SPEED, 1);
 							vehicle.lastImpulseTime = _time;
@@ -233,10 +246,6 @@ function CalcPosInFront(entity, distance, height)
 end;
 
 ---------------------------------------------------------------------
-if(not PL_MODE_BASE_RATE)then
-	PL_MODE_BASE_RATE = 0.3;
-end;
----------------------------------------------------------------------
 function SetPLModeSpeed(a)
 	a = tonumber(a);
 	if(not a)then
@@ -280,10 +289,6 @@ function SetPLModeDir(a, b)
 end;
 System.AddCCommand("plm_dirVectors","SetPLModeDir(%%)","")
 ---------------------------------------------------------------------
-if(not PL_MODE_USE_PLAYER_DIR)then
-	PL_MODE_USE_PLAYER_DIR = false;
-end;
----------------------------------------------------------------------
 function ToggleUsePlayerDir()
 	if(PL_MODE_USE_PLAYER_DIR)then
 		PL_MODE_USE_PLAYER_DIR = false;
@@ -306,4 +311,16 @@ function TogglePLMode()
 end;
 System.AddCCommand("plm_toggle","TogglePLMode()","")
 ---------------------------------------------------------------------
-System.Log("$9[$4SiN$9] Entities patch installed (1.31)")
+function TogglePlModeReorientate()
+	if(not PL_MODE_REORIENTATE_VEHICLE)then
+		PL_MODE_REORIENTATE_VEHICLE = true;
+	else
+		PL_MODE_REORIENTATE_VEHICLE = false;
+	end;
+	printf("$9[$8PlMode$9] Re-Orientate vehicle " .. (PL_MODE_REORIENTATE_VEHICLE and "enabled" or "disabled"));
+	return true;
+end;
+System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
+---------------------------------------------------------------------
+
+System.Log("$9[$4SiN$9] Entities patch installed (1.33)")
