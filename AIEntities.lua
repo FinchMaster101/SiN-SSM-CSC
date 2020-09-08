@@ -365,4 +365,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.8.5b)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.8.6b)")
