@@ -197,7 +197,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 									dir.z = dir.z + PL_MODE_DIR_UP;
 								end;
 							end;
-							if(PL_MODE_REORIENTATE_VEHICLE and not PL_MODE_USE_PLAYER_DIR)
+							if(PL_MODE_REORIENTATE_VEHICLE and not PL_MODE_USE_PLAYER_DIR)then
 								vehicle:SetDirectionVector(dir);
 							end;
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_BASE_SPEED, 1);
@@ -323,4 +323,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.34)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.341)")
