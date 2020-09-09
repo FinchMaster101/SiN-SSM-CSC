@@ -50,6 +50,7 @@ function Scout.Client:OnUpdate(frameTime)
   if(newDir)then
      self:SetDirectionVector(newDir);
   end;
+	if(ALLOW_EXPERIMENTAL)then printf("updated: " .. tostring(newDir)); end;
   local currWp = (self.inventory and self.inventory:GetCurrentItem());
   if(currWp)then
      if(currWp.class == "Scout_MOAR" and self.lastHitDirection)then
