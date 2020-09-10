@@ -148,6 +148,9 @@ function g_localActor:OnAction(action, activation, value)
 			local i = 600
 			if g_localActor.actor:GetNanoSuitMode() == 1 then i = 1100 end
 			g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, i, 1);
+			if(ALLOW_EXPERIMENTAL)then
+				printf("[DEBuG] Performing jump multiplier on g_localActor")
+			end;
 		end
 	end
 	
@@ -170,6 +173,9 @@ function g_localActor:OnAction(action, activation, value)
 end;
 ---------------------------------------------------------------------
 function g_localActor:DoWallJumpMult()
+	if(ALLOW_EXPERIMENTAL)then
+		printf("[DEBuG] Performing wall jump multiplier on g_localActor")
+	end;
 	local i = self.wallJumpMultiplier * 300
 	if self.actor:GetNanoSuitMode()==1 then i = self.wallJumpMultiplier * 400 end
 	local dir = GNV(self.actor:GetHeadDir())
@@ -188,10 +194,9 @@ function g_localActor:DoWallJumpMult()
 end;
 ---------------------------------------------------------------------
 function g_localActor:IsWallJumping()
-	local dist = 1;
+	local dist = 0.4;
 	local dir = vecScale(self.actor:GetHeadDir(), dist);
-	local pos = self:GetPos()
-	pos.z = pos.z + 1.5
+	local pos = self:GetBonePos("Bip01 head");
 	local hits = Physics.RayWorldIntersection(pos,dir,1,ent_all,self.id,nil,g_HitTable);
 	local splat = g_HitTable[1];
 	if not self.actor:IsFlying() and (hits > 0 and splat and ((splat.dist or 0)>0.25)) then
@@ -453,4 +458,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.9wj)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.9.1d)")
