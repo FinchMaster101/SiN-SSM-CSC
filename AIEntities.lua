@@ -141,6 +141,63 @@ function g_localActor:OnAction(action, activation, value)
 		end;
 		--printf("Vehicle found")
 	end;
+	
+	if g_localActor.superJumper then
+		if action == "cycle_spectator_mode" and not g_localActor.actor:IsFlying() and not g_localActor:IsWallJumping() then
+			g_localActor.superJumpStartPos = g_localActor:GetPos()
+			local i = 600
+			if g_localActor.actor:GetNanoSuitMode() == 1 then i = 1100 end
+			g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, i, 1);
+		end
+	end
+	
+	local j = false;
+	if (action == "cycle_spectator_mode") and (g_localActor.pfk == "next_spectator_target" or g_localActor.pfk == "cycle_spectator_mode") and (g_localActor.ppfk == "next_spectator_target" or g_localActor.ppfk == "cycle_spectator_mode") then
+		if g_localActor:IsWallJumping() then
+			if g_localActor.wallJumpMultiplier then
+				g_localActor:DoWallJumpMult(player)
+				j = true
+			end
+		end
+	end
+	
+	if g_localActor.pfk then g_localActor.ppfk = g_localActor.pfk end
+	g_localActor.pfk = action
+	if j then
+		g_localActor.pfk = ""
+		g_localActor.ppfk = ""
+	end
+end;
+---------------------------------------------------------------------
+function g_localActor:DoWallJumpMult()
+	local i = self.wallJumpMultiplier * 300
+	if self.actor:GetNanoSuitMode()==1 then i = self.wallJumpMultiplier * 400 end
+	local dir = GNV(self.actor:GetHeadDir())
+	--dir.z = dir.z + 0.3
+	self:AddImpulse(-1, self:GetCenterOfMassPos(), dir, i, 1);
+	if (self.wallJumpMultiplier * 300) >= 33000 then
+		local lc = 3
+		if (self.wallJumpMultiplier * 300) >= 83000 then lc = lc * 3 end
+		for i=1,lc do
+			Script.SetTimer(i*25,function()
+				--Debug("loop")
+				self:AddImpulse(-1, self:GetCenterOfMassPos(), dir, 33000, 1);
+			end)
+		end
+	end
+end;
+---------------------------------------------------------------------
+function g_localActor:IsWallJumping()
+	local dist = 1;
+	local dir = vecScale(self.actor:GetHeadDir(), dist);
+	local pos = self:GetPos()
+	pos.z = pos.z + 1.5
+	local hits = Physics.RayWorldIntersection(pos,dir,1,ent_all,self.id,nil,g_HitTable);
+	local splat = g_HitTable[1];
+	if not self.actor:IsFlying() and (hits > 0 and splat and ((splat.dist or 0)>0.25)) then
+		return true
+	end
+	return false
 end;
 ---------------------------------------------------------------------
 if(not PL_MODE)then 
@@ -396,4 +453,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.9.1)")
+System.Log("$9[$4SiN$9] Entities patch installed (1.9wj)")
