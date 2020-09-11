@@ -329,78 +329,38 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 									--dir.z = dir.z + PL_MODE_DIR_UP; -- unused
 								end;
 							end;
-							
-							--printf("if("..tostring(_time).." - "..tostring(PL_MODE_TIME).." > "..tostring(PL_MODE_STARTUP_TIME).."/"..tostring(PL_MODE_STARTUP_ADDTIME).." and not "..tostring(PL_MODE_CURR_IMPULSE_AMOUNT)..">="..tostring(PL_MODE_BASE_SPEED)..")then")
-							
-							
-							
-							-- >> so it wont instantly have full speed :)
+
 							PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME; -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
 							PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
-							
-							--printf(type(PL_MODE_CURR_IMPULSE_AMOUNT).. ", " .. type(PL_MODE_TIME))
-							
-							if(
-								(
-									(_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)
-								) and (
-									tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)<=tonumber(PL_MODE_BASE_SPEED)
-								)
-							)then -- !!prevent Infinite impulseadd
+
+							if(((_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)) and (tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)<=tonumber(PL_MODE_BASE_SPEED)))then -- !!prevent Infinite impulseadd
 								PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
 								PL_MODE_TIME = _time;
 							end;
-							
-							--printf(PL_MODE_CURR_IMPULSE_AMOUNT.."/"..PL_MODE_BASE_SPEED);
-							
-							-- <<
-									
+	
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_CURR_IMPULSE_AMOUNT, 1);
 							vehicle.lastImpulseTime = _time;
 							
 							vehicle.lastDir = vehicle.lastDir or dir;
-							
-							
-							--printf("Impulse added !");
+
 						end;
 					else
-						-- >> so it wont instantly have full speed :)
 						PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME; -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
 						PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
-							
-						--printf(type(PL_MODE_CURR_IMPULSE_AMOUNT).. ", " .. type(PL_MODE_TIME))
-							
-						if(
-							(
-								(_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)
-							) and (
-									tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)>=tonumber(PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME)
-							)
-						)then -- !!prevent Infinite impulseadd
+						if(((_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)) and (tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)>=tonumber(PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME)))then -- !!prevent Infinite impulseadd
 							PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT - (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
 							PL_MODE_TIME = _time;
-						end;
-							
-						--printf(PL_MODE_CURR_IMPULSE_AMOUNT.."/"..PL_MODE_BASE_SPEED);
-							
-						-- <<
+
 					end;
 				else
-					--printf("vehicle not in plMode");
 				end;
 			else
-				--printf("vehicle not found");
 			end;
 		else
 			PL_MODE_TIME = 0;
 			PL_MODE_CURR_IMPULSE_AMOUNT = 0;
 		end;
 	else
-		--self.lb = self.lb or _time-3
-		--if _time -self.lb >=3 then
-			--printf("plMode == "..tostring(self.plMode or "nil"))
-			--self.lb=_time
-		--end
 	end;
 	
 	--OLD.Player_ClUpdate(self,frameTime)
@@ -411,8 +371,8 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		if(g)then
 			local f = g:IsFiring();
 			if(f and (w.class~="Fists"))then
-				g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.05);
-				if(_time - g_localActor.lastFireTime >= 0.05)then
+				g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
+				if(_time - g_localActor.lastFireTime >= 0.1)then
 					g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 					g_localActor.lastFireTime = _time;
 				end;
@@ -453,11 +413,18 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 	
 	local s = weapon.shotSound;
 	if(s and type(s) == "string")then
-		self:PlaySoundEvent(weapon.shotSound or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+		self:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+		if(ALLOW_EXPERIMENTAL)then
+			printf("[DEBuG] Playing shot sound on g_localActor");	
+		end;
+	else
+		if(ALLOW_EXPERIMENTAL)then
+			printf("[DEBuG] Shot sound not found or type not valid");	
+		end;	
 	end;
 	
 	self.lastAccessoryReport = self.lastAccessoryReport or (_time - 10);
-	if(_time - self.lastAccessoryTime >= 10)then
+	if(_time - self.lastAccessoryReport >= 10)then
 		local wName = weapon:GetName();
 		local ss = (w:GetAccessory("SinperScope") and 1 or 0);
 		local as = (w:GetAccessory("AssaultScope") and 1 or 0);
@@ -466,7 +433,7 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 		local lf = (w:GetAccessory("LAMRifleFlashLight") and 1 or 0);
 		local ia = (w:GetAccessory("FY71IncendiaryAmmo") and 1 or 0);
 		if(ss~=0 or as~=0 or rf~=0 or lr~=0 or lf~=0 or ia~=0)then
-			self:Report(4, ss, as, rf, lr, lf, ia);
+			self:Report(4, wName, ss, as, rf, lr, lf, ia);
 		end;
 	end;
 end;
@@ -487,7 +454,7 @@ function g_localActor:Report(tpe, x, y, z, a, b, c, d, e, f, g, h, i)
 	elseif(tpe==3)then
 		hash, msg = g_localActor.currHashCode:sub(1,4), tostring(x)..","..tostring(y)..","..tostring(z);
 	elseif(tpe==4)then
-		hash, msg = g_localActor.currHashCode:sub(7,11), tostring(x)..","..tostring(y)..","..tostring(z)..","..tostring(a)..","..tostring(b)..","..tostring(c);
+		hash, msg = g_localActor.currHashCode:sub(7,11), tostring(x)..","..tostring(y)..","..tostring(z)..","..tostring(a)..","..tostring(b)..","..tostring(c)..","..tostring(d);
 	end;
 	
 	if(hash and msg and SYNC_LOCAL_ACTOR)then
@@ -608,4 +575,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.2.2)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.2.3)")
