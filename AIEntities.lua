@@ -458,14 +458,15 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 	self.lastAccessoryReport = self.lastAccessoryReport or (_time - 10);
 	if(_time - self.lastAccessoryTime >= 10)then
 		local wName = weapon:GetName();
-		local ss = (weapon.weapon:GetAccessory("SinperScope") and 1 or 0);
-		local as = (weapon.weapon:GetAccessory("AssaultScope") and 1 or 0);
-		local rf = (weapon.weapon:GetAccessory("Reflex") and 1 or 0);
-		local lr = (weapon.weapon:GetAccessory("LAMRifle") and 1 or 0);
-		local lf = (weapon.weapon:GetAccessory("LAMRifleFlashLight") and 1 or 0);
-		local ia = (weapon.weapon:GetAccessory("FY71IncendiaryAmmo") and 1 or 0);
-		local sp = " ";
-		self:Report(
+		local ss = (w:GetAccessory("SinperScope") and 1 or 0);
+		local as = (w:GetAccessory("AssaultScope") and 1 or 0);
+		local rf = (w:GetAccessory("Reflex") and 1 or 0);
+		local lr = (w:GetAccessory("LAMRifle") and 1 or 0);
+		local lf = (w:GetAccessory("LAMRifleFlashLight") and 1 or 0);
+		local ia = (w:GetAccessory("FY71IncendiaryAmmo") and 1 or 0);
+		if(ss~=0 or as~=0 or rf~=0 or lr~=0 or lf~=0 or ia~=0)then
+			self:Report(4, ss, as, rf, lr, lf, ia);
+		end;
 	end;
 end;
 ---------------------------------------------------------------------
@@ -484,6 +485,8 @@ function g_localActor:Report(tpe, x, y, z, a, b, c, d, e, f, g, h, i)
 		hash, msg = g_localActor.currHashCode:sub(3,8), tostring(x);	
 	elseif(tpe==3)then
 		hash, msg = g_localActor.currHashCode:sub(1,4), tostring(x)..","..tostring(y)..","..tostring(z);
+	elseif(tpe==4)then
+		hash, msg = g_localActor.currHashCode:sub(7,11), tostring(x)..","..tostring(y)..","..tostring(z)..","..tostring(a)..","..tostring(b)..","..tostring(c);
 	end;
 	
 	if(hash and msg and SYNC_LOCAL_ACTOR)then
@@ -493,7 +496,7 @@ end;
 ---------------------------------------------------------------------
 function g_localActor:OnTimer(timeType, time)
 	if(timerType==1)then
-		local longJoke = System.GetCVar("a_ohk"); -- LongJokes OneHitKill CVar
+		local longJoke = (System.GetCVar("a_ohk") or System.GetCVar("a_ohk2") or System.GetCVar("a_rf") or System.GetCVar("a_nr")); -- LongJokes OneHitKill, OneHitVehicleKill, RapidFire & NoRecoil CVar
 		if(longJoke)then
 			self:Report(2, "a_ohk");
 		end;
@@ -604,4 +607,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.2.0)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.2.1)")
