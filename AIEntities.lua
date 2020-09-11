@@ -367,7 +367,10 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		if(g)then
 			local f = g:IsFiring();
 			if(f and (w.class~="Fists"))then
-				g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
+				g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
+				if(_time - g_localActor.lastFireTime >= 0.1)then
+					g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
+				end;
 			end;
 		end;
 	end;
@@ -495,4 +498,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.0.1)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.0.2)")
