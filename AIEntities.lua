@@ -76,7 +76,7 @@ function g_gameRules.Client:OnDisconnect(c, d)
 	end;
 	
 	if(g_localActor.Client.OnUpdateNew)then
-		function g_localActor.Client:OnUpdateNew
+		function g_localActor.Client:OnUpdateNew()
 			return;	
 		end;
 	end;
@@ -105,6 +105,7 @@ function g_gameRules.Client:OnDisconnect(c, d)
 	printf("$9[$4SiN$9] Deinstalled client successfully");
 end;
 
+g_gameRules.Client.PreGame.OnDisconnect = g_gameRules.Client.OnDisconnect;
 g_gameRules.Client.InGame.OnDisconnect = g_gameRules.Client.OnDisconnect;
 
 -- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ::  PLAYER UPDATES  :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -607,4 +608,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.2.1)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.2.2)")
