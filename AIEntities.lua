@@ -27,7 +27,7 @@ end;
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
 
 function Debug(v, m)
-	if(v>=LOG_VERBOSITY)then
+	if(LOG_VERBOSITY>=v)then
 		printf("[DEBuG] " .. tostring(m));
 	end;
 end;
@@ -321,9 +321,8 @@ if(not PL_MODE_STARTUP_ADDTIME)then
 	PL_MODE_STARTUP_ADDTIME = 10.0; -- maybe cvar?
 end;
 ---------------------------------------------------------------------
-function g_localActor.Client:OnUpdateNew(frameTime)
-	if(PL_MODE==1)then
-		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
+function g_localActor:UpdatePLMode(frameTime)
+	local vehicleId = g_localActor.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle)then
@@ -376,12 +375,15 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 			PL_MODE_TIME = 0;
 			PL_MODE_CURR_IMPULSE_AMOUNT = 0;
 		end;
-	else
+end;
+---------------------------------------------------------------------
+function g_localActor.Client:OnUpdateNew(frameTime)
+	if(PL_MODE==1)then
+		g_localActor:UpdatePLMode(frameTime)
 	end;
 	
-	--OLD.Player_ClUpdate(self,frameTime)
-	
 	local w = g_localActor.inventory:GetCurrentItem();
+	
 	if(w)then
 		local g = w.weapon;
 		if(g)then
