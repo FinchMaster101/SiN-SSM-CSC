@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.3.2";
+FILE_VERSION = "2.3.3";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -398,6 +398,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 			
 			if(w.class ~= g_localActor.lastWeaponClass)then
 				g_localActor.lastAmmoCount = a;
+				g_localActor.lastWeaponClass = w.class;
 			end;
 			
 			if(f and (w.class~="Fists") and (g_localActor.lastAmmoCount~=a))then
