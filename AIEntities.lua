@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.3.1";
+FILE_VERSION = "2.3.2";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -392,7 +392,14 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		if(g)then
 			local f = g:IsFiring();
 			local a = g:GetAmmoCount();
+			
 			g_localActor.lastAmmoCount = g_localActor.lastAmmoCount or a+1;
+			g_localActor.lastWeaponClass = g_localActor.lastWeaponClass or w.class;
+			
+			if(w.class ~= g_localActor.lastWeaponClass)then
+				g_localActor.lastAmmoCount = a;
+			end;
+			
 			if(f and (w.class~="Fists") and (g_localActor.lastAmmoCount~=a))then
 				g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
 				if(_time - g_localActor.lastFireTime >= 0.1)then
@@ -400,7 +407,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 					g_localActor.lastFireTime = _time;
 				end;
 			else
-				Debug(6, "OnFiring() canelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
+				Debug(6, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 			end;
 		end;
 	end;
@@ -459,6 +466,7 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 	end;
 	
 	g_localActor.lastAmmoCount = w:GetAmmoCount();
+	g_localActor.lastWeaponClass = weapon.class;
 end;
 ---------------------------------------------------------------------
 if(not SYNC_LOCAL_ACTOR)then
