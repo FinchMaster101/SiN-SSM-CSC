@@ -378,8 +378,10 @@ end
 ---------------------------------------------------------------------
 function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 	
-	local spread = weapon:GetSpread();
-	local recoil = weapon:GetRecoil();
+	local w = weapon.weapon 
+
+	local spread = w:GetSpread();
+	local recoil = w:GetRecoil();
 	
 	local ms = 0.1;
 	local mr = 0.1;
@@ -498,4 +500,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.0.2)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.0.3)")
