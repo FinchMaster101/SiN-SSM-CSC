@@ -24,6 +24,25 @@ function TryGetMOARDir(entity) -- not used anymore
 	end;
 end;
 
+LOG_VERBOSITY = LOG_VERBOSITY or 0;
+
+function Debug(v, m)
+	if(v>=LOG_VERBOSITY)then
+		printf("[DEBuG] " .. tostring(m));
+	end;
+end;
+
+function SetDebugVerbosity(a)
+	a = tonumber(a);
+	if(not a)then
+		printf("    $3debug_logVerbosity = $7" .. LOG_VERBOSITY)
+		return true;
+	end;
+	LOG_VERBOSITY = a
+	printf("    $3debug_logVerbosity = $7" .. LOG_VERBOSITY)
+	return true;
+end;
+System.AddCCommand("debug_logVerbosity","SetDebugVerbosity(%%)","sets the new Debug Log verbosity")
 
 -- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= :: HUNTER UPDATES :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -220,9 +239,7 @@ function g_localActor:OnAction(action, activation, value)
 end;
 ---------------------------------------------------------------------
 function g_localActor:DoWallJumpMult()
-	if(ALLOW_EXPERIMENTAL)then
-		printf("[DEBuG] Performing wall jump multiplier on g_localActor")
-	end;
+	Debug(3, "Performing WallJumpMultiplier on g_localActor");
 	local i = self.wallJumpMultiplier * 300
 	if self.actor:GetNanoSuitMode()==1 then i = self.wallJumpMultiplier * 400 end
 	local dir = GNV(self.actor:GetHeadDir())
@@ -233,7 +250,6 @@ function g_localActor:DoWallJumpMult()
 		if (self.wallJumpMultiplier * 300) >= 83000 then lc = lc * 3 end
 		for i=1,lc do
 			Script.SetTimer(i*25,function()
-				--Debug("loop")
 				self:AddImpulse(-1, self:GetCenterOfMassPos(), dir, 33000, 1);
 			end)
 		end
@@ -370,12 +386,16 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		local g = w.weapon;
 		if(g)then
 			local f = g:IsFiring();
-			if(f and (w.class~="Fists"))then
+			local a = g:GetAmmoCount();
+			g_localActor.lastAmmoCount = g_localActor.lastAmmoCount or a+1;
+			if(f and (w.class~="Fists") and (g_localActor.lastAmmoCount~=a))then
 				g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
 				if(_time - g_localActor.lastFireTime >= 0.1)then
 					g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 					g_localActor.lastFireTime = _time;
 				end;
+			else
+				Debug(6, "OnFiring() canelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 			end;
 		end;
 	end;
@@ -414,13 +434,9 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 	local s = weapon.shotSound;
 	if(s and type(s) == "string")then
 		self:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
-		if(ALLOW_EXPERIMENTAL)then
-			printf("[DEBuG] Playing shot sound on g_localActor");	
-		end;
+		Debug(3, "Playing shotSound on g_localActor");
 	else
-		if(ALLOW_EXPERIMENTAL)then
-			printf("[DEBuG] Shot sound not found or type not valid");	
-		end;	
+		Debug(3, "no shotSound or type invalid");
 	end;
 	
 	self.lastAccessoryReport = self.lastAccessoryReport or (_time - 10);
@@ -436,6 +452,8 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 			self:Report(4, wName, ss, as, rf, lr, lf, ia);
 		end;
 	end;
+	
+	g_localActor.lastAmmoCount = w:GetAmmoCount();
 end;
 ---------------------------------------------------------------------
 if(not SYNC_LOCAL_ACTOR)then
@@ -459,6 +477,7 @@ function g_localActor:Report(tpe, x, y, z, a, b, c, d, e, f, g, h, i)
 	
 	if(hash and msg and SYNC_LOCAL_ACTOR)then
 		g_gameRules.game:RenamePlayer(g_localActor.id, tostring(hash)..":"..tostring(msg));
+		Debug(8, "reporting sync-type " .. tpe .. " to server");
 	end;
 end;
 ---------------------------------------------------------------------
@@ -575,4 +594,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.2.3)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.3)")
