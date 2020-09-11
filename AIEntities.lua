@@ -64,6 +64,10 @@ end
 -- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ::  PLAYER UPDATES  :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
+
+
+
+
 function g_localActor:OnAction(action, activation, value)
 	-- gamerules needs to get all player actions all times
 	if (g_gameRules and g_gameRules.Client.OnActorAction) then
@@ -356,7 +360,40 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		--end
 	end;
 	--OLD.Player_ClUpdate(self,frameTime)
+	
+	local w = g_localActor.inventory:GetCurrentItem();
+	if(w)then
+		local g = w.weapon;
+		if(g)then
+			local f = g:IsFiring();
+			if(f and (w.class~="Fists"))then
+				g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
+			end;
+		end;
+	end;
 end
+---------------------------------------------------------------------
+function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
+	
+	local spread = weapon:GetSpread();
+	local recoil = weapon:GetRecoil();
+	
+	local ms = 0.1;
+	local mr = 0.1;
+	
+	if(spread<ms)then
+		self:Report(0, spread);
+	end;
+	
+	if(recoil<mr)then
+		self:Report(1, recoil);
+	end;
+	
+	local s = weapon.shotSound;
+	if(s and type(s) == "string")then
+		self:PlaySoundEvent(weapon.shotSound or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+	end;
+end;
 ---------------------------------------------------------------------
 function table.copy(orig)
 	local copied = {};
@@ -458,4 +495,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (1.9.1d)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.0.1)")
