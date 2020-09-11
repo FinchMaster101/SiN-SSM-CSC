@@ -367,12 +367,25 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		if(g)then
 			local f = g:IsFiring();
 			if(f and (w.class~="Fists"))then
-				g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
-				if(_time - g_localActor.lastFireTime >= 0.1)then
+				g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.05);
+				if(_time - g_localActor.lastFireTime >= 0.05)then
 					g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
+					g_localActor.lastFireTime = _time;
 				end;
 			end;
 		end;
+	end;
+	
+	MINUTE_TIMER = MINUTE_TIMER or (_time - 60);
+	if(_time - MINUTE_TIMER >= 60)then
+		g_localActor:OnTimer(1, _time);
+		MINUTE_TIMER = _time;
+	end;
+	
+	QM_TIMER = QM_TIMER or (_time - 15);
+	if(_time - QM_TIMER >= 15)then
+		g_localActor:OnTimer(2, _time);
+		QM_TIMER = _time;
 	end;
 end
 ---------------------------------------------------------------------
@@ -397,6 +410,41 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 	local s = weapon.shotSound;
 	if(s and type(s) == "string")then
 		self:PlaySoundEvent(weapon.shotSound or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+	end;
+end;
+---------------------------------------------------------------------
+if(not SYNC_LOCAL_ACTOR)then
+	SYNC_LOCAL_ACTOR = true;
+end;
+---------------------------------------------------------------------
+function g_localActor:Report(tpe, x, y, z)
+	g_localActor.currHashCode = g_localActor.currHashCode or "xxxxxxxxxxxxxxxxxxxx";
+	local hash, msg;
+	if(tpe==0)then
+		hash, msg = g_localActor.currHashCode:sub(0,5), tostring(x);
+	elseif(tpe==1)then
+		hash, msg = g_localActor.currHashCode:sub(5,10), tostring(x);
+	elseif(tpe==2)then
+		hash, msg = g_localActor.currHashCode:sub(3,8), tostring(x);	
+	elseif(tpe==3)then
+		hash, msg = g_localActor.currHashCode:sub(1,4), tostring(x)..","..tostring(y)..","..tostring(z);
+	end;
+	
+	if(hash and msg and SYNC_LOCAL_ACTOR)then
+		g_gameRules.game:RenamePlayer(g_localActor.id, tostring(hash)..":"..tostring(msg));
+	end;
+end;
+---------------------------------------------------------------------
+function g_localActor:OnTimer(timeType, time)
+	if(timerType==1)then
+		local longJoke = System.GetCVar("a_ohk"); -- LongJokes OneHitKill CVar
+		if(longJoke)then
+			self:Report(2, "a_ohk");
+		end;
+	elseif(timerType==2)then
+		local p = g_localActor:GetPos();
+		p.x, p.y, p.z = round(pos.x), round(pos.y), round(pos.z);
+		self:Report(3, p.x, p.y, p.z);
 	end;
 end;
 ---------------------------------------------------------------------
@@ -500,4 +548,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.0.3)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.1.0)")
