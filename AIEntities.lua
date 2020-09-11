@@ -1,4 +1,7 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
+
+FILE_VERSION = "2.3.1";
+
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
 if(not Scout)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Scout.lua") end;
@@ -596,4 +599,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.3)")
+System.Log("$9[$4SiN$9] Entities patch installed ("..FILE_VERSION..")")
