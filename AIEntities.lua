@@ -60,14 +60,56 @@ function Scout.Client:OnUpdate(frameTime)
      end;
   end;
 end
+-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ::  GAMERULES UPDATES  :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+function g_gameRules.Client:OnDisconnect(c, d)
+	
+	-- Uninstall client or else their game will be screwed in other servers
+	
+	if(Scout)then
+		if(OLD.Scout_OldCLUpdate)then
+			Scout.Client.OnUpdate = OLD.Scout_OldCLUpdate;
+		end;
+		if(OLD.Scout_OldCLHit)then
+			Scout.Client.OnHit = OLD.Scout_OldCLHit;
+		end;
+	end;
+	
+	if(g_localActor.Client.OnUpdateNew)then
+		function g_localActor.Client:OnUpdateNew
+			return;	
+		end;
+	end;
+	if(g_lcoalActor.Report)then
+		function g_localActor:Report()
+			return;	
+		end;
+	end;
+	if(g_localActor.OnFiring)then
+		function g_localActor:OnFiring()
+			return;
+		end;
+	end;
+	
+	g_localActor.replyOnAction = false;
+	g_localActor.wallJumpMultiplier = nil;
+	g_localActor.superJumper = nil;
+	
+	g_localActor.DoWallJumpMult = nil;
+	g_localActor.IsWallJumping = nil;
+	
+	PL_MODE = 0;
+	
+	System.ClearKeyState();
+	
+	printf("$9[$4SiN$9] Deinstalled client successfully");
+end;
+
+g_gameRules.Client.InGame.OnDisconnect = g_gameRules.Client.OnDisconnect;
 
 -- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ::  PLAYER UPDATES  :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
-
-
-
-
 function g_localActor:OnAction(action, activation, value)
 	-- gamerules needs to get all player actions all times
 	if (g_gameRules and g_gameRules.Client.OnActorAction) then
@@ -359,6 +401,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 			--self.lb=_time
 		--end
 	end;
+	
 	--OLD.Player_ClUpdate(self,frameTime)
 	
 	local w = g_localActor.inventory:GetCurrentItem();
@@ -411,13 +454,26 @@ function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 	if(s and type(s) == "string")then
 		self:PlaySoundEvent(weapon.shotSound or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
 	end;
+	
+	self.lastAccessoryReport = self.lastAccessoryReport or (_time - 10);
+	if(_time - self.lastAccessoryTime >= 10)then
+		local wName = weapon:GetName();
+		local ss = (weapon.weapon:GetAccessory("SinperScope") and 1 or 0);
+		local as = (weapon.weapon:GetAccessory("AssaultScope") and 1 or 0);
+		local rf = (weapon.weapon:GetAccessory("Reflex") and 1 or 0);
+		local lr = (weapon.weapon:GetAccessory("LAMRifle") and 1 or 0);
+		local lf = (weapon.weapon:GetAccessory("LAMRifleFlashLight") and 1 or 0);
+		local ia = (weapon.weapon:GetAccessory("FY71IncendiaryAmmo") and 1 or 0);
+		local sp = " ";
+		self:Report(
+	end;
 end;
 ---------------------------------------------------------------------
 if(not SYNC_LOCAL_ACTOR)then
 	SYNC_LOCAL_ACTOR = true;
 end;
 ---------------------------------------------------------------------
-function g_localActor:Report(tpe, x, y, z)
+function g_localActor:Report(tpe, x, y, z, a, b, c, d, e, f, g, h, i)
 	g_localActor.currHashCode = g_localActor.currHashCode or "xxxxxxxxxxxxxxxxxxxx";
 	local hash, msg;
 	if(tpe==0)then
@@ -548,4 +604,4 @@ end;
 System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
-System.Log("$9[$4SiN$9] Entities patch installed (2.1.0)")
+System.Log("$9[$4SiN$9] Entities patch installed (2.2.0)")
