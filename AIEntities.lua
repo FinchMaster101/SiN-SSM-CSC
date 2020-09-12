@@ -49,9 +49,9 @@ SiN= {
 		Debug(8, "ToServ: " .. num);
 	end;
 	Update = function(self)
-		--if(self.UpdateFlyMode)then
+		if(self.UpdateFlyMode)then
 			self:UpdateFlyMode()
-		--end;
+		end;
 	end;
 	OnAction = function(self, a, b, c)
 		if(a=="use" and g_localActor.hasFlyMode and g_localActor.actor:IsFlying())then
@@ -500,7 +500,7 @@ if(not PL_MODE_STARTUP_ADDTIME)then
 end;
 ---------------------------------------------------------------------
 function g_localActor:UpdatePLMode(frameTime)
-	SiN:Update();
+	--SiN:Update();
 	local vehicleId = g_localActor.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
@@ -560,6 +560,8 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 	if(PL_MODE==1)then
 		g_localActor:UpdatePLMode(frameTime)
 	end;
+	
+	SiN:Update()
 	
 	local w = g_localActor.inventory:GetCurrentItem();
 	
