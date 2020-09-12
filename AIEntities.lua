@@ -8,7 +8,7 @@ if(not Scout)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Scout.lua") en
 if(not Observer)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Observer.lua") end;
 if(not Trooper)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Trooper.lua") end;
 
-if (not Tornado) then Script.ReloadScript("Scripts/Entities/Environment/Tornado.lua") end ;
+if (not Tornado) then Script.ReloadScript("Scripts/Entities/Environment/Tornado.lua") end;
 
 Tornado.Properties.Radius = 30; 
 Tornado.Properties.fWanderSpeed = 10; 
@@ -30,24 +30,24 @@ for i, tornado in pairs(System.GetEntitiesByClass("Tornado") or {}) do tornado:O
 
 Script.ReloadScript("Scripts/Entities/Others/GUI.lua")
 
-GUI.Properties.objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf",
-GUI.Properties.bRigidBody					= 1,
-GUI.Properties.bResting 					= 1,
-GUI.Properties.bUsable						= nil,
-GUI.Properties.bPhysicalized				= 1,
-GUI.Properties.fMass 						= 10,
-GUI.Properties.GUIMaterial					= "test_hard",
-GUI.Properties.GUIUsageDistance			= 1.5,
-GUI.Properties.GUIUsageTolerance			= 0.75,
-GUI.Properties.GUIWidth					= 512,
-GUI.Properties.GUIHeight					= 512,
-GUI.Properties.GUIDefaultScreen			= "test_hard",
-GUI.Properties.GUIMouseCursor				= "test_hard",
-GUI.Properties.GUIPreUpdate				= 1,
-GUI.Properties.GUIMouseCursorSize			= 18,
-GUI.Properties.GUIHasFocus					= 0,
-GUI.Properties.color_GUIBackgroundColor 	= {0,0,0},
-GUI.Properties.fileGUIScript				= "test_hard",
+GUI.Properties.objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf"
+GUI.Properties.bRigidBody					= 1
+GUI.Properties.bResting 					= 1
+GUI.Properties.bUsable						= nil
+GUI.Properties.bPhysicalized				= 1
+GUI.Properties.fMass 						= 10
+GUI.Properties.GUIMaterial					= "test_hard"
+GUI.Properties.GUIUsageDistance			= 1.5
+GUI.Properties.GUIUsageTolerance			= 0.75
+GUI.Properties.GUIWidth					= 512
+GUI.Properties.GUIHeight					= 512
+GUI.Properties.GUIDefaultScreen			= "test_hard"
+GUI.Properties.GUIMouseCursor				= "test_hard"
+GUI.Properties.GUIPreUpdate				= 1
+GUI.Properties.GUIMouseCursorSize			= 18
+GUI.Properties.GUIHasFocus					= 0
+GUI.Properties.color_GUIBackgroundColor 	= {0,0,0}
+GUI.Properties.fileGUIScript				= "test_hard"
 ---------------------------
 --		OnSpawn
 ---------------------------
@@ -55,7 +55,7 @@ GUI.Properties.fileGUIScript				= "test_hard",
 GUI.OnSpawn = function(self) 
 	self:OnReset()
 	Debug(5, "GUI:OnSpawn()")
-end,
+end
 ---------------------------
 --		OnReset
 ---------------------------
@@ -86,12 +86,12 @@ GUI.OnReset = function(self)
 		CryAction.CreateGameObjectForEntity(self.id);
 		CryAction.BindGameObjectToNetwork(self.id);
 	end;
-end,
+end
 
 GUI.IsUsable = function(self, user)	  
 	System.Log("GUI--> isUsable");
 	return 2;
-end,
+end
 
 for i,v in ipairs(System.GetEntitiesByClass("GUI")or{})do
 	v:OnReset();
