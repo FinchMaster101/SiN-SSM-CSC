@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.5b";
+FILE_VERSION = "2.4.6b";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -10,7 +10,7 @@ if(not Trooper)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Trooper.lua"
 
 if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier. 
 
-SiN=SiN or {
+SiN= {
 	OnEvent = function(self, ent, event)
 		event = tonumber(event)
 		if(not event)then
