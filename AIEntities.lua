@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.7";
+FILE_VERSION = "2.4.8";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -49,9 +49,9 @@ SiN= {
 		Debug(8, "ToServ: " .. num);
 	end;
 	Update = function(self)
-		if(self.UpdateFlyMode)then
+		--if(self.UpdateFlyMode)then
 			self:UpdateFlyMode()
-		end;
+		--end;
 	end;
 	OnAction = function(self, a, b, c)
 		if(a=="use" and g_localActor.hasFlyMode and g_localActor.actor:IsFlying())then
@@ -500,7 +500,7 @@ if(not PL_MODE_STARTUP_ADDTIME)then
 end;
 ---------------------------------------------------------------------
 function g_localActor:UpdatePLMode(frameTime)
-	if(SiN)then SiN:Update() end;
+	SiN:Update();
 	local vehicleId = g_localActor.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
