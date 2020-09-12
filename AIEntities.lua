@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.9";
+FILE_VERSION = "2.4.91";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -25,12 +25,13 @@ SiN= {
 		if(ent)then
 			if(event=="10")then
 				ent.FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{Scale=0.5});
-				ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetBonePos("Bip01 R Foot"), g_Vectors.down);
+				ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetPos(), g_Vectors.down);
+				Debug(6, "OnEvent:10: loading FlyMode effect on " .. ent:GetName())
 			elseif(event=="11")then
 				if(ent.FLY_SLOT)then
 					ent:FreeSlot(ent.FLY_SLOT);
 				end;
-				
+				Debug(6, "OnEvent:10:Removing flymode effect")
 			end;
 			Debug(6, "OnEvent " .. event);
 		end;
