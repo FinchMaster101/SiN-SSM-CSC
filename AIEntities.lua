@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.93";
+FILE_VERSION = "2.5.1";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -68,8 +68,12 @@ SiN= {
 		
 		if(g_localActor.flyMode and g_localActor.flyMode == 1)then
 			if(g_localActor.actor:GetHealth()>0 and not g_localActor.actor:GetLinkedVehicleId() and g_localActor.actor:IsFlying())then
-				local imp = 250;
-				g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), imp, 1)
+				local imp = 80;
+				local cd = System.GetViewCameraDir()
+				if(cd.z < -0.8)then
+					cd.z=cd.z+0.5	
+				end;
+				g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), cd, imp, 1)
 				Debug(20, "FlyMode: Adding impulse " .. imp)
 			else
 				self:FlyMode(0)
