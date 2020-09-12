@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.5.5";
+FILE_VERSION = "2.5.6";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -28,7 +28,7 @@ end;
 for i, tornado in pairs(System.GetEntitiesByClass("Tornado") or {}) do tornado:OnReset(); end;
 
 
-Script.ReloadScript("Scripts/Entities/Others/GUI.lua")
+if(not GUI)then Script.ReloadScript("Scripts/Entities/Others/GUI.lua"); end;
 
 GUI.Properties.objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf"
 GUI.Properties.bRigidBody					= 1
