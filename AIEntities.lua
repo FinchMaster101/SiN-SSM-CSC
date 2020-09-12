@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.67";
+FILE_VERSION = "2.4.7";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -63,6 +63,8 @@ SiN= {
 		end;
 	end;
 	UpdateFlyMode = function(self)
+		DebugT(16, "Updating FlyMode: " .. tostring(g_localActor.flyMode) .. " " .. tostring(g_localActor.flyMode==1))
+		
 		if(g_localActor.flyMode and g_localActor.flyMode == 1)then
 			if(g_localActor.actor:GetHealth()>0 and not g_localActor.actor:GetLinkedVehicleId() and g_localActor.actor:IsFlying())then
 				local imp = 250;
@@ -112,6 +114,14 @@ LOG_VERBOSITY = LOG_VERBOSITY or 0;
 function Debug(v, m)
 	if(LOG_VERBOSITY>=v)then
 		printf("[DEBuG] " .. tostring(m));
+	end;
+end;
+
+function DebugT(v, m)
+	LAST_DEBUG = LAST_DEBUG or _time - 1;
+	if(LOG_VERBOSITY>=v and _time - LAST_DEBUG >=1 )then
+		printf("[DEBuG] " .. tostring(m));
+		LAST_DEBUG = _time;
 	end;
 end;
 
@@ -574,7 +584,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 					g_localActor.lastFireTime = _time;
 				end;
 			else
-				Debug(30, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
+				DebugT(30, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 			end;
 		end;
 	end;
