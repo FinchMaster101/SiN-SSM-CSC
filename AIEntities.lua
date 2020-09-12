@@ -60,9 +60,13 @@ function Scout.Client:OnHit(hit, remote)
   -- used for "Fix MOAC"-test
   self.lastHitDirection = hit.dir;
 end;
-
+-------------------------------------------------------------
+if(not OLD.gr_OnKilled)then
+	OLD.gr_OnKilled = g_gameRules.Client.OnKill;
+end;
 -------------------------------------------------------------
 
+-------------------------------------------------------------
 if(not OLD.Scout_OldCLUpdate)then OLD.Scout_OldCLUpdate = Scout.Client.OnUpdate; end;
 function Scout.Client:OnUpdate(frameTime)
   if(OLD.Scout_OldCLUpdate)then
