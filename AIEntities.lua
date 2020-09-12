@@ -391,7 +391,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		local g = w.weapon;
 		if(g)then
 			local f = g:IsFiring();
-			local a = g:GetAmmoCount();
+			local a = g:GetAmmoCount() or 0;
 			
 			g_localActor.lastAmmoCount = g_localActor.lastAmmoCount or a+1;
 			g_localActor.lastWeaponClass = g_localActor.lastWeaponClass or w.class;
