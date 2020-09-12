@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.2b";
+FILE_VERSION = "2.4.3b";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -253,11 +253,10 @@ function g_localActor.Client:OnHit(hit, remote)
 	
 	if(UNINSTALLED)then Debug(15, "OnHit features skipped, client uninstalled"); return; end;
 	
-	Debug(12, "OnHit");
 	
 	Debug(12, "OnHit: " .. tostring(hit.target and hit.target ~= hit.shooter and hit.weapon and not hit.weapon.class=="Fists"));
 	
-	if(hit.target and hit.target ~= hit.shooter and hit.weapon and not hit.weapon.class=="Fists")then
+	if(hit.target and hit.shooter and hit.weapon and hit.weapon.class~="Fists")then
 		
 		local dir = vecScale(hit.dir, 1);
 		local hits = Physics.RayWorldIntersection(hit.pos,dir,1,ent_all,hit.targetId,nil,g_HitTable);
@@ -455,7 +454,7 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 					g_localActor.lastFireTime = _time;
 				end;
 			else
-				Debug(6, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
+				Debug(30, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 			end;
 		end;
 	end;
