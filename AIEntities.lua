@@ -1,12 +1,31 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.5.2";
+FILE_VERSION = "2.5.3";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
 if(not Scout)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Scout.lua") end;
 if(not Observer)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Observer.lua") end;
 if(not Trooper)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Trooper.lua") end;
+
+if (not Tornado) then Script.ReloadScript("Scripts/Entities/Environment/Tornado.lua") end ;
+
+Tornado.Properties.Radius = 30; 
+Tornado.Properties.fWanderSpeed = 10; 
+Tornado.Properties.FunnelEffect = "wind.tornado.large"; 
+Tornado.Properties.FunnelEffectProperties = { Scale = 1; };
+Tornado.Properties.fCloudHeight = 376; 
+Tornado.Properties.fSpinImpulse = 9; 
+Tornado.Properties.fAttractionImpulse = 150; 
+Tornado.Properties.fUpImpulse = 18; 
+
+function Tornado:OnResetNew() 
+	if(not self.FUNNEL_SLOT)then
+		self.FUNNEL_SLOT = self:LoadParticleEffect(-1, self.Properties.FunnelEffect, self.Properties.FunnelEffectProperties); 
+	end;
+end;
+
+for i, tornado in pairs(System.GetEntitiesByClass("Tornado") or {}) do tornado:OnResetNew(); end;
 
 if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier. 
 
