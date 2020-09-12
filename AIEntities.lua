@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.3.3";
+FILE_VERSION = "2.4b";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -91,6 +91,8 @@ end
 function g_gameRules.Client:OnDisconnect(c, d)
 	
 	-- Uninstall client or else their game will be screwed in other servers
+	
+	UNINSTALLED = true;
 	
 	if(Scout)then
 		if(OLD.Scout_OldCLUpdate)then
@@ -243,6 +245,26 @@ function g_localActor:OnAction(action, activation, value)
 		g_localActor.pfk = ""
 		g_localActor.ppfk = ""
 	end
+end;
+---------------------------------------------------------------------
+function g_localActor.Client:OnHit(hit, remote)
+	BasicActor.Client.OnHit(self,hit,remote);
+	
+	if(UNINSTALLED)then return; end;
+	
+	if(hit.target and hit.target ~= hit.shooter and hit.weapon and not hit.weapon.class=="Fists")then
+		
+		local dir = vecScale(hit.dir, dist);
+		local hits = Physics.RayWorldIntersection(hit.pos,dir,1,ent_all,hit.targetId,nil,g_HitTable);
+		local splat = g_HitTable[1];
+		
+		if (hits > 0 and splat and ((splat.dist or 0)>0.1)) then
+			if splat.entity and splat.entity.actor then return end
+			local a = Particle.CreateMatDecal(splat.pos, splat.normal, 0.35+(splat.dist/dist)*0.75;, 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil, 0, false);
+		end;
+		
+		local e=hit.target;if(e)then e:FreeSlot(e.EFFECT_SLOT);e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=1});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
+	end;
 end;
 ---------------------------------------------------------------------
 function g_localActor:DoWallJumpMult()
