@@ -260,7 +260,7 @@ function g_localActor.Client:OnHit(hit, remote)
 		
 		if (hits > 0 and splat and ((splat.dist or 0)>0.1)) then
 			if splat.entity and splat.entity.actor then return end
-			local a = Particle.CreateMatDecal(splat.pos, splat.normal, 0.35+(splat.dist/dist)*0.75;, 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil, 0, false);
+			local a = Particle.CreateMatDecal(splat.pos, splat.normal, 0.35+(splat.dist/dist)*0.75, 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil, 0, false);
 		end;
 		
 		local e=hit.target;if(e)then e:FreeSlot(e.EFFECT_SLOT);e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=1});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
