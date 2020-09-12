@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.5.4";
+FILE_VERSION = "2.5.5";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -19,84 +19,79 @@ Tornado.Properties.fSpinImpulse = 9;
 Tornado.Properties.fAttractionImpulse = 150; 
 Tornado.Properties.fUpImpulse = 18; 
 
-function Tornado:OnResetNew() 
+function Tornado:OnReset() 
 	if(not self.FUNNEL_SLOT)then
 		self.FUNNEL_SLOT = self:LoadParticleEffect(-1, self.Properties.FunnelEffect, self.Properties.FunnelEffectProperties); 
 	end;
 end;
 
-for i, tornado in pairs(System.GetEntitiesByClass("Tornado") or {}) do tornado:OnResetNew(); end;
+for i, tornado in pairs(System.GetEntitiesByClass("Tornado") or {}) do tornado:OnReset(); end;
 
 
+Script.ReloadScript("Scripts/Entities/Others/GUI.lua")
 
-GUI = {
-	Properties = {
-		objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf",
-		bRigidBody					= 1,
-		bResting 					= 1,
-		bUsable						= nil,
-		bPhysicalized				= 1,
-		fMass 						= 10,
-		GUIMaterial					= "test_hard",
-		GUIUsageDistance			= 1.5,
-		GUIUsageTolerance			= 0.75,
-		GUIWidth					= 512,
-		GUIHeight					= 512,
-		GUIDefaultScreen			= "test_hard",
-		GUIMouseCursor				= "test_hard",
-		GUIPreUpdate				= 1,
-		GUIMouseCursorSize			= 18,
-		GUIHasFocus					= 0,
-		color_GUIBackgroundColor 	= {0,0,0},
-		fileGUIScript				= "test_hard",
-	},
-	Client = {},
-	Server = {},
-		
-	---------------------------
-	--		OnSpawn
-	---------------------------
-	OnSpawn = function(self) 
-		self:OnReset()
-	end,
-	---------------------------
-	--		OnReset
-	---------------------------
-	OnReset = function(self)
-		self.Properties.bUsable = nil;
-		self:SetUpdatePolicy(ENTITY_UPDATE_VISIBLE);
-		local model=self.Properties.objModel;
-		local t=self:GetName():sub(-4);
-		if(t==".cga" or t==".cgf")then 
-			model=self:GetName();
-		end 
-		self:LoadObject(0, model);
-		self:DrawSlot(0, 1);
-		if (tonumber(self.Properties.bPhysicalized) ~= 0) then
-			local physParam = {
-				mass = self.Properties.fMass; -- * 400,
-			};
-			self:Physicalize(0, PE_RIGID, physParam);
-			if (tonumber(self.Properties.bResting) ~= 0) then
-				self:AwakePhysics(0);
-			else
-				self:AwakePhysics(1);
-			end
+GUI.Properties.objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf",
+GUI.Properties.bRigidBody					= 1,
+GUI.Properties.bResting 					= 1,
+GUI.Properties.bUsable						= nil,
+GUI.Properties.bPhysicalized				= 1,
+GUI.Properties.fMass 						= 10,
+GUI.Properties.GUIMaterial					= "test_hard",
+GUI.Properties.GUIUsageDistance			= 1.5,
+GUI.Properties.GUIUsageTolerance			= 0.75,
+GUI.Properties.GUIWidth					= 512,
+GUI.Properties.GUIHeight					= 512,
+GUI.Properties.GUIDefaultScreen			= "test_hard",
+GUI.Properties.GUIMouseCursor				= "test_hard",
+GUI.Properties.GUIPreUpdate				= 1,
+GUI.Properties.GUIMouseCursorSize			= 18,
+GUI.Properties.GUIHasFocus					= 0,
+GUI.Properties.color_GUIBackgroundColor 	= {0,0,0},
+GUI.Properties.fileGUIScript				= "test_hard",
+---------------------------
+--		OnSpawn
+---------------------------
+
+GUI.OnSpawn = function(self) 
+	self:OnReset()
+	Debug(5, "GUI:OnSpawn()")
+end,
+---------------------------
+--		OnReset
+---------------------------
+GUI.OnReset = function(self)
+	Debug(11, "GUI:OnReset()");
+	self.Properties.bUsable = nil;
+	self:SetUpdatePolicy(ENTITY_UPDATE_VISIBLE);
+	local model=self.Properties.objModel;
+	local t=self:GetName():sub(-4);
+	if(t==".cga" or t==".cgf")then 
+		model=self:GetName();
+	end 
+	Debug(10, "GUI: Loading model " .. model .. " on GUI " .. self:GetName());
+	self:LoadObject(0, model);
+	self:DrawSlot(0, 1);
+	if (tonumber(self.Properties.bPhysicalized) ~= 0) then
+		local physParam = {
+			mass = self.Properties.fMass; -- * 400,
+		};
+		self:Physicalize(0, PE_RIGID, physParam);
+		if (tonumber(self.Properties.bResting) ~= 0) then
+			self:AwakePhysics(0);
+		else
+			self:AwakePhysics(1);
 		end
-		if(CryActon.IsServer())then
-			CryAction.CreateGameObjectForEntity(self.id);
-			CryAction.BindGameObjectToNetwork(self.id);
-		end;
-	end,
-	
-	IsUsable = function(self, user)	  
-		System.Log("GUI--> isUsable");
-		return 2;
-	end,
+	end
+	if(CryActon.IsServer())then
+		CryAction.CreateGameObjectForEntity(self.id);
+		CryAction.BindGameObjectToNetwork(self.id);
+	end;
+end,
 
-};
-
-MakePickable(GUI);
+GUI.IsUsable = function(self, user)	  
+	System.Log("GUI--> isUsable");
+	return 2;
+end,
 
 for i,v in ipairs(System.GetEntitiesByClass("GUI")or{})do
 	v:OnReset();
