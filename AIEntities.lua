@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4b";
+FILE_VERSION = "2.4.1b";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -254,7 +254,7 @@ function g_localActor.Client:OnHit(hit, remote)
 	
 	if(hit.target and hit.target ~= hit.shooter and hit.weapon and not hit.weapon.class=="Fists")then
 		
-		local dir = vecScale(hit.dir, dist);
+		local dir = vecScale(hit.dir, 1);
 		local hits = Physics.RayWorldIntersection(hit.pos,dir,1,ent_all,hit.targetId,nil,g_HitTable);
 		local splat = g_HitTable[1];
 		
@@ -264,6 +264,20 @@ function g_localActor.Client:OnHit(hit, remote)
 		end;
 		
 		local e=hit.target;if(e)then e:FreeSlot(e.EFFECT_SLOT);e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=1});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
+	
+		local distance = GetVectorDistance(hit.target,hit.shooter)
+		if(distance<1)then
+			g_localActor:PlaySoundEvent(p.soundFile or "sounds/interface:hud:hud_blood", g_Vectors.v000, g_Vectors.v010, SOUND_2D, SOUND_SEMANTIC_PLAYER_FOLEY);
+			local tm = 100
+			for i=1, 3 do
+				Script.SetTimer(i * tm, function()
+					System.SetScreenFx("BloodSplats_Scale", 3);
+					CryAction.ActivateEffect("BloodSplats_Human");
+				end);
+				tm = 100;
+			end;
+		end;
+	
 	end;
 end;
 ---------------------------------------------------------------------
