@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.3b";
+FILE_VERSION = "2.4.4b";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -17,6 +17,16 @@ function TryGetDir(entity)
 	else
 		return nil;
 	end;
+end;
+
+function GetVectorDistance(a, b)
+
+	local p1, p2 = (not a.id and a or a:GetWorldPos()), (not b.id and b or b:GetWorldPos());
+
+	local x, y, z = (p1.x - p2.x), (p1.y - p2.y), (p1.z - p2.z);
+
+	return (math.sqrt(x*x + y*y + z*z) or 0.0)
+
 end;
 
 function TryGetMOARDir(entity) -- not used anymore
