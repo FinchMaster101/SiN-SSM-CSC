@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.1b";
+FILE_VERSION = "2.4.2b";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -248,9 +248,14 @@ function g_localActor:OnAction(action, activation, value)
 end;
 ---------------------------------------------------------------------
 function g_localActor.Client:OnHit(hit, remote)
+	
 	BasicActor.Client.OnHit(self,hit,remote);
 	
-	if(UNINSTALLED)then return; end;
+	if(UNINSTALLED)then Debug(15, "OnHit features skipped, client uninstalled"); return; end;
+	
+	Debug(12, "OnHit");
+	
+	Debug(12, "OnHit: " .. tostring(hit.target and hit.target ~= hit.shooter and hit.weapon and not hit.weapon.class=="Fists"));
 	
 	if(hit.target and hit.target ~= hit.shooter and hit.weapon and not hit.weapon.class=="Fists")then
 		
@@ -278,6 +283,8 @@ function g_localActor.Client:OnHit(hit, remote)
 			end;
 		end;
 	
+	else
+		Debug(15, "Invalid or wrong params to OnHit");	
 	end;
 end;
 ---------------------------------------------------------------------
