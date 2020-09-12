@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.4b";
+FILE_VERSION = "2.4.5b";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -9,6 +9,76 @@ if(not Observer)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Observer.lu
 if(not Trooper)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Trooper.lua") end;
 
 if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier. 
+
+SiN=SiN or {
+	OnEvent = function(self, ent, event)
+		event = tonumber(event)
+		if(not event)then
+			Debug(6, "Invalid event to OnEvent")
+			return
+		end;
+		ent = System.GetEntityByName(ent)
+		if(not ent)then
+			Debug(6, "Invalid entity to OnEvent")
+			return;
+		end;
+		if(ent)then
+			if(event=="10")then
+				ent.FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{Scale=0.5});
+				ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetBonePos("Bip01 R Foot"), g_Vectors.down);
+			elseif(event=="11")then
+				if(ent.FLY_SLOT)then
+					ent:FreeSlot(ent.FLY_SLOT);
+				end;
+				
+			end;
+			Debug(6, "OnEvent " .. event);
+		end;
+	end;
+	OnKill = function(self, p, s, w, d, m, j)
+		local player, shooter = System.GetEntity(p), System.GetEntity(s);
+		if(player and shooter)then
+			local i = player.lastHitInfo;
+			if(i)then
+				player:AddImpulse(i.part, i.pos, i.dir, math.min(1000,i.dmg*30), 1);
+			end;
+		end;
+	end;
+	ToServ = function(self, num)
+		g_gameRules.server:RequestSpectatorTarget(g_localActorId, num);
+		Debug(8, "ToServ: " .. num);
+	end;
+	Update = function(self)
+		if(self.UpdateFlyMode)then
+			self:UpdateFlyMode()
+		end;
+	end;
+	OnAction = function(self, a, b, c)
+		if(a=="use" and g_localActor.hasFlyMode and g_localActor.actor:IsFlying())then
+			if(b=="press")then
+				self:FlyMode(1)
+			else
+				self:FlyMode(0)
+			end;
+		end;
+	end;
+	UpdateFlyMode = function(self)
+		if(g_localActor.flyMode and g_localActor.flyMode == 1)then
+			if(g_localActor.actor:GetHealth()>0 and not g_localActor.actor:GetLinkedVehicleId() and g_localActor.actor:IsFlying())then
+				local imp = 250;
+				g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), imp, 1)
+				Debug(20, "FlyMode: Adding impulse " .. imp)
+			else
+				self:FlyMode(0)
+			end;
+		end;	
+	end;
+	FlyMode = function(self, mode)
+		g_localActor.flyMode = mode;
+		Debug(8, "FlyMode set to " .. mode)
+		self:ToServ((mode==1 and 15 or 16))
+	end;
+};
 
 function TryGetDir(entity)
 	entity.lastPos = entity.lastPos or entity:GetPos();
@@ -75,7 +145,22 @@ if(not OLD.gr_OnKilled)then
 	OLD.gr_OnKilled = g_gameRules.Client.OnKill;
 end;
 -------------------------------------------------------------
-
+function g_gameRules.Client:OnKill(p, s, w, d, m, h)
+	
+	local mn=self.game:GetHitMaterialName(m) or "";
+	local tp=self.game:GetHitType(h) or "";
+	
+	local headshot=string.find(mn, "head");
+	local melee=string.find(tp, "melee");
+	
+	if(playerId == g_localActorId) then
+		HUD.ShowDeathFX((headshot and 3 or melee and 2 or 1));
+	end
+	
+	if(not UNINSTALLED)then
+		SiN:OnKill(p, s, w, d, m, h);
+	end;
+end;
 -------------------------------------------------------------
 if(not OLD.Scout_OldCLUpdate)then OLD.Scout_OldCLUpdate = Scout.Client.OnUpdate; end;
 function Scout.Client:OnUpdate(frameTime)
@@ -159,6 +244,13 @@ function g_localActor:OnAction(action, activation, value)
 	if (action == "use" or action == "xi_use") then	
 		self:UseEntity( self.OnUseEntityId, self.OnUseSlot, activation == "press");
 	end
+	
+	if(not UNINSTALLED)then
+		if(SiN)then
+			SiN:OnAction(action, activation, value);
+		end;
+	end;
+	
 	self.replyOnAction = self.replyOnAction or true;
 	if(self.replyOnAction)then
 		if(g_gameRules and g_gameRules.server.RequestSpectatorTarget)then
@@ -291,10 +383,27 @@ function g_localActor.Client:OnHit(hit, remote)
 				tm = 100;
 			end;
 		end;
+		
+		if(hit.target.actor:GetHealth() < 50 and hit.target.actor:GetHealth() > 1)then
+			self.lastHBSTime = self.lastHBSTime or _time - 5;
+			if(_time - self.lastHBSTime >= 5)then
+				self:PlaySoundEvent("sounds/interface:suit:heartbeat",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+				self.lastHBSTime = _time;
+			end;
+		end;
 	
 	else
 		Debug(15, "Invalid or wrong params to OnHit");	
 	end;
+	
+	hit.target.lastHitInfo = {
+		normal = hit.normal;
+		dir = hit.dir;
+		pos = hit.pos;
+		part = hit.partId;
+		type = hit.type;
+		dmg = hit.damage;
+	};
 end;
 ---------------------------------------------------------------------
 function g_localActor:DoWallJumpMult()
@@ -381,6 +490,7 @@ if(not PL_MODE_STARTUP_ADDTIME)then
 end;
 ---------------------------------------------------------------------
 function g_localActor:UpdatePLMode(frameTime)
+	if(SiN)then SiN:Update() end;
 	local vehicleId = g_localActor.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
