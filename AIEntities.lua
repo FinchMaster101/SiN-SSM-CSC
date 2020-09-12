@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.4.92";
+FILE_VERSION = "2.4.93";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -12,8 +12,8 @@ if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patchi
 
 SiN= {
 	OnEvent = function(self, ent, event)
-		event = tonumber(event)
-		if(not event)then
+		event = tostring(event)
+		if(not event or event=="nil")then
 			Debug(6, "Invalid event to OnEvent")
 			return
 		end;
