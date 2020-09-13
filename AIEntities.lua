@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.5.8";
+FILE_VERSION = "2.6.0";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -99,7 +99,7 @@ end;
 if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier. 
 
 SiN= {
-	OnEvent = function(self, ent, event)
+	OnEvent = function(self, ent, event, a, b, c, d, e, f, g, h, i, j) --, k, l, m, o, p, q, r, s, t, u, v, w, x, y, z
 		event = tostring(event)
 		if(not event or event=="nil")then
 			Debug(6, "Invalid event to OnEvent")
@@ -112,14 +112,34 @@ SiN= {
 		end;
 		if(ent)then
 			if(event=="10")then
-				ent.FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{Scale=0.5});
+				ent.FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{CountScale=2;Scale=0.5});
 				ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetPos(), g_Vectors.down);
-				Debug(6, "OnEvent:10: loading FlyMode effect on " .. ent:GetName())
 			elseif(event=="11")then
 				if(ent.FLY_SLOT)then
 					ent:FreeSlot(ent.FLY_SLOT);
 				end;
-				Debug(6, "OnEvent:10:Removing flymode effect")
+			elseif(event=="PSE")then
+				if(a)then
+					ent.soundId=ent:PlaySoundEvent(a,g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+				end;
+			elseif(event=="LPE")then
+				if(a)then
+					if(ent.particleId and i and tostring(i) == "CO")then
+						ent:FreeSlot(ent.particleId);
+					end;
+					ent.particleId = ent:LoadParticleEffect( -1, tostring(a or nil), {				
+						bActive=1,
+						bPrime=1,
+						Scale=tonumber(b or 1),								-- Scale entire effect size.
+						SpeedScale=tonumber(c or 0),						-- Scale particle emission speed
+						CountScale=tonumber(d or 0),						-- Scale particle counts.
+						bCountPerUnit=tonumber(e or 0),				-- Multiply count by attachment extent
+						AttachType=tostring(f or "Render"),					-- BoundingBox, Physics, Render
+						AttachForm=tostring(g or "Surface"),		-- Vertices, Edges, Surface, Volume
+						PulsePeriod=tonumber(h or 0),					-- Restart continually at this period.
+					});
+					Debug(6, "OnEvent LPE: Loading Particle Effect " .. a .. " on " .. ent:GetName() .. "")
+				end;
 			end;
 			Debug(6, "OnEvent " .. event);
 		end;
