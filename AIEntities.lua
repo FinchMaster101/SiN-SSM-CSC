@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.6.1";
+FILE_VERSION = "2.6.2";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -143,7 +143,7 @@ SiN= {
 			elseif(event=="FreeSlot")then
 				if(a=="particleId")then
 					if(ent.particleId)then
-						ent:Freeslot(ent.particleId)
+						ent:FreeSlot(ent.particleId)
 					end;
 				end;
 			end;
