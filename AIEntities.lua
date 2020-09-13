@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.5.6";
+FILE_VERSION = "2.5.7";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -82,10 +82,7 @@ GUI.OnReset = function(self)
 			self:AwakePhysics(1);
 		end
 	end
-	if(CryActon.IsServer())then
-		CryAction.CreateGameObjectForEntity(self.id);
-		CryAction.BindGameObjectToNetwork(self.id);
-	end;
+
 end
 
 GUI.IsUsable = function(self, user)	  
