@@ -293,11 +293,11 @@ end;
 function SetDebugVerbosity(a)
 	a = tonumber(a);
 	if(not a)then
-		printf("    $3debug_logVerbosity = $7" .. LOG_VERBOSITY)
+		printf("    $3debug_logVerbosity = $6" .. LOG_VERBOSITY)
 		return true;
 	end;
 	LOG_VERBOSITY = a
-	printf("    $3debug_logVerbosity = $7" .. LOG_VERBOSITY)
+	printf("    $3debug_logVerbosity = $6" .. LOG_VERBOSITY)
 	return true;
 end;
 System.AddCCommand("debug_logVerbosity","SetDebugVerbosity(%%)","sets the new Debug Log verbosity")
@@ -328,7 +328,7 @@ function g_gameRules.Client:OnKill(p, s, w, d, m, h)
 	local headshot=string.find(mn, "head");
 	local melee=string.find(tp, "melee");
 	
-	if(playerId == g_localActorId) then
+	if(p == g_localActorId) then
 		HUD.ShowDeathFX((headshot and 3 or melee and 2 or 1));
 	end
 	
@@ -507,7 +507,7 @@ function g_localActor:OnAction(action, activation, value)
 			if g_localActor.actor:GetNanoSuitMode() == 1 then i = 1100 end
 			g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, i, 1);
 			if(ALLOW_EXPERIMENTAL)then
-				printf("[DEBuG] Performing jump multiplier on g_localActor")
+				printf("[DEBuG] Performing jump multiplier on g_localActor " ..i .. " impulse")
 			end;
 		end
 	end
@@ -542,24 +542,29 @@ function g_localActor.Client:OnHit(hit, remote)
 	if(hit.target and hit.shooter and hit.weapon and hit.weapon.class~="Fists")then
 		
 		local dir = vecScale(hit.dir, 1);
-		local hits = Physics.RayWorldIntersection(hit.pos,dir,1,ent_all,hit.targetId,nil,g_HitTable);
+		local hits = Physics.RayWorldIntersection(hit.pos,dir,1,-1,hit.targetId,nil,g_HitTable);
 		local splat = g_HitTable[1];
 		
 		if (hits > 0 and splat and ((splat.dist or 0)>0.1)) then
 			if splat.entity and splat.entity.actor then return end
 			local a = Particle.CreateMatDecal(splat.pos, splat.normal, 0.35+(splat.dist/dist)*0.75, 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil, 0, false);
+			Debug(7, "Creating WallSplat particle")
+		else
+			Debug(7, "Cannot create WallSplat, hits<0 or splat.dist<0.1 ("..(splat and splat.dist or 0.0)..")")	
 		end;
 		
 		local e=hit.target;if(e)then e:FreeSlot(e.EFFECT_SLOT);e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=1});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
 	
 		local distance = GetVectorDistance(hit.target,hit.shooter)
 		if(distance<1)then
-			g_localActor:PlaySoundEvent(p.soundFile or "sounds/interface:hud:hud_blood", g_Vectors.v000, g_Vectors.v010, SOUND_2D, SOUND_SEMANTIC_PLAYER_FOLEY);
-			local tm = 100
+			g_localActor:PlaySoundEvent("sounds/interface:hud:hud_blood", g_Vectors.v000, g_Vectors.v010, SOUND_2D, SOUND_SEMANTIC_PLAYER_FOLEY);
+			Debug(5, "PLaying hud_blood sound on g_localActor")
+			local tm = 0
 			for i=1, 3 do
 				Script.SetTimer(i * tm, function()
 					System.SetScreenFx("BloodSplats_Scale", 3);
 					CryAction.ActivateEffect("BloodSplats_Human");
+					Debug(7, "Setting ScreenFX to BloodSplats_Human")
 				end);
 				tm = 100;
 			end;
@@ -570,6 +575,7 @@ function g_localActor.Client:OnHit(hit, remote)
 			if(_time - self.lastHBSTime >= 5)then
 				self:PlaySoundEvent("sounds/interface:suit:heartbeat",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
 				self.lastHBSTime = _time;
+				Debug(5, "playing HeartBeat sound on g_localActor")
 			end;
 		end;
 	
