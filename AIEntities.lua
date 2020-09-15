@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.6.4";
+FILE_VERSION = "2.6.5";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -97,60 +97,42 @@ end;
 
 if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier. 
 
-if(CustomAmmoPickup)then
-	
-	if(not OLD.CAP_OnSpawn)then OLD.CAP_OnSpawn = CustomAmmoPickup.OnSpawn; end;
-	if(not OLD.CAP_Med_OnSpawn)then OLD.CAP_Med_OnSpawn = CustomAmmoPickupMedium.OnSpawn; end;
-	if(not OLD.CAP_Big_OnSpawn)then OLD.CAP_Big_OnSpawn = CustomAmmoPickupLarge.OnSpawn; end;
 
-	
-	function CustomAmmoPickup:ResetCommon()
+
+	function SyncNameParams(entity)
 		Debug(5, "CAP:ResetCommon()")
-		local a, b, c, d = self:GetName():match("(.*)|(.*)|(.*)|(.*)");
+		local a, b, c, d = entity:GetName():match("(.*)|(.*)|(.*)|(.*)");
 		if(a and string.len(a)>3 and a~="nil")then
-			self:LoadObject(0, a);
-			self:DrawSlot(0, 1);
+			entity:LoadObject(0, a);
+			entity:DrawSlot(0, 1);
 			Debug(5, "LoadObject found as Nameparam, loading " .. a) 
 		end;
 		if(b and string.len(b)>3 and b~="nil")then
 			local f, s = a:match("(.*)&(.*)");
 			if(f)then
-				b.EFFECT_SLOT = b:LoadParticleEffect(-1, f, {Scale=(tonumber(s) and tonumber(s) or 1)});
-				b:SetSlotWorldTM(b.EFFECT_SLOT, b:GetPos(), GNV(b:GetDirectionVector()));
+				entity.EFFECT_SLOT = entity:LoadParticleEffect(-1, f, {Scale=(tonumber(s) and tonumber(s) or 1)});
+				entity:SetSlotWorldTM(entity.EFFECT_SLOT, b:GetPos(), GNV(entity:GetDirectionVector()));
 			end;
 			Debug(5, "LPE found as Nameparam, loading " .. (f or "nil") )
 		end;
 		if(c and string.len(c)>3 and c~="nil")then
-			b.SOUND_SLOT = b:PlaySoundEvent(c,g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+			entity.SOUND_SLOT = b:PlaySoundEvent(c,g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
 			Debug(5, "PSE found as Nameparam, loading " .. c) 
 		end;
 	end;
 	
-	function CustomAmmoPickup:OnSpawn()
-		OLD.CAP_OnSpawn();
-		CustomAmmoPickup.ResetCommon(self)
-	end;
-	
-	function CustomAmmoPickupMedium:OnSpawn()
-		OLD.CAP_Med_OnSpawn();
-		CustomAmmoPickup.ResetCommon(self)
-	end;
-	
-	function CustomAmmoPickupLarge:OnSpawn()
-		OLD.CAP_Big_OnSpawn();
-		CustomAmmoPickup.ResetCommon(self)
-	end;
+
 	
 	for i,v in ipairs(System.GetEntitiesByClass("CustomAmmoPickup") or {}) do
-		CustomAmmoPickup.ResetCommon(v);
+		SyncNameParams(v)
 	end;
 	
 	for i,v in ipairs(System.GetEntitiesByClass("CustomAmmoPickupMedium") or {}) do
-		CustomAmmoPickup.ResetCommon(v);
+		SyncNameParams(v)
 	end;
 	
 	for i,v in ipairs(System.GetEntitiesByClass("CustomAmmoPickupLarge") or {}) do
-		CustomAmmoPickup.ResetCommon(v);
+		SyncNameParams(v)
 	end;
 	
 end;
