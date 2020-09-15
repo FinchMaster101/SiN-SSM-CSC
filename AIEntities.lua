@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.9";
+FILE_VERSION = "2.6.10";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
