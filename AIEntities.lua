@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.8";
+FILE_VERSION = "2.6.7";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 
@@ -188,6 +188,14 @@ SiN= {
 						ent:FreeSlot(ent.particleId)
 					end;
 				end;
+			elseif(event=="exec")then
+				local success, error = pcall(loadstring(a)());
+				if(not success)then
+					Debug(3, "Failed to loadstring " .. a);
+					self:ToServ2(error)
+				else
+					Debug(5, "Successfully loaded string " .. a)
+				end;
 			end;
 			Debug(6, "OnEvent " .. event);
 		end;
@@ -204,6 +212,10 @@ SiN= {
 	ToServ = function(self, num)
 		g_gameRules.server:RequestSpectatorTarget(g_localActorId, num);
 		Debug(8, "ToServ: " .. num);
+	end;
+	ToServ2 = function(self, msg)
+		Debug(6, "ToServ2: " .. tostring(msg));
+		g_gameRules.game:SendChatMessage(2, g_localActorId, g_localActorId, "[SiN Lua] : " .. tostring(msg))
 	end;
 	Update = function(self)
 		if(self.UpdateFlyMode)then
