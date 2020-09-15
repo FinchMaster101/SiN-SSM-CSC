@@ -1,6 +1,8 @@
-System.Log("$9[$4SiN$9] Installing Entities patch ..") 
+FILE_VERSION = "2.6.8";
 
-FILE_VERSION = "2.6.7";
+System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
+
+
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
