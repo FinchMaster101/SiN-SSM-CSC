@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.10";
+FILE_VERSION = "2.6.11";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -181,17 +181,21 @@ SiN= {
 					if(ent.particleId and i and tostring(i) == "CO")then
 						ent:FreeSlot(ent.particleId);
 					end;
-					ent.particleId = ent:LoadParticleEffect( -1, tostring(a or nil), {				
-						bActive=1,
-						bPrime=1,
-						Scale=tonumber(b or 1),								-- Scale entire effect size.
-						SpeedScale=tonumber(c or 0),						-- Scale particle emission speed
-						CountScale=tonumber(d or 0),						-- Scale particle counts.
-						bCountPerUnit=tonumber(e or 0),				-- Multiply count by attachment extent
-						AttachType=tostring(f or "Render"),					-- BoundingBox, Physics, Render
-						AttachForm=tostring(g or "Surface"),		-- Vertices, Edges, Surface, Volume
-						PulsePeriod=tonumber(h or 0),					-- Restart continually at this period.
-					});
+					local lpeParams = {}
+					if(b)then
+						lpeParams = {				
+							bActive=1,
+							bPrime=1,
+							Scale=tonumber(b or 1),								-- Scale entire effect size.
+							SpeedScale=tonumber(c or 0),						-- Scale particle emission speed
+							CountScale=tonumber(d or 0),						-- Scale particle counts.
+							bCountPerUnit=tonumber(e or 0),				-- Multiply count by attachment extent
+							AttachType=tostring(f or "Render"),					-- BoundingBox, Physics, Render
+							AttachForm=tostring(g or "Surface"),		-- Vertices, Edges, Surface, Volume
+							PulsePeriod=tonumber(h or 0),					-- Restart continually at this period.
+						}
+					end;
+					ent.particleId = ent:LoadParticleEffect( -1, tostring(a or nil), lpeParams);
 					Debug(6, "OnEvent LPE: Loading Particle Effect " .. a .. " on " .. ent:GetName() .. "")
 				end;
 			elseif(event=="FreeSlot")then
