@@ -1,7 +1,7 @@
-FILE_VERSION = "2.6.8";
+FILE_VERSION = "2.6.9";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
-
+LOG_VERBOSITY = LOG_VERBOSITY or 0;
 function Debug(v, m)
 	if(LOG_VERBOSITY>=v)then
 		printf("[DEBuG] " .. tostring(m));
@@ -298,7 +298,7 @@ function TryGetMOARDir(entity) -- not used anymore
 	end;
 end;
 
-LOG_VERBOSITY = LOG_VERBOSITY or 0;
+
 
 
 
