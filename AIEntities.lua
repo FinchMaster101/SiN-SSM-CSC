@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.11";
+FILE_VERSION = "2.6.2";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -178,6 +178,15 @@ SiN= {
 				end;
 			elseif(event=="LPE")then
 				if(a)then
+					ent.SLOTS = ent.SLOTS or {};
+					nextSlot = 100;
+					while ent.SLOTS[nextSlot] ~= nil do
+						nextSlot = tonumber(nextSlot) + 1;
+						if(nextSlot>9999)then
+							break;
+						end;
+					end;
+					
 					if(ent.particleId and i and tostring(i) == "CO")then
 						ent:FreeSlot(ent.particleId);
 					end;
@@ -195,13 +204,20 @@ SiN= {
 							PulsePeriod=tonumber(h or 0),					-- Restart continually at this period.
 						}
 					end;
-					ent.particleId = ent:LoadParticleEffect( -1, tostring(a or nil), lpeParams);
+					ent.SLOTS[nextSlot] = ent:LoadParticleEffect( -1, tostring(a or nil), lpeParams);
 					Debug(6, "OnEvent LPE: Loading Particle Effect " .. a .. " on " .. ent:GetName() .. "")
+					Debug(6, "Next Slot  is " .. nextSlot)
 				end;
 			elseif(event=="FreeSlot")then
 				if(a=="particleId")then
 					if(ent.particleId)then
 						ent:FreeSlot(ent.particleId)
+					end;
+				end;
+				if("a"=="all")then
+					for i,v in pairs(ent.SLOTS or {}) do
+						ent:FreeSlot(v)
+						Debug(6, "Slot " .. v .." cleared!");
 					end;
 				end;
 			elseif(event=="exec")then
