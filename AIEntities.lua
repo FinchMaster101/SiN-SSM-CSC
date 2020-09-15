@@ -1,6 +1,6 @@
 System.Log("$9[$4SiN$9] Installing Entities patch ..") 
 
-FILE_VERSION = "2.6.5";
+FILE_VERSION = "2.6.6";
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -108,12 +108,12 @@ if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patchi
 			Debug(5, "LoadObject found as Nameparam, loading " .. a) 
 		end;
 		if(b and string.len(b)>3 and b~="nil")then
-			local f, s = a:match("(.*)&(.*)");
+			local f, s = b:match("(.*)&(.*)");
 			if(f)then
 				entity.EFFECT_SLOT = entity:LoadParticleEffect(-1, f, {Scale=(tonumber(s) and tonumber(s) or 1)});
 				entity:SetSlotWorldTM(entity.EFFECT_SLOT, b:GetPos(), GNV(entity:GetDirectionVector()));
 			end;
-			Debug(5, "LPE found as Nameparam, loading " .. (f or "nil") )
+			Debug(5, "LPE found as Nameparam, loading " .. (f or "nil") .. ", " .. (s or "null") )
 		end;
 		if(c and string.len(c)>3 and c~="nil")then
 			entity.SOUND_SLOT = b:PlaySoundEvent(c,g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
