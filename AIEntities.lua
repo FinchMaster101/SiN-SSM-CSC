@@ -1,8 +1,20 @@
-FILE_VERSION = "2.6.7";
+FILE_VERSION = "2.6.8";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 
+function Debug(v, m)
+	if(LOG_VERBOSITY>=v)then
+		printf("[DEBuG] " .. tostring(m));
+	end;
+end;
 
+function DebugT(v, m)
+	LAST_DEBUG = LAST_DEBUG or _time - 1;
+	if(LOG_VERBOSITY>=v and _time - LAST_DEBUG >=1 )then
+		printf("[DEBuG] " .. tostring(m));
+		LAST_DEBUG = _time;
+	end;
+end;
 
 if(not Hunter)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Hunter.lua") end;
 if(not Alien)then Script.ReloadScript("Scripts/Entities/AI/Aliens/Alien.lua") end;
@@ -288,19 +300,7 @@ end;
 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
 
-function Debug(v, m)
-	if(LOG_VERBOSITY>=v)then
-		printf("[DEBuG] " .. tostring(m));
-	end;
-end;
 
-function DebugT(v, m)
-	LAST_DEBUG = LAST_DEBUG or _time - 1;
-	if(LOG_VERBOSITY>=v and _time - LAST_DEBUG >=1 )then
-		printf("[DEBuG] " .. tostring(m));
-		LAST_DEBUG = _time;
-	end;
-end;
 
 function SetDebugVerbosity(a)
 	a = tonumber(a);
