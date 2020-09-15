@@ -95,8 +95,34 @@ for i,v in ipairs(System.GetEntitiesByClass("GUI")or{})do
 end;
 
 
-
 if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patching will be easier. 
+
+if(CustomAmmoPickup)then
+	if(not OLD.CAP_OnSpawn)then OLD.CAP_OnSpawn = CustomAmmoPickup.OnSpawn; end;
+	if(not OLD.CAP_Med_OnSpawn)then OLD.CAP_Med_OnSpawn = CustomAmmoPickupMedium.OnSpawn; end;
+	if(not OLD.CAP_Big_OnSpawn)then OLD.CAP_Big_OnSpawn = CustomAmmoPickupLarge.OnSpawn; end;
+
+	
+	function CustomAmmoPickup:OnSpawn()
+		local a, b, c, d = self:GetName():match("(.*)|(.*)|(.*)|(.*)");
+		if(a and string.len(a)>3 and a~="nil")then
+			self:LoadObject(0, a);
+			self:DrawSlot(0, 1);
+		end;
+		if(b and string.len(b)>3 and b~="nil")then
+			local f, s = a:match("(.*)&(.*)");
+			if(f)then
+				b.EFFECT_SLOT = b:LoadParticleEffect(-1, f, {Scale=(tonumber(s) and tonumber(s) or 1)});
+				b:SetSlotWorldTM(b.EFFECT_SLOT, b:GetPos(), GNV(b:GetDirectionVector()));
+			end;
+		end;
+		if(c and string.len(c)>3 and c~="nil")then
+			b.SOUND_SLOT = b:PlaySoundEvent(c,g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+		end;
+	end;
+	
+end;
+
 
 SiN= {
 	OnEvent = function(self, ent, event, a, b, c, d, e, f, g, h, i, j) --, k, l, m, o, p, q, r, s, t, u, v, w, x, y, z
