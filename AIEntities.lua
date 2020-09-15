@@ -135,7 +135,7 @@ if(not OLD)then OLD = {}; end; -- in here all old functions are stored so patchi
 		SyncNameParams(v)
 	end;
 	
-end;
+
 
 
 SiN= {
