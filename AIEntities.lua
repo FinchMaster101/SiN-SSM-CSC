@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.4";
+FILE_VERSION = "2.6.5";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -601,7 +601,7 @@ function g_localActor.Client:OnHit(hit, remote)
 				tm = 100;
 			end;
 		else
-			Debug("Cannot create BloodPLats, " .. distance)	
+			Debug(5, "Cannot create BloodPLats, " .. distance)	
 		end;
 		
 		if(hit.target.actor:GetHealth() < 50 and hit.target.actor:GetHealth() > 1)then
