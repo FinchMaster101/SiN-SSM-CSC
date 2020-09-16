@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.6";
+FILE_VERSION = "2.6.7";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -573,7 +573,7 @@ function g_localActor.Client:OnHit(hit, remote)
 	
 	if(hit.target and hit.shooter and hit.weapon and hit.weapon.class~="Fists")then
 		
-		local dir = vecScale(hit.dir, 2);
+		local dir = vecScale(GNV(hit.dir), 2);
 		local hits = Physics.RayWorldIntersection(hit.pos,dir,2,-1,hit.targetId,nil,g_HitTable);
 		local splat = g_HitTable[1];
 		
@@ -804,13 +804,17 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 	
 	MINUTE_TIMER = MINUTE_TIMER or (_time - 60);
 	if(_time - MINUTE_TIMER >= 60)then
-		g_localActor:OnTimer(1, _time);
+		if(g_localActor.OnTimer)then
+			g_localActor:OnTimer(1, _time);
+		end;
 		MINUTE_TIMER = _time;
 	end;
 	
 	QM_TIMER = QM_TIMER or (_time - 15);
 	if(_time - QM_TIMER >= 15)then
-		g_localActor:OnTimer(2, _time);
+		if(g_localActor.OnTimer)then
+			g_localActor:OnTimer(2, _time);
+		end;
 		QM_TIMER = _time;
 	end;
 end
