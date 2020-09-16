@@ -378,7 +378,7 @@ function Scout.Client:OnUpdate(frameTime)
   if(newDir)then
      self:SetDirectionVector(newDir);
   end;
-	if(ALLOW_EXPERIMENTAL)then printf("updated: " .. tostring(newDir)); end;
+	Debug(16, "ScoutSelf="..tostring(self)..", id:" .. tostring(self.id));
   local currWp = (self.inventory and self.inventory:GetCurrentItem());
   if(currWp)then
      if(currWp.class == "Scout_MOAR" and self.lastHitDirection)then
@@ -573,16 +573,16 @@ function g_localActor.Client:OnHit(hit, remote)
 	
 	if(hit.target and hit.shooter and hit.weapon and hit.weapon.class~="Fists")then
 		
-		local dir = vecScale(hit.dir, 1);
-		local hits = Physics.RayWorldIntersection(hit.pos,dir,1,-1,hit.targetId,nil,g_HitTable);
+		local dir = vecScale(hit.dir, 2);
+		local hits = Physics.RayWorldIntersection(hit.pos,dir,2,-1,hit.targetId,nil,g_HitTable);
 		local splat = g_HitTable[1];
 		
-		if (hits > 0 and splat and ((splat.dist or 0)>0.1)) then
+		if (hits > 0 and splat and ((splat.dist or 0)>2)) then
 			if splat.entity and splat.entity.actor then return end
 			local a = Particle.CreateMatDecal(splat.pos, splat.normal, 0.35+(splat.dist/dist)*0.75, 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil, 0, false);
 			Debug(7, "Creating WallSplat particle")
 		else
-			Debug(7, "Cannot create WallSplat, hits<0 or splat.dist<0.1 ("..(splat and splat.dist or 0.0)..")")	
+			Debug(7, "Cannot create WallSplat, hits<0 or splat.dist>0.1 ("..(splat and splat.dist or 0.0)..")")	
 		end;
 		
 		local e=hit.target;if(e)then e:FreeSlot(e.EFFECT_SLOT);e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=1});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
@@ -600,6 +600,8 @@ function g_localActor.Client:OnHit(hit, remote)
 				end);
 				tm = 100;
 			end;
+		else
+			Debug("Cannot create BloodPLats, " .. distance)	
 		end;
 		
 		if(hit.target.actor:GetHealth() < 50 and hit.target.actor:GetHealth() > 1)then
