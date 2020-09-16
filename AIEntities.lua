@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.5";
+FILE_VERSION = "2.6.6";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -577,12 +577,12 @@ function g_localActor.Client:OnHit(hit, remote)
 		local hits = Physics.RayWorldIntersection(hit.pos,dir,2,-1,hit.targetId,nil,g_HitTable);
 		local splat = g_HitTable[1];
 		
-		if (hits > 0 and splat and ((splat.dist or 0)>2)) then
+		if (hits > 0 and splat and ((splat.dist or 0)<1.5)) then
 			if splat.entity and splat.entity.actor then return end
 			local a = Particle.CreateMatDecal(splat.pos, splat.normal, 0.35+(splat.dist/dist)*0.75, 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil, 0, false);
 			Debug(7, "Creating WallSplat particle")
 		else
-			Debug(7, "Cannot create WallSplat, hits<0 or splat.dist>0.1 ("..(splat and splat.dist or 0.0)..")")	
+			Debug(7, "Cannot create WallSplat, hits<0 or splat.dist>1.5 ("..(splat and splat.dist or 0.0)..")")	
 		end;
 		
 		local e=hit.target;if(e)then e:FreeSlot(e.EFFECT_SLOT);e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=1});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
