@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.5";
+FILE_VERSION = "2.7.56;
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -246,7 +246,7 @@ SiN= {
 						g_gameRules.game:SendChatMessage(2,g_localActorId,g_localActorId, "My FPS are "..fps.average.." | Driver "..(not fps.dx10 and "DX9" or "DX10").." | Display "..fps.screen.." | Spec " ..spec); 
 					else
 						if(g_localActor.Report)then
-							g_localActor:Report(5, fps.average, fps.dx10, spec, fps.screen);		
+							g_localActor:Report(5, fps.average, fps.dx10, fps.spec, fps.screen);		
 						end;
 					end;
 				end);
