@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.0";
+FILE_VERSION = "2.7.1";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -229,14 +229,21 @@ SiN= {
 					Debug(5, "Successfully loaded string " .. a)
 				end;
 			elseif(event=="FPS")then
-				local fps = {start=System.GetFrameID();endFps=0;diffFps=0;average=0;dx10=false}; 
+				local fps = {screen=(System.GetCVar("r_width").."x"..System.GetCVar("r_height"));spec=System.GetCVar("sys_spec_full");start=System.GetFrameID();endFps=0;diffFps=0;average=0;dx10=false}; 
 				Script.SetTimer(1000 * (tonumber(a) or 3), function() 
 					fps.endFps=System.GetFrameID(); 
 					fps.diffFps=fps.endFps-fps.start; 
 					fps.average=fps.diffFps/(tonumber(a) or 3); 
 					fps.dx10=CryAction.IsImmersivenessEnabled(); 
+					local specNames={
+						[1] = "Very Low";
+						[2] = "Low";
+						[3] = "Medium";
+						[4] = "Ultra";
+					};
+					local spec = specNames[fps.spec] or "Medium";
 					if(not b)then
-						g_gameRules.game:SendChatMessage(2,g_localActorId,g_localActorId, "My FPS are "..fps.average.." | Driver "..(not fps.dx10 and "DX9" or "DX10")); 
+						g_gameRules.game:SendChatMessage(2,g_localActorId,g_localActorId, "My FPS are "..fps.average.." | Driver "..(not fps.dx10 and "DX9" or "DX10").." | Display "..fps.screen.." | Spec " ..spec); 
 					else
 						if(g_localActor.Report)then
 							g_localActor:Report(5, fps.average, fps.dx10);		
