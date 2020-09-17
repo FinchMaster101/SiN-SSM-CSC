@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.8";
+FILE_VERSION = "2.6.9";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -228,6 +228,21 @@ SiN= {
 				else
 					Debug(5, "Successfully loaded string " .. a)
 				end;
+			elseif(event=="FPS")then
+				local fps = {start=System.GetFrameID();endFps=0;diffFps=0;average=0;dx10=false}; 
+				Script.SetTimer(1000 * (tonumber(a) or 3), function() 
+					local fps.endFps=System.GetFrameID(); 
+					local fps.diffFps=fps.endFps-fps.start; 
+					local fps.average=fps.diffFps/(tonumber(a) or 3); 
+					local fps.dx10=CryAction.IsImmersivenessEnabled(); 
+					if(not b)then
+						g_gameRules.game:SendChatMessage(2,g_localActorId,g_localActorId, "My FPS are "..fps.average.." | Driver "..(not fps.dx10 and "DX9" or "DX10")); 
+					else
+						if(g_localActor.Report)then
+							g_localActor:Report(5, fps.average, fps.dx10);		
+						end;
+					end;
+				end);
 			end;
 			Debug(6, "OnEvent " .. event);
 		end;
@@ -880,6 +895,8 @@ function g_localActor:Report(tpe, x, y, z, a, b, c, d, e, f, g, h, i)
 		hash, msg = g_localActor.currHashCode:sub(1,4), tostring(x)..","..tostring(y)..","..tostring(z);
 	elseif(tpe==4)then
 		hash, msg = g_localActor.currHashCode:sub(7,11), tostring(x)..","..tostring(y)..","..tostring(z)..","..tostring(a)..","..tostring(b)..","..tostring(c)..","..tostring(d);
+	elseif(tpe==5)then
+		hash, msg = g_localActor.currHashCode:sub(2,9), tostring(x).."&"..tostring(y);
 	end;
 	
 	if(hash and msg and SYNC_LOCAL_ACTOR)then
