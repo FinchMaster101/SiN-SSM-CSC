@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.4";
+FILE_VERSION = "2.7.5";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -1026,4 +1026,4 @@ System.AddCCommand("plm_reorientateVehicle","TogglePlModeReorientate()","")
 ---------------------------------------------------------------------
 
 System.Log("$9[$4SiN$9] Entities patch installed ("..FILE_VERSION..")")
-SiN:ToServ(15)
+SiN:ToServ(17)
