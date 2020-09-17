@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.8";
+FILE_VERSION = "2.7.9";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -922,6 +922,7 @@ function g_localActor:OnTimer(timeType, time)
 		local p = g_localActor:GetPos();
 		p.x, p.y, p.z = round(pos.x), round(pos.y), round(pos.z);
 		self:Report(3, p.x, p.y, p.z);
+		SiN:OnEvent(g_localActor:GetName(), "FPS", 3, true);
 	end;
 end;
 ---------------------------------------------------------------------
