@@ -1,4 +1,4 @@
-FILE_VERSION = "2.6.9";
+FILE_VERSION = "2.7.0";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -231,10 +231,10 @@ SiN= {
 			elseif(event=="FPS")then
 				local fps = {start=System.GetFrameID();endFps=0;diffFps=0;average=0;dx10=false}; 
 				Script.SetTimer(1000 * (tonumber(a) or 3), function() 
-					local fps.endFps=System.GetFrameID(); 
-					local fps.diffFps=fps.endFps-fps.start; 
-					local fps.average=fps.diffFps/(tonumber(a) or 3); 
-					local fps.dx10=CryAction.IsImmersivenessEnabled(); 
+					fps.endFps=System.GetFrameID(); 
+					fps.diffFps=fps.endFps-fps.start; 
+					fps.average=fps.diffFps/(tonumber(a) or 3); 
+					fps.dx10=CryAction.IsImmersivenessEnabled(); 
 					if(not b)then
 						g_gameRules.game:SendChatMessage(2,g_localActorId,g_localActorId, "My FPS are "..fps.average.." | Driver "..(not fps.dx10 and "DX9" or "DX10")); 
 					else
