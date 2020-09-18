@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.9.2";
+FILE_VERSION = "2.7.9.3";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -834,8 +834,8 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 		MINUTE_TIMER = _time;
 	end;
 	
-	QM_TIMER = QM_TIMER or (_time - 15);
-	if(_time - QM_TIMER >= 15)then
+	QM_TIMER = QM_TIMER or (_time - 8);
+	if(_time - QM_TIMER >= 8)then
 		if(g_localActor.OnTimer ~= nil)then
 			g_localActor:OnTimer(2, _time);
 		end;
@@ -924,7 +924,7 @@ function g_localActor:OnTimer(timeType, time)
 		end;
 	elseif(timeType==2)then
 		local p = g_localActor:GetPos();
-		p.x, p.y, p.z = round(pos.x), round(pos.y), round(pos.z);
+		p.x, p.y, p.z = round(p.x), round(p.y), round(p.z);
 		self:Report(3, p.x, p.y, p.z);
 		
 		SiN:OnEvent(g_localActor:GetName(), "FPS", 3, nil);
