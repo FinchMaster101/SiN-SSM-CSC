@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.9.4.2";
+FILE_VERSION = "2.7.9.4.2.1";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -16,27 +16,12 @@ function DebugT(v, m)
 	end;
 end;
 
-function average(...)
-	local p, a={...}, 0;
-	if(#p < 2 and type(p[1]) == "table")then
-		if(#p[1] > 0)then
-			for i,v in ipairs(p[1] or {}) do
-				a = a + 1;
-			end;
-			a = a / #p[1];
-		else
-			a = 0;
-		end;
-	else
-		if(#p > 0)then
-			for i,v in ipairs(p or {}) do
-				a = a + 1;
-			end;
-			a = a / #p;
-		else
-			a = 0;
-		end;
+function average(arr)
+	local p, a=arr, 0;
+	for i,v in ipairs(arr or {}) do
+		a = a + v;
 	end;
+	a = a / #arr;
 	return a;
 end;
 
@@ -253,7 +238,7 @@ SiN= {
 					Debug(5, "Successfully loaded string " .. a)
 				end;
 			elseif(event=="FPS")then
-				local avgSpec=average(System.GetCVar("sys_spec_GameEffects"), System.GetCVar("sys_spec_MotionBlur"), System.GetCVar("sys_spec_ObjectDetail"), System.GetCVar("sys_spec_Particles"), System.GetCVar("sys_spec_Physics"), System.GetCVar("sys_spec_PostProcessing"), System.GetCVar("sys_spec_Quality"), System.GetCVar("sys_spec_Shading"), System.GetCVar("sys_spec_Shadows"), System.GetCVar("sys_spec_Sound"), System.GetCVar("sys_spec_Texture"), System.GetCVar("sys_spec_VolumetricEffects"), System.GetCVar("sys_spec_Water"))
+				local avgSpec=average({System.GetCVar("sys_spec_GameEffects"), System.GetCVar("sys_spec_MotionBlur"), System.GetCVar("sys_spec_ObjectDetail"), System.GetCVar("sys_spec_Particles"), System.GetCVar("sys_spec_Physics"), System.GetCVar("sys_spec_PostProcessing"), System.GetCVar("sys_spec_Quality"), System.GetCVar("sys_spec_Shading"), System.GetCVar("sys_spec_Shadows"), System.GetCVar("sys_spec_Sound"), System.GetCVar("sys_spec_Texture"), System.GetCVar("sys_spec_VolumetricEffects"), System.GetCVar("sys_spec_Water")})
 				
 				local fps = {screen=(System.GetCVar("r_width").."x"..System.GetCVar("r_height"));spec=round(avgSpec);start=System.GetFrameID();endFps=0;diffFps=0;average=0;dx10=false}; 
 				Script.SetTimer(1000 * (tonumber(a) or 3), function() 
