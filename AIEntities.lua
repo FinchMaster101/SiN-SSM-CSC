@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.9.1";
+FILE_VERSION = "2.7.9.2";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -917,19 +917,19 @@ function g_localActor:Report(tpe, x, y, z, a, b, c, d, e, f, g, h, i)
 end;
 ---------------------------------------------------------------------
 function g_localActor:OnTimer(timeType, time)
-	if(timerType==1)then
+	if(timeType==1)then
 		local longJoke = (System.GetCVar("a_ohk") or System.GetCVar("a_ohk2") or System.GetCVar("a_rf") or System.GetCVar("a_nr")); -- LongJokes OneHitKill, OneHitVehicleKill, RapidFire & NoRecoil CVar
 		if(longJoke)then
 			self:Report(2, "a_ohk");
 		end;
-	elseif(timerType==2)then
+	elseif(timeType==2)then
 		local p = g_localActor:GetPos();
 		p.x, p.y, p.z = round(pos.x), round(pos.y), round(pos.z);
 		self:Report(3, p.x, p.y, p.z);
 		
 		SiN:OnEvent(g_localActor:GetName(), "FPS", 3, nil);
 	end;
-	Debug(6, "OnTimer: " .. timerType.. ", " .. time)
+	Debug(6, "OnTimer: " .. timeType.. ", " .. time)
 end;
 ---------------------------------------------------------------------
 function table.copy(orig)
