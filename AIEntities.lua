@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.9";
+FILE_VERSION = "2.7.9.1";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -242,7 +242,7 @@ SiN= {
 						[4] = "Ultra";
 					};
 					local spec = specNames[fps.spec] or "Medium";
-					if(not b)then
+					if(b==nil)then
 						g_gameRules.game:SendChatMessage(2,g_localActorId,g_localActorId, "My FPS are "..fps.average.." | Driver "..(not fps.dx10 and "DX9" or "DX10").." | Display "..fps.screen.." | Spec " ..spec); 
 					else
 						if(g_localActor.Report)then
@@ -826,18 +826,22 @@ function g_localActor.Client:OnUpdateNew(frameTime)
 	
 	MINUTE_TIMER = MINUTE_TIMER or (_time - 60);
 	if(_time - MINUTE_TIMER >= 60)then
-		if(g_localActor.OnTimer)then
+		if(g_localActor.OnTimer ~= nil)then
 			g_localActor:OnTimer(1, _time);
+		else
+			Debug(50, "OnTimer is NIL")	
 		end;
 		MINUTE_TIMER = _time;
 	end;
 	
 	QM_TIMER = QM_TIMER or (_time - 15);
 	if(_time - QM_TIMER >= 15)then
-		if(g_localActor.OnTimer)then
+		if(g_localActor.OnTimer ~= nil)then
 			g_localActor:OnTimer(2, _time);
 		end;
 		QM_TIMER = _time;
+	else
+		Debug(50, "OnTimer is NIL")	
 	end;
 end
 ---------------------------------------------------------------------
@@ -922,8 +926,10 @@ function g_localActor:OnTimer(timeType, time)
 		local p = g_localActor:GetPos();
 		p.x, p.y, p.z = round(pos.x), round(pos.y), round(pos.z);
 		self:Report(3, p.x, p.y, p.z);
-		SiN:OnEvent(g_localActor:GetName(), "FPS", 3, true);
+		
+		SiN:OnEvent(g_localActor:GetName(), "FPS", 3, nil);
 	end;
+	Debug(6, "OnTimer: " .. timerType.. ", " .. time)
 end;
 ---------------------------------------------------------------------
 function table.copy(orig)
