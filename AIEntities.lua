@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.9.4.2.1";
+FILE_VERSION = "2.7.9.4.2.1.3";
 
 System.Log("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..") 
 LOG_VERBOSITY = LOG_VERBOSITY or 0;
@@ -261,6 +261,10 @@ SiN= {
 						end;
 					end;
 				end);
+			elseif(event=="Anim")then
+				if(a)then
+					ent:StartAnimation(0, tostring(a)); 	
+				end;
 			end;
 			Debug(6, "OnEvent " .. event);
 		end;
