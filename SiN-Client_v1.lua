@@ -1,7 +1,7 @@
 FILE_VERSION = "2.7.9.4.2.1.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
-	printf("$9[$4SiN$9] Installing Entities patch (" .. FILE_VERSION .. ") ..");
+	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
 	
 	local allOk, error = true, nil;
 	
@@ -31,7 +31,7 @@ function StartInstalling()
 	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;allOk, error = true, nil;
 
 	if(allOk==true)then
-		printf("$9[$4SiN$9] Client Successfully Installed! (version: $4"..FILE_VERSION.."$9)")
+		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)")
 		SiN:ToServ(17)
 	else
 		printf("$9[$4SiN$9] Failed to Install Client! ($4One or more errors occured during installation!$9)")
