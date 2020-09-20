@@ -643,7 +643,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("sin_aiUpdateSystem", "ToggleAIUpdate()", "if true, AI Entities will be updated and relocated to their correct position");
 	---------------------------------------------------------------------
 	function DownloadLatest() -- function from diznq from sfwcl client
-		DownloadFile("https://raw.githubusercontent.com/FinchMaster101/SiN-SSM-CSC/master/Main.lua");
+		DownloadFile("https://raw.githubusercontent.com/FinchMaster101/SiN-SSM-CSC/master/SiN-Client_v1.lua");
 	end;
 	System.AddCCommand("sin_update", "DownloadLatest()", "re-downloads the SiN-AIFiles");
 	---------------------------------------------------------------------
