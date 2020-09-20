@@ -6,29 +6,29 @@ function StartInstalling()
 	local allOk, error = true, nil;
 	
 	-- Reload every unexistant entity Script.
-	allOk, error = pcall(ReloadEntityScripts());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"ReloadEntityScripts()\": " .. tostring(error));else System.Log("$9[$4SiN$9] ReloadEntityScripts(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(ReloadEntityScripts);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"ReloadEntityScripts()\": " .. tostring(error));else System.Log("$9[$4SiN$9] ReloadEntityScripts(): $3Success!");end;allOk, error = true, nil;
 	-- Save the old functions 
-	allOk, error = pcall(SaveOldFunctions());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"SaveOldFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] SaveOldFunctions(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(SaveOldFunctions);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"SaveOldFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] SaveOldFunctions(): $3Success!");end;allOk, error = true, nil;
 	-- Register Globals
-	allOk, error = pcall(RegisterGlobals());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterGlobals()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterGlobals(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(RegisterGlobals);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterGlobals()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterGlobals(): $3Success!");end;allOk, error = true, nil;
 	-- Register functions
-	allOk, error = pcall(RegisterFunctions());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterFunctions(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(RegisterFunctions);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterFunctions(): $3Success!");end;allOk, error = true, nil;
 	-- Register the Main mod file
-	allOk, error = pcall(RegisterSiN());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterSiN()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterSiN(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(RegisterSiN);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterSiN()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterSiN(): $3Success!");end;allOk, error = true, nil;
 	-- Path other scripts
-	allOk, error = pcall(PatchOther());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchOther()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchOther(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(PatchOther);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchOther()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchOther(): $3Success!");end;allOk, error = true, nil;
 	-- Patch entities 
-	allOk, error = pcall(PatchEntities());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchEntities()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchEntities(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(PatchEntities);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchEntities()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchEntities(): $3Success!");end;allOk, error = true, nil;
 	-- Register Console commands
-	allOk, error = pcall(RegisterConsoleCommands());
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;allOk, error = false, nil;
+	allOk, error = pcall(RegisterConsoleCommands);
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;allOk, error = true, nil;
 
 	if(allOk==true)then
 		printf("$9[$4SiN$9] Client Successfully Installed! (version: $4"..FILE_VERSION.."$9)")
@@ -911,8 +911,8 @@ function PatchPlayer()
 				elseif(action=="v_moveforward")then if(vehicle.plMode==1)then if(activation=="press")then vehicle.impMode=1;else vehicle.impMode=nil;end;end;
 				elseif(action=="v_moveback")then
 					if(vehicle.plMode==1)then if(activation=="press")then vehicle.impMode=2;else vehicle.impMode=nil;end;end;
-				elseif(action=="v_rollleft" or action=="v_turnleft")then if(vehicle.plMode==1)thenvehicle.impDir=value+2;end;
-				elseif(action=="v_rollright" or action=="turnright")then if(vehicle.plMode==1)thenvehicle.impDir=value;end;end;
+				elseif(action=="v_rollleft" or action=="v_turnleft")then if(vehicle.plMode==1)then vehicle.impDir=value+2;end;
+				elseif(action=="v_rollright" or action=="turnright")then if(vehicle.plMode==1)then vehicle.impDir=value;end;end;
 			end;
 		end;
 		
@@ -939,7 +939,7 @@ function PatchPlayer()
 			end;
 		end;
 		
-		if(g_localActor.pfk)then g_localActor.ppfk=g_localActor.pfk)end;g_localActor.pfk = action;if(jumped)then g_localActor.pfk = "";g_localActor.ppfk = "";end;
+		if(g_localActor.pfk)then g_localActor.ppfk=g_localActor.pfk;end;g_localActor.pfk = action;if(jumped)then g_localActor.pfk = "";g_localActor.ppfk = "";end;
 	end;
 	---------------------------------------------------------------------
 	function g_localActor.Client:OnHit(hit, remote)
@@ -1207,4 +1207,4 @@ function PatchPlayer()
 	end;
 end;
 
-pcall(StartInstalling());
+pcall(StartInstalling);
