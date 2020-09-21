@@ -113,7 +113,7 @@ function RegisterFunctions()
 				local model = tostring(modelName);
 				if (string.len(model) > 0) then
 					v:LoadObject(0, "objects/weapons/asian/fy71/fy71_clip_fp.cgf");
-					local newModel = System.SpawnEntity({class="OffHand", position = v:GetPos(), orientation = v:GetDirectionVector(), name = tostring(v:GetName()"_"..SpawnCounter())});
+					local newModel = System.SpawnEntity({class="OffHand", position = v:GetPos(), orientation = v:GetDirectionVector(), name = tostring(v:GetName().."_"..SpawnCounter())});
 					local ext = string.lower(string.sub(model, -4));
 					if ((ext == ".chr") or (ext == ".cdf") or (ext == ".cga")) then
 						newModel:LoadCharacter(0, modelName);
