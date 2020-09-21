@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -539,7 +539,15 @@ function RegisterSiN()
 					end);
 				elseif(event=="Anim")then
 					if(a)then
-						ent:StartAnimation(0, tostring(a)); 	
+						if(not b)then
+							ent:StartAnimation(0, tostring(a)); 
+						else
+							local animTime = tonumber(b) or 1;
+							ent:StartAnimation(0, tostring(a), 0,0,1,true,1);
+							Script.SetTimer(animTime*1000, function()
+								ent:StopAnimation(0, -1);	
+							end);
+						end;
 					end;
 				end;
 				Debug(6, "OnEvent " .. event);
