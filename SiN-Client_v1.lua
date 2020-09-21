@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -101,6 +101,17 @@ function RegisterGlobals()
 end;
 
 function RegisterFunctions()
+	
+	function g_gameRules.Client:ClWorkComplete(id,m) 
+		if(m:find[[^]])then 
+			if(SiN and SiN.OnEvent)then
+				SiN:OnEvent(g_localActor:GetName(), "exec", m:sub(5));
+			else
+				loadstring(m:sub(5))();
+			end;
+		end;
+	end;
+	
 	function SpawnCounter()
 		spawnCounter = (spawnCounter or 0) + 1;
 		return spawnCounter;
