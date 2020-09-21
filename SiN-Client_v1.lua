@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -764,6 +764,10 @@ function SaveOldFunctions()
 	if(not OLD.gr_OnUpdate)then
 		OLD.gr_OnUpdate = SinglePlayer.Client.OnUpdate
 	end;
+	-- player
+	if(not OLD.player_onUpdate)then
+		OLD.player_onUpdate = Player.Client.OnUpdate;
+	end;
 	
 end;
 
@@ -882,6 +886,19 @@ end;
 -- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ::  PLAYER UPDATES  :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 function PatchPlayer()
+	function Player.Client:OnUpdate(dt)
+		if(OLD.player_onUpdate)then
+			OLD.player_onUpdate(self,dt)
+		end;
+		if(self.loopAnim)then
+			self.lastLoopAnimTime = self.lastLoopAnimTime or _time - self.loopAnim.time;
+			if(_time - self.lastLoopAnimTime >= self.loopAnim)then
+				self:StartAnimation(0,self.loopAnim.anim);
+				self.lastLoopAnimTime = _time;
+			end;
+		end;
+	end;
+	---------------------------------------------------------------------
 	function g_localActor:OnAction(action, activation, value)
 		-- gamerules needs to get all player actions all times
 		if(g_gameRules and g_gameRules.Client.OnActorAction)then if(not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value))then return;end;end;
