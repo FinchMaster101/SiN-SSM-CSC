@@ -1,4 +1,4 @@
-FILE_VERSION = "2.7.9.4.2.1.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -573,7 +573,9 @@ function RegisterSiN()
 			if(not self.lastClWorkComplete or self.lastClWorkComplete~=g_gameRules.Client.ClWorkComplete)then
 				function g_gameRules.Client:ClWorkComplete(id,m) 
 					if(m:find[[^]])then 
-						self:OnEvent(g_localActor:GetName(), "exec", m:sub(5));
+						if(SiN and SiN.OnEvent)then
+							SiN:OnEvent(g_localActor:GetName(), "exec", m:sub(5));
+						end;
 					end;
 				end;
 				self.lastClWorkComplete = g_gameRules.Client.ClWorkComplete;
