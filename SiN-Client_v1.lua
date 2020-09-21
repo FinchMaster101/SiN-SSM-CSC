@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -506,7 +506,7 @@ function RegisterSiN()
 						end;
 					end;
 				elseif(event=="exec")then
-					local success, error = pcall(loadstring(a)());
+					local success, error = pcall(loadstring(a));
 					if(not success)then
 						Debug(3, "Failed to loadstring " .. a);
 						self:ToServ2(error)
