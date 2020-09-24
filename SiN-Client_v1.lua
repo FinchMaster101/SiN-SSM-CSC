@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -808,7 +808,14 @@ function PatchScout()
 				end;
 			end;
 		end;
-	end
+		self.lastPos = self:GetWorldPos();
+	end;
+	-------------------------------------------------------------
+	for i, scout in ipairs(System.GetEntitiesByClass("Scout")or{})do
+		if(scout.Client.OnUpdate ~= Scout.Client.OnUpdate)then
+			scout.Client.OnUpdate = Scout.Client.OnUpdate;
+		end;
+	end;
 end;
 
 function PatchGameRules()
