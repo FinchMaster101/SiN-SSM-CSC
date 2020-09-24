@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.8"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -333,6 +333,7 @@ function PatchEntities()
 	PatchGUI();
 	PatchCAP();
 	PatchPlayer();
+	PatchScout();
 	-- PatchGameRules(); -- it's not an entity, is it? :D. so it deserves its own function!
 end;
 
