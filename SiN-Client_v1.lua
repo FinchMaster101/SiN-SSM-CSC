@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.8"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -362,24 +362,24 @@ end;
 
 
 function PatchGUI()
-	GUI.Properties.objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf"
-	GUI.Properties.bRigidBody					= 1
-	GUI.Properties.bResting 					= 1
-	GUI.Properties.bUsable						= nil
-	GUI.Properties.bPhysicalized				= 1
-	GUI.Properties.fMass 						= 10
-	GUI.Properties.GUIMaterial					= "test_hard"
-	GUI.Properties.GUIUsageDistance			= 1.5
-	GUI.Properties.GUIUsageTolerance			= 0.75
-	GUI.Properties.GUIWidth					= 512
-	GUI.Properties.GUIHeight					= 512
-	GUI.Properties.GUIDefaultScreen			= "test_hard"
-	GUI.Properties.GUIMouseCursor				= "test_hard"
-	GUI.Properties.GUIPreUpdate				= 1
-	GUI.Properties.GUIMouseCursorSize			= 18
-	GUI.Properties.GUIHasFocus					= 0
-	GUI.Properties.color_GUIBackgroundColor 	= {0,0,0}
-	GUI.Properties.fileGUIScript				= "test_hard"
+	GUI.Properties.objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf";
+	GUI.Properties.bRigidBody					= 1;
+	GUI.Properties.bResting 					= 0;
+	GUI.Properties.bUsable						= nil;
+	GUI.Properties.bPhysicalized				= 1;
+	GUI.Properties.fMass 						= 35;
+	GUI.Properties.GUIMaterial					= "test_hard";
+	GUI.Properties.GUIUsageDistance			= 1.5;
+	GUI.Properties.GUIUsageTolerance			= 0.75;
+	GUI.Properties.GUIWidth					= 512;
+	GUI.Properties.GUIHeight					= 512;
+	GUI.Properties.GUIDefaultScreen			= "test_hard";
+	GUI.Properties.GUIMouseCursor				= "test_hard";
+	GUI.Properties.GUIPreUpdate				= 1;
+	GUI.Properties.GUIMouseCursorSize			= 18;
+	GUI.Properties.GUIHasFocus					= 0;
+	GUI.Properties.color_GUIBackgroundColor 	= {0,0,0};
+	GUI.Properties.fileGUIScript				= "test_hard";
 	---------------------------
 	--		OnSpawn
 	---------------------------
