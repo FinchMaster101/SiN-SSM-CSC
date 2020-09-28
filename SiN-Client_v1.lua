@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -380,6 +380,7 @@ function PatchGUI()
 	GUI.Properties.GUIHasFocus					= 0;
 	GUI.Properties.color_GUIBackgroundColor 	= {0,0,0};
 	GUI.Properties.fileGUIScript				= "test_hard";
+	GUI.Properties.bStatic                            = 0;
 	---------------------------
 	--		OnSpawn
 	---------------------------
@@ -406,7 +407,7 @@ function PatchGUI()
 			local physParam = {
 				mass = self.Properties.fMass; -- * 400,
 			};
-			self:Physicalize(0, PE_RIGID, physParam);
+			self:Physicalize(0, (self.Properties.bStatic==1 and PE_STATIC or PE_RIGID), physParam);
 			if (tonumber(self.Properties.bResting) ~= 0) then
 				self:AwakePhysics(0);
 			else
