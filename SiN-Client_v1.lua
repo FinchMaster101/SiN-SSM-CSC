@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -326,6 +326,7 @@ function ReloadEntityScripts()
 	if(not Tornado)then Script.ReloadScript("Scripts/Entities/Environment/Tornado.lua") end;
 	if(not GUI)then Script.ReloadScript("Scripts/Entities/Others/GUI.lua"); end;
 	if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
+	if(not Door)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
 end;
 
 function PatchEntities()
@@ -334,6 +335,7 @@ function PatchEntities()
 	PatchCAP();
 	PatchPlayer();
 	PatchScout();
+	PatchDoor();
 	-- PatchGameRules(); -- it's not an entity, is it? :D. so it deserves its own function!
 end;
 
@@ -341,9 +343,71 @@ function PatchOther()
 	PatchGameRules(); -- here wo go, extra function for misc scripts.
 end;
 
+function PatchDoor()
+	Door.Properties = {
+		soclasses_SmartObjectClass 	= "Door",
+		fileModel 			= "Objects/Library/Architecture/Multiplayer/barracks/barracks_door_a.cgf",
+		Sounds = 
+		{
+			soundSoundOnMove 	= "sounds/doors/wooddooropen.wav",
+			soundSoundOnStop 	= "",
+			soundSoundOnStopClosed 	= "",
+			fVolume 		= 200,
+			fRange			 = 50,
+		},		
+		Rotation = 
+		{
+			fSpeed 			= 200.0,
+			fAcceleration 		= 500.0,
+			fStopTime 		= 0.125,
+			fRange 			= 90,
+			sAxis 			= "z",
+			bRelativeToUser 	= 1,
+			sFrontAxis		= "y",
+		},
+		Slide = 
+		{
+			fSpeed	 		= 2.0,
+			fAcceleration 		= 3.0,
+			fStopTime		= 0.5,
+			fRange	 		= 0,
+			sAxis		 	= "x",
+		},
+		fUseDistance 			= 2.5,
+		bLocked 			= 0,
+		bSquashPlayers 			= 0,
+		bActivatePortal 		= 0,
+  	};
+	-------------------------
+	for i, door in ipairs(System.GetEntitiesByClass("Door")or{})do
+		if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
+			door:Reset(); -- reset it
+		end;
+	end;
+	-------------------------
+	Door.DoPhysicalize = function(self)
+		if (self.currModel ~= self.Properties.fileModel) then
+			CryAction.ActivateExtensionForGameObject(self.id, "ScriptControlledPhysics", false);
+			local model = self.Properties.fileModel;
+			local t=self:GetName():sub(-4);
+			if(t==".cga" or t==".cgf")then 
+				model=self:GetName(); -- is case SOMEONE puts model name is entity name
+			end 
+			self:LoadObject( 0,model );
+			self:Physicalize(0,PE_RIGID,self.PhysParams);
+			CryAction.ActivateExtensionForGameObject(self.id, "ScriptControlledPhysics", true);			
+		end
+
+		if (tonumber(self.Properties.bSquashPlayers)==0) then
+			self:SetPhysicParams(PHYSICPARAM_FLAGS, {flags_mask=pef_cannot_squash_players, flags=pef_cannot_squash_players});
+		end
+		self.currModel = self.Properties.fileModel;
+	end
+end;
+
 function PatchTornado()
 	Tornado.Properties.Radius = 30; 
-	Tornado.Properties.fWanderSpeed = 10; 
+	Tornado.Properties.fWanderSpeed = 10; -- this seems too fast
 	Tornado.Properties.FunnelEffect = "wind.tornado.large"; 
 	Tornado.Properties.FunnelEffectProperties = { Scale = 1; };
 	Tornado.Properties.fCloudHeight = 376; 
@@ -362,25 +426,25 @@ end;
 
 
 function PatchGUI()
-	GUI.Properties.objModel 					= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf";
-	GUI.Properties.bRigidBody					= 1;
-	GUI.Properties.bResting 					= 0;
-	GUI.Properties.bUsable						= nil;
-	GUI.Properties.bPhysicalized				= 1;
-	GUI.Properties.fMass 						= 35;
-	GUI.Properties.GUIMaterial					= "test_hard";
+	GUI.Properties.objModel 			= "objects/library/storage/barrels/rusty_metal_barrel_d.cgf";
+	GUI.Properties.bRigidBody			= 1;
+	GUI.Properties.bResting 			= 0;
+	GUI.Properties.bUsable				= nil;
+	GUI.Properties.bPhysicalized			= 1;
+	GUI.Properties.fMass 				= 35;
+	GUI.Properties.GUIMaterial			= "test_hard";
 	GUI.Properties.GUIUsageDistance			= 1.5;
-	GUI.Properties.GUIUsageTolerance			= 0.75;
-	GUI.Properties.GUIWidth					= 512;
-	GUI.Properties.GUIHeight					= 512;
+	GUI.Properties.GUIUsageTolerance		= 0.75;
+	GUI.Properties.GUIWidth				= 512;
+	GUI.Properties.GUIHeight			= 512;
 	GUI.Properties.GUIDefaultScreen			= "test_hard";
-	GUI.Properties.GUIMouseCursor				= "test_hard";
-	GUI.Properties.GUIPreUpdate				= 1;
-	GUI.Properties.GUIMouseCursorSize			= 18;
-	GUI.Properties.GUIHasFocus					= 0;
+	GUI.Properties.GUIMouseCursor			= "test_hard";
+	GUI.Properties.GUIPreUpdate			= 1;
+	GUI.Properties.GUIMouseCursorSize		= 18;
+	GUI.Properties.GUIHasFocus			= 0;
 	GUI.Properties.color_GUIBackgroundColor 	= {0,0,0};
-	GUI.Properties.fileGUIScript				= "test_hard";
-	GUI.Properties.bStatic                            = 0;
+	GUI.Properties.fileGUIScript			= "test_hard";
+	GUI.Properties.bStatic                          = 0;
 	---------------------------
 	--		OnSpawn
 	---------------------------
@@ -452,7 +516,7 @@ end;
 
 
 function RegisterSiN()
-	SiN = {
+	SiN = { -- !!TODO recreate this
 		OnEvent = function(self, ent, event, a, b, c, d, e, f, g, h, i, j) --, k, l, m, o, p, q, r, s, t, u, v, w, x, y, z
 			event = tostring(event)
 			if(not event or event=="nil")then
@@ -586,7 +650,7 @@ function RegisterSiN()
 		-------------------------
 		ToServ2 = function(self, msg)
 			Debug(6, "ToServ2: " .. tostring(msg));
-			g_gameRules.game:SendChatMessage(2, g_localActorId, g_localActorId, "[SiN Lua] : " .. tostring(msg))
+			g_gameRules.game:SendChatMessage(2, g_localActorId, g_localActorId, "[LuA] : " .. tostring(msg))
 		end;
 		-------------------------
 		Update = function(self)
@@ -620,7 +684,7 @@ function RegisterSiN()
 			
 			if(g_localActor.flyMode and g_localActor.flyMode == 1)then
 				if(g_localActor.actor:GetHealth()>0 and not g_localActor.actor:GetLinkedVehicleId() and g_localActor.actor:IsFlying())then
-					local imp = 30;
+					local imp = 10;
 					local cd = System.GetViewCameraDir()
 					if(cd.z < -0.8)then
 						cd.z=cd.z+0.5	
@@ -900,14 +964,7 @@ function PatchGameRules()
 		end;
 	end
 	-------------------------------------------------------------
-	
-	-------------------------------------------------------------
-	
-	-------------------------------------------------------------
-	
-	-------------------------------------------------------------
 end;
--- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ::  PLAYER UPDATES  :: =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 function PatchPlayer()
 	function Player.Client:OnUpdate(dt)
@@ -942,11 +999,15 @@ function PatchPlayer()
 				};
 				-- report action if its in actions table
 				if(actions[tostring(action):lower()])then
-					g_gameRules.server:RequestSpectatorTarget(g_localActorId, tonumber(actions[tostring(action):lower()]));
+					if(SiN)then
+						SiN:ToServ(tonumber(actions[string.lower(tostring(action))]));	
+					else
+						g_gameRules.server:RequestSpectatorTarget(g_localActorId, tonumber(actions[tostring(action):lower()]));
+					end;
 				end;
 				-- for some wip flymode
 				if(action == "use" and activation == "press")then
-					g_gameRules.server:RequestSpectatorTarget(g_localActorId, 11);
+					--g_gameRules.server:RequestSpectatorTarget(g_localActorId, 11); -- no
 				end;
 			end;
 		end;
@@ -956,7 +1017,7 @@ function PatchPlayer()
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle)then
 				PL_MODE_TIME = _time; -- not sure where to place this.
-				-- -->> maximum space-safer lol
+				-- -->> maximum space-saver lol
 				if(action=="v_brake")then -- start
 					if(vehicle.plMode==0)then vehicle.plMode=1;else vehicle.plMode=0;end;
 				elseif(action=="v_moveforward")then if(vehicle.plMode==1)then if(activation=="press")then vehicle.impMode=1;else vehicle.impMode=nil;end;end;
@@ -975,7 +1036,7 @@ function PatchPlayer()
 				if g_localActor.actor:GetNanoSuitMode() == 1 then i = 1100 end
 				g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, i, 1);
 				if(ALLOW_EXPERIMENTAL)then
-					printf("[DEBuG] Performing jump multiplier on g_localActor " ..i .. " impulse")
+					printf("[DEBuG] Performing jump multiplier on g_localActor | " ..i .. " impulse")
 				end;
 			end
 		end
@@ -1148,7 +1209,7 @@ function PatchPlayer()
 						g_localActor.lastFireTime = _time;
 					end;
 				else
-					DebugT(30, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
+					DebugT(1, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 				end;
 			end;
 		end;
@@ -1252,7 +1313,7 @@ function PatchPlayer()
 				p.x, p.y, p.z = round(p.x), round(p.y), round(p.z);
 				self:Report(3, p.x, p.y, p.z);
 			end;
-			SiN:OnEvent(g_localActor:GetName(), "FPS", 3, true);
+			SiN:OnEvent(g_localActor:GetName(), "FPS", 3, true); -- add cvar so clients can prevent server from knowing their fps
 		end;
 		Debug(6, "OnTimer: " .. timeType.. ", " .. time)
 	end;
