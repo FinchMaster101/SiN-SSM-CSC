@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -1241,8 +1241,8 @@ function PatchPlayer()
 		local spread = w:GetSpread();
 		local recoil = w:GetRecoil();
 		
-		local ms = 0.1;
-		local mr = 0.1;
+		local ms = 1;
+		local mr = 1;
 		
 		if(spread<ms)then
 			self:Report(0, spread);
