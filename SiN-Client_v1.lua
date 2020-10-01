@@ -1244,11 +1244,11 @@ function PatchPlayer()
 		local ms = 1; -- also report normal values so server doesn't think client has ONLY low values 
 		local mr = 1;
 		
-		if(spread<ms and (self.lastSpread and ((self.lastSpread == 0 and math.random(1.00001,2.00001) or self.lastSpread) ~= spread))then -- do not report same values like 0.041222001 twice :s
+		if(spread<ms and (self.lastSpread and ((self.lastSpread == 0 and math.random(1.00001,2.00001) or self.lastSpread) ~= spread)))then -- do not report same values like 0.041222001 twice :s
 			self:Report(0, spread);
 		end;
 		
-		if(recoil<mr and (self.lastRecoil and ((self.lastRecoil == 0 and math.random(1.00001,2.00001) or self.lastRecoil) ~= recoil))then
+		if(recoil<mr and (self.lastRecoil and ((self.lastRecoil == 0 and math.random(1.00001,2.00001) or self.lastRecoil) ~= recoil)))then
 			self:Report(1, recoil);
 		end;
 		
