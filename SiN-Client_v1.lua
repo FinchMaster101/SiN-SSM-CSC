@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -327,6 +327,7 @@ function ReloadEntityScripts()
 	if(not GUI)then Script.ReloadScript("Scripts/Entities/Others/GUI.lua"); end;
 	if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
 	if(not Door)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
+	if(not Grunt)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
 end;
 
 function PatchEntities()
@@ -336,7 +337,12 @@ function PatchEntities()
 	PatchPlayer();
 	PatchScout();
 	PatchDoor();
+	PatchGrunt();
 	-- PatchGameRules(); -- it's not an entity, is it? :D. so it deserves its own function!
+end;
+
+function PatchGrunt()
+	-- Grunt Implementation
 end;
 
 function PatchOther()
