@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -1203,8 +1203,8 @@ function PatchPlayer()
 					g_localActor.lastWeaponClass = w.class;
 				end;
 				if(f and (w.class~="Fists") and (g_localActor.lastAmmoCount~=a))then
-					g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
-					if(_time - g_localActor.lastFireTime >= 0.1)then
+					g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.2);
+					if(_time - g_localActor.lastFireTime >= 0.2)then
 						g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 						g_localActor.lastFireTime = _time;
 					end;
@@ -1241,16 +1241,19 @@ function PatchPlayer()
 		local spread = w:GetSpread();
 		local recoil = w:GetRecoil();
 		
-		local ms = 1;
+		local ms = 1; -- also report normal values so server doesn't think client has ONLY low values 
 		local mr = 1;
 		
-		if(spread<ms)then
+		if(spread<ms and (self.lastSpread and ((self.lastSpread == 0 and math.random(1.00001,2.00001) or self.lastSpread) ~= spread))then -- do not report same values like 0.041222001 twice :s
 			self:Report(0, spread);
 		end;
 		
-		if(recoil<mr)then
+		if(recoil<mr and (self.lastRecoil and ((self.lastRecoil == 0 and math.random(1.00001,2.00001) or self.lastRecoil) ~= recoil))then
 			self:Report(1, recoil);
 		end;
+		
+		self.lastSpread = spread;
+		self.lastRecoil = recoil;
 		
 		local s = weapon.shotSound;
 		if(s and type(s) == "string")then
