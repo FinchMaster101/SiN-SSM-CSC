@@ -1273,8 +1273,8 @@ function PatchPlayer()
 					g_localActor.lastWeaponClass = w.class;
 				end;
 				if(f and (w.class~="Fists") and (g_localActor.lastAmmoCount~=a))then
-					g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.2);
-					if(_time - g_localActor.lastFireTime >= 0.2)then
+					g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
+					if(_time - g_localActor.lastFireTime >= 0.1)then
 						g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 						g_localActor.lastFireTime = _time;
 					end;
