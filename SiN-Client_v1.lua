@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.17"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.18"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -46,6 +46,10 @@ function RegisterGlobals()
 	---------------------------------------------------------------------
 	if(not PL_MODE)then 
 		PL_MODE = 0;
+	end;
+	---------------------------------------------------------------------
+	if(not CHAT_EFFECT)then
+		CHAT_EFFECT = ""; -- Alien_weapons.Freeze_Beam.Warrior_MOAR_firing :D
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_BASE_RATE)then 
@@ -619,10 +623,18 @@ function RegisterSiN()
 						ent:FreeSlot(ent.FLY_SLOT);
 					end;
 				elseif(event=="12")then
+					
+					if(ent.chatEffect)then
+						if(ent.chatEffect.C_SLOT)then
+							ent.chatEffect:FreeSlot(ent.chatEffect.C_SLOT);	
+						end;
+						System.RemoveEntity(ent.chatEffect.id);	
+					end;
+					
 					local pos = ent:GetPos();pos.z=pos.z+1.8
 					ent.chatEffect = System.SpawnEntity({class = "OffHand", name = "chatEffect", position = pos})	
 					
-					ent.chatEffect.C_SLOT = ent.chatEffect:LoadParticleEffect(-1, "Alien_special.Warrior.thrusters_fleet", {Scale=0.3});
+					ent.chatEffect.C_SLOT = ent.chatEffect:LoadParticleEffect(-1, CHAT_EFFECT, {Scale=0.3});
 					
 					ent:AttachChild(ent.chatEffect.id, 1)
 				elseif(event=="13")then
