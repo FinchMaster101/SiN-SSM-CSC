@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -1016,7 +1016,7 @@ function PatchGameRules()
 			end;
 		end;
 		
-		printf("$9[$4SiN$9] Deinstalled client successfully");
+		printf("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
 	end;
 	-------------------------------------------------------------
 	g_gameRules.Client.PreGame.OnDisconnect = g_gameRules.Client.OnDisconnect;
@@ -1028,6 +1028,9 @@ function PatchGameRules()
 		end;
 		if(g_localActor and g_localActor.Client.OnUpdateNew)then
 			g_localActor.Client:OnUpdateNew(dt)
+		end;
+		for i,v in ipairs(System.GetEntitiesByClass("Grunt")or{})do
+			Grunt.Client:UpdateGrunt(v, System.GetFrameTime());
 		end;
 	end
 	-------------------------------------------------------------
