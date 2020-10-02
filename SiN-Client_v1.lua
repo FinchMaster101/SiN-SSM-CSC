@@ -484,7 +484,7 @@ function PatchTornado()
 	-------------------------
 	function Tornado:OnReset() 
 		if(not self.FUNNEL_SLOT)then
-			self.FUNNEL_SLOT = self:LoadParticleEffect(-1, self.Properties.FunnelEffect, self.Properties.FunnelEffectProperties); 
+			self.FUNNEL_SLOT = self:LoadParticleEffect(-1, self.Properties.FunnelEffect, self.Properties.FunnelEffectProperties or {}); 
 		end;
 	end;
 	-------------------------
