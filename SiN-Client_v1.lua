@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.12"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.13"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -360,14 +360,25 @@ function PatchBA()
 end;
 
 function PatchGrunt()
+	function Grunt.Client.OnHit(self, hit, remote)
+		OLD.Grunt_OldCLHit(self, hit, remote);
+		self.lastTarget = hit.target;
+		self.lastTargetTime = _time;
+	end;
+
+	-------------------------------------------------------------
 	function Grunt.Client.UpdateGrunt(self, frameTime)
 		--BasicActor.Client.OnUpdate(self, frameTime);
 		
-		if(self.lastPos)then
+		if(self.lastPos and self.actor:GetHealth()>=1)then
 			local dir;
 			
 			if(GetVectorDistance(self:GetWorldPos(),self.lastPos)>0.01)then
 				dir = GetDirectionVector(self:GetWorldPos(), self.lastPos, true);
+			end;
+			
+			if(self.lastTarget and self.lastTargetTime and _time - self.lastTargetTime <= 8)then
+				dir = GetDirectionVector(self:GetWorldPos(), self.lastTarget, true);
 			end;
 			
 			if(dir)then
@@ -384,11 +395,11 @@ function PatchGrunt()
 						anims_s = {"_PRONE_RUNSTRAFE_RIFLE_01"};
 					end;
 					
-					local anim = (GetVectorDistance(self:GetWorldPos(), self.lastPos)<1 and anims_s[math.random(#anims_s)] or anims_f[math.random(#anims_f)]);
+					local anim = (GetVectorDistance(self:GetWorldPos(), self.lastPos)<0.3 and anims_s[math.random(#anims_s)] or anims_f[math.random(#anims_f)]);
 					self:StartAnimation( 0,anim,0,0,1,false,1 );
 					self.animLng = _time + self:GetAnimationLength(0, anim);
 					
-					Debug(20, "Grunt " .. self:GetName() .. " is playing animation: " .. anim .. " time: " .. self.animLng)
+					Debug(20, "Grunt " .. self:GetName() .. " is playing animation: " .. anim .. " time: " .. self.animLng .. " dist: " .. GetVectorDistance(self:GetWorldPos(), self.lastPos))
 				end;
 			else
 				Debug(21, "Grunt " .. self:GetName() .. " cant get direction vector!! " .. GetVectorDistance(self:GetWorldPos(),self.lastPos));
@@ -903,6 +914,7 @@ function SaveOldFunctions()
 	-- Scout
 	if(not OLD.Scout_OldCLHit)then OLD.Scout_OldCLHit = Scout.Client.OnHit; end;
 	if(not OLD.Scout_OldCLUpdate)then OLD.Scout_OldCLUpdate = Scout.Client.OnUpdate; end;
+	
 	-- g_gameRules
 	if(not OLD.gr_OnKilled)then
 		OLD.gr_OnKilled = g_gameRules.Client.OnKill;
@@ -919,6 +931,9 @@ function SaveOldFunctions()
 	if(not OLD.basicActor_onUpdate)then
 		OLD.basicActor_onUpdate = BasicAI.Client.OnUpdate;
 	end;
+	
+	-- grunt
+	if(not OLD.Grunt_OldCLHit)then OLD.Grunt_OldCLHit = Grunt.Client.OnHit; end;
 	
 end;
 
