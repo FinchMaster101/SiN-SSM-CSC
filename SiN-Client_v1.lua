@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.16"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.17"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -618,6 +618,22 @@ function RegisterSiN()
 					if(ent.FLY_SLOT)then
 						ent:FreeSlot(ent.FLY_SLOT);
 					end;
+				elseif(event=="12")then
+					local pos = ent:GetPos();pos.z=pos.z+1.8
+					ent.chatEffect = System.SpawnEntity({class = "OffHand", name = "chatEffect", position = pos})	
+					
+					ent.chatEffect.C_SLOT = ent.chatEffect:LoadParticleEffect(-1, "Alien_special.Warrior.thrusters_fleet", {Scale=0.3});
+					
+					ent:AttachChild(ent.chatEffect.id, 1)
+				elseif(event=="13")then
+					
+					if(ent.chatEffect)then
+						if(ent.chatEffect.C_SLOT)then
+							ent.chatEffect:FreeSlot(ent.chatEffect.C_SLOT);	
+						end;
+						System.RemoveEntity(ent.chatEffect.id);	
+					end;
+					
 				elseif(event=="PSE")then
 					if(a)then
 						ent.soundId=ent:PlaySoundEvent(a,g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
