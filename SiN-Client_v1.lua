@@ -327,7 +327,7 @@ function ReloadEntityScripts()
 	if(not GUI)then Script.ReloadScript("Scripts/Entities/Others/GUI.lua"); end;
 	if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
 	if(not Door)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
-	if(not Grunt)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
+	if(not Grunt)then Script.ReloadScript("Scripts/Entities/AI/Grunt.lua"); end;
 	if(not BasicAI)then Script.ReloadScript("Scripts/Entities/AI/Shared/BasicAI.lua"); end;
 end;
 
