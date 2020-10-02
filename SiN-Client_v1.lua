@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.13"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.14"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -538,18 +538,20 @@ function PatchGUI()
 		self.Properties.bUsable = nil;
 		self:SetUpdatePolicy(ENTITY_UPDATE_VISIBLE);
 		local model=self.Properties.objModel;
-		local t=self:GetName():sub(-4);
+		local modelName, bStatic, fMass = "", 0, self.Properties.fMass;
+		modelName, bStatic, fMass = self:GetName():match("(.*)|(.*)|(.*)");
+		local t=modelName:sub(-4);
 		if(t==".cga" or t==".cgf")then 
 			model=self:GetName();
 		end 
-		Debug(10, "GUI: Loading model " .. model .. " on GUI " .. self:GetName());
+		Debug(10, "GUI: Received Name Params: model " .. model .. " | bStatic " .. bStatic .. " fMass " .. fMass .. " on GUI " .. self:GetName());
 		self:LoadObject(0, model);
 		self:DrawSlot(0, 1);
 		if (tonumber(self.Properties.bPhysicalized) ~= 0) then
 			local physParam = {
 				mass = self.Properties.fMass; -- * 400,
 			};
-			self:Physicalize(0, (self.Properties.bStatic==1 and PE_STATIC or PE_RIGID), physParam);
+			self:Physicalize(0, ((bStatic ==1 or self.Properties.bStatic==1) and PE_STATIC or PE_RIGID), physParam);
 			if (tonumber(self.Properties.bResting) ~= 0) then
 				self:AwakePhysics(0);
 			else
