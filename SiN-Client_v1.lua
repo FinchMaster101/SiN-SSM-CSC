@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -1030,7 +1030,7 @@ function PatchGameRules()
 			g_localActor.Client:OnUpdateNew(dt)
 		end;
 		for i,v in ipairs(System.GetEntitiesByClass("Grunt")or{})do
-			Grunt.Client:UpdateGrunt(v, System.GetFrameTime());
+			Grunt.Client.UpdateGrunt(v, System.GetFrameTime());
 		end;
 	end
 	-------------------------------------------------------------
