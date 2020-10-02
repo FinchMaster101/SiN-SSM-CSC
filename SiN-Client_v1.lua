@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -338,12 +338,29 @@ function PatchEntities()
 	PatchScout();
 	PatchDoor();
 	PatchGrunt();
+	PatchBA();
 	-- PatchGameRules(); -- it's not an entity, is it? :D. so it deserves its own function!
 end;
 
+function PatchBA()
+	function BasicActor.Client:OnUpdate(frameTime)
+		if(OLD and OLD.basicActor_onUpdate)then
+			OLD.basicActor_onUpdate(self,frameTime)
+		end;
+		if(self.class == "Grunt")then
+			if(self.UpdateGrunt)then
+				self:UpdateGrunt(frameTime);
+			else
+				Grunt.Client.OnUpdate(self, frameTime);
+			end;
+		end;
+		Debug(22, "Upding BasicActor")
+	end;
+end;
+
 function PatchGrunt()
-	Grunt.Client.OnUpdate = function(self, frameTime)
-		BasicActor.Client.OnUpdate(self, frameTime);
+	Grunt.Client.UpdateGrunt = function(self, frameTime)
+		--BasicActor.Client.OnUpdate(self, frameTime);
 		
 		if(self.lastPos)then
 			local dir = TryGetDir(self);
@@ -379,7 +396,7 @@ function PatchGrunt()
 	end;
 	
 	for i,v in ipairs(System.GetEntitiesByClass("Grunt")or{})do
-		v.Client.OnUpdate = Grunt.Client.OnUpdate;
+		v.Client.OnUpdate = BasicActor.Client.OnUpdate;
 	end;
 end;
 
@@ -894,6 +911,7 @@ function SaveOldFunctions()
 	
 	-- basicactor
 	if(not OLD.basicActor_onUpdate)then
+		OLD.basicActor_onUpdate = BasicActor.Client.OnUpdate;
 	end;
 	
 end;
