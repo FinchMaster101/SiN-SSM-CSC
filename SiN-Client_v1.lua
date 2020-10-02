@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -348,6 +348,7 @@ function PatchGrunt()
 		if(self.lastPos)then
 			local dir = TryGetDir(self);
 			if(dir)then
+				self:SetWorldAngles(dir);
 				if(not self.actor:IsFlying() and (self.animLng and _time - self.animLng >= 0))then
 					local anims_f = {"_COMBAT_RUNSTRAFE_RIFLE_01"};
 					local anims_s = {"_COMBAT_WALKSTRAFE_RIFLE_01"};
@@ -364,13 +365,21 @@ function PatchGrunt()
 					self:StartAnimation( 0,anim,0,0,1,false,1 );
 					self.animLng = self:GetAnimationLength(0, anim);
 					
-					Debug(80, "Grunt " .. self:GetName() .. " is playing animation: " .. anim)
+					Debug(20, "Grunt " .. self:GetName() .. " is playing animation: " .. anim)
 				end;
+			else
+				Debug(20, "Grunt " .. self:GetName() .. " cant get direction vector!!")
 			end;
 			
 		end;
 		
+		Debug(21, "Grunt " .. self:GetName() .. ":OnUpdate("..frameTime..")")
+		
 		self.lastPos = self:GetWorldPos();
+	end;
+	
+	for i,v in ipairs(System.GetEntitiesByClass("Grunt")or{})do
+		v.Client.OnUpdate = Grunt.Client.OnUpdate;
 	end;
 end;
 
