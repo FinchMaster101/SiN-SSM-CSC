@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -342,7 +342,36 @@ function PatchEntities()
 end;
 
 function PatchGrunt()
-	-- Grunt Implementation
+	Grunt.Client.OnUpdate = function(self, frameTime)
+		BasicActor.Client.OnUpdate(self, frameTime);
+		
+		if(self.lastPos)then
+			local dir = TryGetDir(self);
+			if(dir)then
+				if(not self.actor:IsFlying() and (self.animLng and _time - self.animLng >= 0))then
+					local anims_f = {"_COMBAT_RUNSTRAFE_RIFLE_01"};
+					local anims_s = {"_COMBAT_WALKSTRAFE_RIFLE_01"};
+					
+					if(self.actorStats.stance == 2)then
+						anims_f = {"_CROUCH_RUNSTRAFE_RIFLE_01"}; 
+						anims_s = {"_CROUCH_RUNSTRAFE_RIFLE_01"};
+					elseif(self.actorStats.stance == 1)then
+						anims_f = {"_PRONE_RUNSTRAFE_RIFLE_01"}; 
+						anims_s = {"_PRONE_RUNSTRAFE_RIFLE_01"};
+					end;
+					
+					local anim = (GetVectorDistance(self:GetWorldPos(), self.lastPos)<1 and anims_s[#math.random(#anims_s)] or anims_f[#math.random(#anims_f)]);
+					self:StartAnimation( 0,anim,0,0,1,false,1 );
+					self.animLng = self:GetAnimationLength(0, anim);
+					
+					Debug(80, "Grunt " .. self:GetName() .. " is playing animation: " .. anim)
+				end;
+			end;
+			
+		end;
+		
+		self.lastPos = self:GetWorldPos();
+	end;
 end;
 
 function PatchOther()
@@ -852,6 +881,10 @@ function SaveOldFunctions()
 	-- player
 	if(not OLD.player_onUpdate)then
 		OLD.player_onUpdate = Player.Client.OnUpdate;
+	end;
+	
+	-- basicactor
+	if(not OLD.basicActor_onUpdate)then
 	end;
 	
 end;
