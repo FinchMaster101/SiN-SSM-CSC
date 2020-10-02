@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.14"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.15"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -542,7 +542,7 @@ function PatchGUI()
 		modelName, bStatic, fMass = self:GetName():match("(.*)|(.*)|(.*)");
 		local t=modelName:sub(-4);
 		if(t==".cga" or t==".cgf")then 
-			model=self:GetName();
+			model=modelName;
 		end 
 		Debug(10, "GUI: Received Name Params: model " .. model .. " | bStatic " .. bStatic .. " fMass " .. fMass .. " on GUI " .. self:GetName());
 		self:LoadObject(0, model);
