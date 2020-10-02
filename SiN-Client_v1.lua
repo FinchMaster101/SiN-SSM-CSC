@@ -1089,6 +1089,10 @@ function PatchPlayer()
 					["v_boost"] = 8;
 					["cycle_spectator_mode"] = 9;
 					["use"] = 10;
+					
+					["hud_openchat"] = 110;
+					["hud_openteamchat"] = 111;
+					
 					--["reload"] = 12;
 				};
 				-- report action if its in actions table
