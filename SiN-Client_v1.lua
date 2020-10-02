@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.10"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -366,13 +366,13 @@ function PatchGrunt()
 		if(self.lastPos)then
 			local dir;
 			
-			if(GetVectorDistance(self:GetWorldPos(),self.lastPos)>0.1)then
+			if(GetVectorDistance(self:GetWorldPos(),self.lastPos)>0.01)then
 				dir = GetDirectionVector(self:GetWorldPos(), self.lastPos, true);
 			end;
 			
 			if(dir)then
 				self:SetWorldAngles(dir);
-				if(not self.actor:IsFlying() and (self.animLng and _time - self.animLng >= 0))then
+				if(not self.actor:IsFlying() and (not self.animLng or (self.animLng and _time - self.animLng >= 0)))then
 					local anims_f = {"_COMBAT_RUNSTRAFE_RIFLE_01"};
 					local anims_s = {"_COMBAT_WALKSTRAFE_RIFLE_01"};
 					
@@ -391,7 +391,7 @@ function PatchGrunt()
 					Debug(20, "Grunt " .. self:GetName() .. " is playing animation: " .. anim)
 				end;
 			else
-				Debug(21, "Grunt " .. self:GetName() .. " cant get direction vector!!")
+				Debug(21, "Grunt " .. self:GetName() .. " cant get direction vector!! " .. GetVectorDistance(self:GetWorldPos(),self.lastPos));
 			end;
 			
 		end;
