@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -343,7 +343,7 @@ function PatchEntities()
 end;
 
 function PatchBA()
-	function BasicActor.Client:OnUpdate(frameTime)
+	function BasicActor.Client.OnUpdate(self, frameTime)
 		if(OLD and OLD.basicActor_onUpdate)then
 			OLD.basicActor_onUpdate(self,frameTime)
 		end;
@@ -354,7 +354,7 @@ function PatchBA()
 				Grunt.Client.OnUpdate(self, frameTime);
 			end;
 		end;
-		Debug(22, "Upding BasicActor")
+		Debug(22, "Upding BasicActor: " .. tostring(self) .. ", " .. tostring(self.id))
 	end;
 end;
 
