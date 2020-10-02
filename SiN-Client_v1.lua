@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.10"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.11"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -384,11 +384,11 @@ function PatchGrunt()
 						anims_s = {"_PRONE_RUNSTRAFE_RIFLE_01"};
 					end;
 					
-					local anim = (GetVectorDistance(self:GetWorldPos(), self.lastPos)<1 and anims_s[#math.random(#anims_s)] or anims_f[#math.random(#anims_f)]);
+					local anim = (GetVectorDistance(self:GetWorldPos(), self.lastPos)<1 and anims_s[math.random(#anims_s)] or anims_f[math.random(#anims_f)]);
 					self:StartAnimation( 0,anim,0,0,1,false,1 );
 					self.animLng = self:GetAnimationLength(0, anim);
 					
-					Debug(20, "Grunt " .. self:GetName() .. " is playing animation: " .. anim)
+					Debug(20, "Grunt " .. self:GetName() .. " is playing animation: " .. anim .. " time: " .. self.animLng)
 				end;
 			else
 				Debug(21, "Grunt " .. self:GetName() .. " cant get direction vector!! " .. GetVectorDistance(self:GetWorldPos(),self.lastPos));
