@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -328,6 +328,7 @@ function ReloadEntityScripts()
 	if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
 	if(not Door)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
 	if(not Grunt)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
+	if(not BasicAI)then Script.ReloadScript("Scripts/Entities/AI/Shared/BasicAI.lua"); end;
 end;
 
 function PatchEntities()
@@ -343,7 +344,7 @@ function PatchEntities()
 end;
 
 function PatchBA()
-	function BasicActor.Client.OnUpdate(self, frameTime)
+	function BasicAI.Client.OnUpdate(self, frameTime)
 		if(OLD and OLD.basicActor_onUpdate)then
 			OLD.basicActor_onUpdate(self,frameTime)
 		end;
@@ -354,7 +355,7 @@ function PatchBA()
 				Grunt.Client.OnUpdate(self, frameTime);
 			end;
 		end;
-		Debug(22, "Upding BasicActor: " .. tostring(self.class) .. ", " .. tostring(self) .. ", " .. tostring(self.id) .. ", " .. tostring(self:GetName()))
+		Debug(22, "Upding BasicAI: " .. tostring(self.class) .. ", " .. tostring(self) .. ", " .. tostring(self.id) .. ", " .. tostring(self:GetName()))
 	end;
 end;
 
@@ -909,9 +910,9 @@ function SaveOldFunctions()
 		OLD.player_onUpdate = Player.Client.OnUpdate;
 	end;
 	
-	-- basicactor
+	-- BasicAI
 	if(not OLD.basicActor_onUpdate)then
-		OLD.basicActor_onUpdate = BasicActor.Client.OnUpdate;
+		OLD.basicActor_onUpdate = BasicAI.Client.OnUpdate;
 	end;
 	
 end;
