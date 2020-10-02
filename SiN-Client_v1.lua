@@ -1,4 +1,4 @@
-FILE_VERSION = "1.01.9.8.8"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.01.9.8.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 function StartInstalling()
 	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
@@ -366,10 +366,8 @@ function PatchGrunt()
 		if(self.lastPos)then
 			local dir;
 			
-			if(cmpvec(self:GetPos(), self.lastPos, 0.1, 0.1, 0.01))then
-				dir = GetDirectionVector(self:GetPos(), self.lastPos, true);
-			else
-				dir = nil;
+			if(GetVectorDistance(self:GetWorldPos(),self.lastPos)>0.1)then
+				dir = GetDirectionVector(self:GetWorldPos(), self.lastPos, true);
 			end;
 			
 			if(dir)then
