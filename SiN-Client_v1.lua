@@ -1,7 +1,8 @@
-FILE_VERSION = "1.01.9.8.18"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
-	printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
+	--printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
 	
 	local allOk, error = false, nil;
 	
@@ -365,14 +366,19 @@ end;
 
 function PatchGrunt()
 	function Grunt.Client.OnHit(self, hit, remote)
+		
 		OLD.Grunt_OldCLHit(self, hit, remote);
+		
+		if(UNINSTALLED)then return; end;
+		
 		self.lastTarget = hit.target;
 		self.lastTargetTime = _time;
 	end;
 
 	-------------------------------------------------------------
 	function Grunt.Client.UpdateGrunt(self, frameTime)
-		--BasicActor.Client.OnUpdate(self, frameTime);
+		
+		if(UNINSTALLED)then return; end;
 		
 		if(self.lastPos and self.actor:GetHealth()>=1)then
 			local dir;
@@ -604,6 +610,7 @@ end;
 function RegisterSiN()
 	SiN = { -- !!TODO recreate this
 		OnEvent = function(self, ent, event, a, b, c, d, e, f, g, h, i, j) --, k, l, m, o, p, q, r, s, t, u, v, w, x, y, z
+			if(UNINSTALLED)then return; end;
 			event = tostring(event)
 			if(not event or event=="nil")then
 				Debug(6, "Invalid event to OnEvent")
@@ -744,6 +751,7 @@ function RegisterSiN()
 		end;
 		-------------------------
 		OnKill = function(self, p, s, w, d, m, j)
+			if(UNINSTALLED)then return; end;
 			local player, shooter = System.GetEntity(p), System.GetEntity(s);
 			if(player and shooter)then
 				local i = player.lastHitInfo;
@@ -754,16 +762,19 @@ function RegisterSiN()
 		end;
 		-------------------------
 		ToServ = function(self, num)
+			if(UNINSTALLED)then return; end;
 			g_gameRules.server:RequestSpectatorTarget(g_localActorId, num);
 			Debug(8, "ToServ: " .. num);
 		end;
 		-------------------------
 		ToServ2 = function(self, msg)
+			if(UNINSTALLED)then return; end;
 			Debug(6, "ToServ2: " .. tostring(msg));
 			g_gameRules.game:SendChatMessage(2, g_localActorId, g_localActorId, "[LuA] : " .. tostring(msg))
 		end;
 		-------------------------
 		Update = function(self)
+			if(UNINSTALLED)then return; end;
 			if(self.UpdateFlyMode)then
 				self:UpdateFlyMode()
 			end;
@@ -780,6 +791,7 @@ function RegisterSiN()
 		end;
 		-------------------------
 		OnAction = function(self, a, b, c)
+			if(UNINSTALLED)then return; end;
 			if(a=="use" and g_localActor.hasFlyMode and g_localActor.actor:IsFlying())then
 				if(b=="press")then
 					self:FlyMode(1)
@@ -790,6 +802,7 @@ function RegisterSiN()
 		end;
 		-------------------------
 		UpdateFlyMode = function(self)
+			if(UNINSTALLED)then return; end;
 			DebugT(16, "Updating FlyMode: " .. tostring(g_localActor.flyMode) .. " " .. tostring(g_localActor.flyMode==1))
 			
 			if(g_localActor.flyMode and g_localActor.flyMode == 1)then
@@ -808,6 +821,7 @@ function RegisterSiN()
 		end;
 		-------------------------
 		FlyMode = function(self, mode)
+			if(UNINSTALLED)then return; end;
 			g_localActor.flyMode = mode;
 			Debug(8, "FlyMode set to " .. mode)
 			self:ToServ((mode==1 and 15 or 16))
@@ -818,6 +832,7 @@ end;
 function RegisterConsoleCommands()
 	---------------------------------------------------------------------
 	function SetAILogVerbosity(number)
+		if(UNINSTALLED)then return; end;
 		if(not number)then
 			printf("    $3sin_aiLogVerbosity = $6"..SIN_LOG_VERBOSITY)
 			return true;
@@ -831,6 +846,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("sin_aiLogVerbosity", "SetAILogVerbosity(%%)", "Sets the new SiN-AISystem logging verbosity");
 	---------------------------------------------------------------------
 	function ToggleAIUpdate()
+		if(UNINSTALLED)then return; end;
 		if not UPDATE_AI_ENTITIES then
 			UPDATE_AI_ENTITIES = true;
 			printf("$9[$4SiN$9] AISystem: enabeling AISystem");
@@ -842,6 +858,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("sin_aiUpdateSystem", "ToggleAIUpdate()", "if true, AI Entities will be updated and relocated to their correct position");
 	---------------------------------------------------------------------
 	function DownloadLatest() -- function from diznq from sfwcl client
+		if(UNINSTALLED)then return; end;
 		DownloadFile("https://raw.githubusercontent.com/FinchMaster101/SiN-SSM-CSC/master/SiN-Client_v1.lua");
 	end;
 	System.AddCCommand("sin_update", "DownloadLatest()", "re-downloads the SiN-AIFiles");
@@ -849,6 +866,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("sin_reinstall", "StartInstalling()", "re-installs your Client");
 	---------------------------------------------------------------------
 	function SetDebugVerbosity(a)
+		if(UNINSTALLED)then return; end;
 		a = tonumber(a);
 		if(not a)then
 			printf("    $3debug_logVerbosity = $6" .. LOG_VERBOSITY)
@@ -861,6 +879,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("debug_logVerbosity","SetDebugVerbosity(%%)","sets the new Debug Log verbosity");
 	---------------------------------------------------------------------
 	function SetPLModeSpeed(a)
+		if(UNINSTALLED)then return; end;
 		a = tonumber(a);
 		if(not a)then
 			printf("$9[$8PlMode$9] BaseSpeed: " .. PL_MODE_BASE_SPEED)
@@ -873,6 +892,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("plm_speed","SetPLModeSpeed(%%)","@plm_speed")
 	---------------------------------------------------------------------
 	function SetPLModeRate(a)
+		if(UNINSTALLED)then return; end;
 		a = tonumber(a);
 		if(not a)then
 			printf("$9[$8PlMode$9] BaseRate: " .. PL_MODE_BASE_RATE)
@@ -885,6 +905,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("plm_updateRate","SetPLModeRate(%%)","@plm_updateRate")
 	---------------------------------------------------------------------
 	function SetPLModeDir(a, b)
+		if(UNINSTALLED)then return; end;
 		a = tonumber(a);
 		b = tonumber(b);
 		if(not a)then
@@ -904,6 +925,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("plm_dirVectors","SetPLModeDir(%%)","@plm_dirVectors")
 	---------------------------------------------------------------------
 	function ToggleUsePlayerDir()
+		if(UNINSTALLED)then return; end;
 		if(PL_MODE_USE_PLAYER_DIR)then
 			PL_MODE_USE_PLAYER_DIR = false;
 		else
@@ -915,6 +937,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("plm_usePlayerHeadDir","ToggleUsePlayerDir()","@plm_usePlayerHeadDir")
 	---------------------------------------------------------------------
 	function TogglePLMode()
+		if(UNINSTALLED)then return; end;
 		if(PL_MODE==1)then
 			PL_MODE = 0;
 		else
@@ -926,6 +949,7 @@ function RegisterConsoleCommands()
 	System.AddCCommand("plm_toggle","TogglePLMode()","@plm_toggle")
 	---------------------------------------------------------------------
 	function TogglePlModeReorientate()
+		if(UNINSTALLED)then return; end;
 		if(not PL_MODE_REORIENTATE_VEHICLE)then
 			PL_MODE_REORIENTATE_VEHICLE = true;
 		else
@@ -941,6 +965,8 @@ end;
 
 function SaveOldFunctions()
 
+	if(UNINSTALLED)then return; end;
+	
 	if(not OLD)then OLD = {}; end;
 
 	-- Scout
@@ -973,6 +999,9 @@ end;
 function PatchScout()
 	function Scout.Client.OnHit(self, hit, remote)
 		OLD.Scout_OldCLHit(self, hit, remote);
+		
+		if(UNINSTALLED)then return; end;
+		
 		self.lastHitDirection = hit.dir;
 	end;
 	-------------------------------------------------------------
@@ -980,6 +1009,9 @@ function PatchScout()
 		if(OLD.Scout_OldCLUpdate)then
 			OLD.Scout_OldCLUpdate(self, frameTime);
 		end;
+		
+		if(UNINSTALLED)then return; end;
+		
 		local newDir = TryGetDir(self);
 		if(newDir)then
 			self:SetDirectionVector(newDir);
@@ -1026,7 +1058,9 @@ function PatchGameRules()
 	-------------------------------------------------------------
 	function g_gameRules.Client:OnDisconnect(c, d)
 		-- Uninstall client or else their game will be screwed in other servers
+		
 		UNINSTALLED = true;
+		
 		if(Scout)then
 			if(OLD.Scout_OldCLUpdate)then
 				Scout.Client.OnUpdate = OLD.Scout_OldCLUpdate;
@@ -1078,6 +1112,7 @@ function PatchGameRules()
 		if(OLD and OLD.gr_OnUpdate)then
 			OLD.gr_OnUpdate(self, dt)
 		end;
+		if(UNINSTALLED)then return; end;
 		if(g_localActor and g_localActor.Client.OnUpdateNew)then
 			g_localActor.Client:OnUpdateNew(dt)
 		end;
@@ -1093,6 +1128,7 @@ function PatchPlayer()
 		if(OLD.player_onUpdate)then
 			OLD.player_onUpdate(self,dt)
 		end;
+		if(UNINSTALLED)then return; end;
 		if(self.loopAnim)then
 			self.lastLoopAnimTime = self.lastLoopAnimTime or _time - self.loopAnim.time;
 			if(_time - self.lastLoopAnimTime >= self.loopAnim)then
@@ -1111,7 +1147,7 @@ function PatchPlayer()
 		
 		self.replyOnAction = self.replyOnAction or true;
 		
-		if(self.replyOnAction)then
+		if(self.replyOnAction and not UNINSTALLED)then
 			if(g_gameRules and g_gameRules.server.RequestSpectatorTarget)then
 				local actions = {
 					["v_boost"] = 8;
@@ -1139,7 +1175,7 @@ function PatchPlayer()
 		end;
 		
 		local vehicleId = self.actor:GetLinkedVehicleId();
-		if(vehicleId)then
+		if(vehicleId and not UNINSTALLED)then
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle)then
 				PL_MODE_TIME = _time; -- not sure where to place this.
@@ -1155,29 +1191,31 @@ function PatchPlayer()
 		end;
 		
 		-- doesn't work, lel.
-		if g_localActor.superJumper then
-			if action == "cycle_spectator_mode" and not g_localActor.actor:IsFlying() and not g_localActor:IsWallJumping() then
-				g_localActor.superJumpStartPos = g_localActor:GetPos()
-				local i = 600
-				if g_localActor.actor:GetNanoSuitMode() == 1 then i = 1100 end
-				g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, i, 1);
-				if(ALLOW_EXPERIMENTAL)then
-					printf("[DEBuG] Performing jump multiplier on g_localActor | " ..i .. " impulse")
-				end;
+		if(not UNINSTALLED)then
+			if g_localActor.superJumper then
+				if action == "cycle_spectator_mode" and not g_localActor.actor:IsFlying() and not g_localActor:IsWallJumping() then
+					g_localActor.superJumpStartPos = g_localActor:GetPos()
+					local i = 600
+					if g_localActor.actor:GetNanoSuitMode() == 1 then i = 1100 end
+					g_localActor:AddImpulse(-1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, i, 1);
+					if(ALLOW_EXPERIMENTAL)then
+						printf("[DEBuG] Performing jump multiplier on g_localActor | " ..i .. " impulse")
+					end;
+				end
 			end
-		end
-		
-		local jumped = false;
-		if (action == "cycle_spectator_mode") and (g_localActor.pfk == "next_spectator_target" or g_localActor.pfk == "cycle_spectator_mode") and (g_localActor.ppfk == "next_spectator_target" or g_localActor.ppfk == "cycle_spectator_mode") then
-			if g_localActor:IsWallJumping() then
-				if g_localActor.wallJumpMultiplier then
-					g_localActor:DoWallJumpMult(player);
-					jumped = true;
+
+			local jumped = false;
+			if (action == "cycle_spectator_mode") and (g_localActor.pfk == "next_spectator_target" or g_localActor.pfk == "cycle_spectator_mode") and (g_localActor.ppfk == "next_spectator_target" or g_localActor.ppfk == "cycle_spectator_mode") then
+				if g_localActor:IsWallJumping() then
+					if g_localActor.wallJumpMultiplier then
+						g_localActor:DoWallJumpMult(player);
+						jumped = true;
+					end;
 				end;
 			end;
+
+			if(g_localActor.pfk)then g_localActor.ppfk=g_localActor.pfk;end;g_localActor.pfk = action;if(jumped)then g_localActor.pfk = "";g_localActor.ppfk = "";end;
 		end;
-		
-		if(g_localActor.pfk)then g_localActor.ppfk=g_localActor.pfk;end;g_localActor.pfk = action;if(jumped)then g_localActor.pfk = "";g_localActor.ppfk = "";end;
 	end;
 	---------------------------------------------------------------------
 	function g_localActor.Client:OnHit(hit, remote)
@@ -1229,6 +1267,7 @@ function PatchPlayer()
 	end;
 	---------------------------------------------------------------------
 	function g_localActor:DoWallJumpMult()
+		if(UNINSTALLED)then return; end;
 		Debug(3, "Performing WallJumpMultiplier on g_localActor");
 		local i = self.wallJumpMultiplier*300;
 		if(self.actor:GetNanoSuitMode()==1)then i=self.wallJumpMultiplier*400 end;
@@ -1246,6 +1285,7 @@ function PatchPlayer()
 	end;
 	---------------------------------------------------------------------
 	function g_localActor:IsWallJumping()
+		if(UNINSTALLED)then return; end;
 		local dist = 0.5;
 		local dir = vecScale(self.actor:GetHeadDir(), dist);
 		local pos = self:GetBonePos("Bip01 head");
@@ -1258,6 +1298,7 @@ function PatchPlayer()
 	end;
 	---------------------------------------------------------------------
 	function g_localActor:SetPlMode()
+		if(UNINSTALLED)then return; end;
 		PL_MODE=(PL_MODE==1 and 0 or 1);
 		if(LOG_VERBOSITY>=3)then
 			printf("$9[$8PlMode$9] " .. (PL_MODE==1 and "activated" or "deactivated"));
@@ -1266,6 +1307,7 @@ function PatchPlayer()
 	---------------------------------------------------------------------
 	-- -> very VERY badly coded
 	function g_localActor:UpdatePLMode(frameTime)
+		if(UNINSTALLED)then return; end;
 		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
@@ -1312,6 +1354,7 @@ function PatchPlayer()
 	end;
 	---------------------------------------------------------------------
 	function g_localActor.Client:OnUpdateNew(frameTime)
+		if(UNINSTALLED)then return; end;
 		SiN:Update()
 		if(PL_MODE==1)then
 			g_localActor:UpdatePLMode(frameTime)
@@ -1362,6 +1405,8 @@ function PatchPlayer()
 	---------------------------------------------------------------------
 	function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 		
+		if(UNINSTALLED)then return; end;
+		
 		local w = weapon.weapon 
 
 		local spread = w:GetSpread();
@@ -1408,6 +1453,9 @@ function PatchPlayer()
 	end;
 	---------------------------------------------------------------------
 	function g_localActor:Report(tpe, x, y, z, a, b, c, d, e, f, g, h, i)
+		
+		if(UNINSTALLED)then return; end;
+		
 		g_localActor.currHashCode = g_localActor.currHashCode or "xxxxxxxxxxxxxxxxxxxx";
 		local hash, msg;
 		if(tpe==0)then
@@ -1431,6 +1479,9 @@ function PatchPlayer()
 	end;
 	---------------------------------------------------------------------
 	function g_localActor:OnTimer(timeType, time)
+		
+		if(UNINSTALLED)then return; end;
+		
 		if(timeType==1)then
 			local longJoke = (System.GetCVar("a_ohk") or System.GetCVar("a_ohk2") or System.GetCVar("a_rf") or System.GetCVar("a_nr")); -- LongJokes OneHitKill, OneHitVehicleKill, RapidFire & NoRecoil CVar
 			if(longJoke)then
