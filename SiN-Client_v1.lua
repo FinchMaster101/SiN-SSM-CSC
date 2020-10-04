@@ -1,4 +1,4 @@
-FILE_VERSION = "1.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1059,50 +1059,58 @@ function PatchGameRules()
 	function g_gameRules.Client:OnDisconnect(c, d)
 		-- Uninstall client or else their game will be screwed in other servers
 		
-		UNINSTALLED = true;
+		if(not UNINSTALLED)then
 		
-		if(Scout)then
-			if(OLD.Scout_OldCLUpdate)then
-				Scout.Client.OnUpdate = OLD.Scout_OldCLUpdate;
+			UNINSTALLED = true;
+
+			if(Scout)then
+				if(OLD.Scout_OldCLUpdate)then
+					Scout.Client.OnUpdate = OLD.Scout_OldCLUpdate;
+				end;
+				if(OLD.Scout_OldCLHit)then
+					Scout.Client.OnHit = OLD.Scout_OldCLHit;
+				end;
 			end;
-			if(OLD.Scout_OldCLHit)then
-				Scout.Client.OnHit = OLD.Scout_OldCLHit;
+			
+			if(g_localActor)then
+			
+				if(g_localActor.Client.OnUpdateNew)then
+					function g_localActor.Client:OnUpdateNew()
+						return;	
+					end;
+				end;
+				if(g_lcoalActor.Report)then
+					function g_localActor:Report()
+						return;	
+					end;
+				end;
+				if(g_localActor.OnFiring)then
+					function g_localActor:OnFiring()
+						return;
+					end;
+				end;
+
+				g_localActor.replyOnAction = false;
+				g_localActor.wallJumpMultiplier = nil;
+				g_localActor.superJumper = nil;
+
+				g_localActor.DoWallJumpMult = nil;
+				g_localActor.IsWallJumping = nil;
+
 			end;
+				
+			PL_MODE = 0;
+		
+			System.ClearKeyState();
+
+			if(SiN)then
+				SiN.Update=function(self)
+					return;
+				end;
+			end;
+
+			printf("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
 		end;
-		if(g_localActor.Client.OnUpdateNew)then
-			function g_localActor.Client:OnUpdateNew()
-				return;	
-			end;
-		end;
-		if(g_lcoalActor.Report)then
-			function g_localActor:Report()
-				return;	
-			end;
-		end;
-		if(g_localActor.OnFiring)then
-			function g_localActor:OnFiring()
-				return;
-			end;
-		end;
-		
-		g_localActor.replyOnAction = false;
-		g_localActor.wallJumpMultiplier = nil;
-		g_localActor.superJumper = nil;
-		
-		g_localActor.DoWallJumpMult = nil;
-		g_localActor.IsWallJumping = nil;
-		
-		PL_MODE = 0;
-		
-		System.ClearKeyState();
-		
-		if(SiN)then
-			SiN.Update=function(self)
-				return;
-			end;
-		end;
-		
-		printf("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
 	end;
 	-------------------------------------------------------------
 	g_gameRules.Client.PreGame.OnDisconnect = g_gameRules.Client.OnDisconnect;
