@@ -1,4 +1,4 @@
-FILE_VERSION = "1.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1061,6 +1061,8 @@ function PatchGameRules()
 		
 		if(not UNINSTALLED)then
 		
+			System.LogAlways("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
+			
 			UNINSTALLED = true;
 
 			if(Scout)then
@@ -1109,7 +1111,7 @@ function PatchGameRules()
 				end;
 			end;
 
-			printf("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
+			
 		end;
 	end;
 	-------------------------------------------------------------
