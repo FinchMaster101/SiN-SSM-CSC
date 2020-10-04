@@ -1,4 +1,4 @@
-FILE_VERSION = "1.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.31"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1150,8 +1150,11 @@ function PatchPlayer()
 	---------------------------------------------------------------------
 	function g_localActor:OnAction(action, activation, value)
 		-- gamerules needs to get all player actions all times
+		Debug(1, "g_localActor: ( Action: " .. action .. ", activation: " .. activation .. ", value: " .. value .. ") send actions to g_gameRules.Client:OnActorAction")
 		if(g_gameRules and g_gameRules.Client.OnActorAction)then if(not g_gameRules.Client.OnActorAction(g_gameRules, self, action, activation, value))then return;end;end;
 		if(action=="use"or action=="xi_use")then self:UseEntity( self.OnUseEntityId, self.OnUseSlot, activation == "press");end;
+		
+		if(UNINSTALLED)then return end;
 		
 		if(not UNINSTALLED)then if(SiN)then SiN:OnAction(action, activation, value);end;end; -- fly mode, etc.
 		
