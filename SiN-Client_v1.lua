@@ -1,4 +1,4 @@
-FILE_VERSION = "1.31"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.32"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -104,6 +104,8 @@ function RegisterGlobals()
 	if(not SIN_LOG_VERBOSITY)then
 		SIN_LOG_VERBOSITY = 50;
 	end;
+	---------------------------------------------------------------------
+	SOUND_REGISTERED_WEAPONS = SOUND_REGISTERED_WEAPONS or {};
 end;
 
 function RegisterFunctions()
@@ -312,7 +314,16 @@ function RegisterFunctions()
 		return {x=vec3.x*-1,y=vec3.y*-1,z=vec3.z*-1};
 	end;
 	---------------------------------------------------------------------
-	
+	function GiveShotSound(weapon, shotSound)
+		local w = (type(weapon) == "string" and System.GetEntityByName(weapon) or weapon);
+		if(w)then
+			SOUND_REGISTERED_WEAPONS[w.id] = shotSound;
+			Debug(6, "SOUND_REGISTERED_WEAPONS["..tostring(w.id):gsub("userdata: ","").."] = \"" .. shotSound .. "\"");
+		else
+			Debug(6, "No weapon to GiveShotSound provided");
+		end;
+		Debug(7, "GiveShotSound()")
+	end;
 	---------------------------------------------------------------------
 	
 	---------------------------------------------------------------------
@@ -1372,26 +1383,44 @@ function PatchPlayer()
 		if(PL_MODE==1)then
 			g_localActor:UpdatePLMode(frameTime)
 		end;
-		local w = g_localActor.inventory:GetCurrentItem();
-		if(w)then
-			local g = w.weapon;
-			if(g)then
-				local f = g:IsFiring();
-				local a = g:GetAmmoCount() or 0;
-				g_localActor.lastAmmoCount = g_localActor.lastAmmoCount or a+1;
-				g_localActor.lastWeaponClass = g_localActor.lastWeaponClass or w.class;
-				if(w.class ~= g_localActor.lastWeaponClass)then
-					g_localActor.lastAmmoCount = a;
-					g_localActor.lastWeaponClass = w.class;
-				end;
-				if(f and (w.class~="Fists") and (g_localActor.lastAmmoCount~=a))then
-					g_localActor.lastFireTime = g_localActor.lastFireTime or (_time - 0.1);
-					if(_time - g_localActor.lastFireTime >= 0.1)then
-						g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
-						g_localActor.lastFireTime = _time;
+		local temp={}
+		local gw = g_localActor.inventory:GetCurrentItem();
+		local w;
+		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
+			w = System.GetEntity(i);
+			if(w)then
+				local g = w.weapon;
+				if(g)then
+					local f = g:IsFiring();
+					local a = g:GetAmmoCount() or 0;
+					w.lastAmmoCount = w.lastAmmoCount or a+1;
+					w.lastWeaponClass = w.lastWeaponClass or w.class;
+					if(w.class ~= g_localActor.lastWeaponClass)then
+						w.lastAmmoCount = a;
+						g_localActor.lastWeaponClass = w.class;
+					end;
+					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
+						w.lastFireTime = w.lastFireTime or (_time - 0.1);
+						if(_time - w.lastFireTime >= 0.1)then
+							if(gw and w==gw)then
+								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
+							end;
+							
+							local s = w.shotSound;
+							if(s and type(s) == "string")then
+								w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+								Debug(3, "Playing shotSound on w("..tostring(w)..")");
+							else
+								Debug(3, "no shotSound or type invalid");
+							end;
+							
+							w.lastFireTime = _time;
+						end;
+					else
+						DebugT(1, "OnFiring() cancelled due to " .. (a==w.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 					end;
 				else
-					DebugT(1, "OnFiring() cancelled due to " .. (a==g_localActor.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
+					SOUND_REGISTERED_WEAPONS[i] = nil;
 				end;
 			end;
 		end;
@@ -1439,13 +1468,13 @@ function PatchPlayer()
 		self.lastSpread = spread;
 		self.lastRecoil = recoil;
 		
-		local s = weapon.shotSound;
-		if(s and type(s) == "string")then
-			self:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
-			Debug(3, "Playing shotSound on g_localActor");
-		else
-			Debug(3, "no shotSound or type invalid");
-		end;
+		--local s = weapon.shotSound;
+		--if(s and type(s) == "string")then
+		--	self:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+		--	Debug(3, "Playing shotSound on g_localActor");
+		--else
+		--	Debug(3, "no shotSound or type invalid");
+		--end;
 		
 		self.lastAccessoryReport = self.lastAccessoryReport or (_time - 10);
 		if(_time - self.lastAccessoryReport >= 10)then
@@ -1461,7 +1490,7 @@ function PatchPlayer()
 			end;
 		end;
 		
-		g_localActor.lastAmmoCount = w:GetAmmoCount();
+		weapon.lastAmmoCount = w:GetAmmoCount();
 		g_localActor.lastWeaponClass = weapon.class;
 	end;
 	---------------------------------------------------------------------
