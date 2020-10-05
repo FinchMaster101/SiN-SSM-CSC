@@ -1,4 +1,4 @@
-FILE_VERSION = "1.34"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.35"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -499,7 +499,7 @@ function PatchDoor()
 			local model = self.Properties.fileModel;
 			local t=self:GetName():sub(-4);
 			if(t==".cga" or t==".cgf")then 
-				model=self:GetName(); -- is case SOMEONE puts model name is entity name
+				model=self:GetName(); -- is case SOMEONE puts model name in entity name
 			end 
 			self:LoadObject( 0,model );
 			self:Physicalize(0,PE_RIGID,self.PhysParams);
@@ -553,6 +553,7 @@ function PatchGUI()
 	GUI.Properties.color_GUIBackgroundColor 	= {0,0,0};
 	GUI.Properties.fileGUIScript			= "test_hard";
 	GUI.Properties.bStatic                          = 0;
+	GUI.Properties.fViewDist                        = 50; -- GUI default (i think)
 	---------------------------
 	--		OnSpawn
 	---------------------------
@@ -568,15 +569,16 @@ function PatchGUI()
 		self.Properties.bUsable = nil;
 		self:SetUpdatePolicy(ENTITY_UPDATE_VISIBLE);
 		local model=self.Properties.objModel;
-		local modelName, bStatic, fMass = "", 0, self.Properties.fMass;
-		modelName, bStatic, fMass = self:GetName():match("(.*)|(.*)|(.*)");
+		local modelName, bStatic, fMass, vDist = "", 0, self.Properties.fMass, self.Properties.fViewDist;
+		modelName, bStatic, fMass, vDist = self:GetName():match("(.*)|(.*)|(.*)|(.*)");
 		fMass = tonumber(fMass)or 35;
 		bStatic = tonumber(bStatic)or 0;
+		vDist = tonumber(vDist)or 50;
 		local t=modelName:sub(-4);
 		if(t==".cga" or t==".cgf")then 
 			model=modelName;
 		end 
-		Debug(10, "GUI: Received Name Params: model " .. model .. " | bStatic " .. bStatic .. " fMass " .. fMass .. " on GUI " .. self:GetName());
+		Debug(10, "GUI: Received Name Params: model " .. model .. " | bStatic " .. bStatic .. " fMass " .. fMass .. " viewDist: " .. vDist .. " on GUI " .. self:GetName());
 		self:LoadObject(0, model);
 		self:DrawSlot(0, 1);
 		if (tonumber(self.Properties.bPhysicalized) ~= 0) then
@@ -590,6 +592,10 @@ function PatchGUI()
 				self:AwakePhysics(1);
 			end
 		end
+		
+		if(vDist and self.SetViewDistRatio)then
+			self:SetViewDistRatio(vDist);
+		end;
 
 	end
 	-------------------------
