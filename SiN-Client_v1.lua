@@ -1,4 +1,4 @@
-FILE_VERSION = "1.35"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -32,8 +32,9 @@ function StartInstalling()
 	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;--allOk, error = true, nil;
 
 	if(allOk==true)then
-		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)")
-		SiN:ToServ(17)
+		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)");
+		SiN:ToServ(17);
+		System.ExecuteCommand("bind f3 say !bombDrop");
 	else
 		printf("$9[$4SiN$9] Failed to Install Client! ($4One or more errors occured during installation!$9)");
 		if(ECH)then ECH(); end;
@@ -856,6 +857,7 @@ function RegisterSiN()
 end;
 
 function RegisterConsoleCommands()
+	--system.AddCCommand("v_bombDrop","vehicleBombDrop", "drops bombs out of your vehicle);
 	---------------------------------------------------------------------
 	function SetAILogVerbosity(number)
 		if(UNINSTALLED)then return; end;
