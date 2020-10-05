@@ -1,4 +1,4 @@
-FILE_VERSION = "1.32"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.33"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1406,7 +1406,7 @@ function PatchPlayer()
 								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 							end;
 							
-							local s = w.shotSound;
+							local s = v;
 							if(s and type(s) == "string")then
 								w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
 								Debug(3, "Playing shotSound on w("..tostring(w)..")");
