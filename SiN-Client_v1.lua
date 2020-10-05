@@ -1,4 +1,4 @@
-FILE_VERSION = "1.33"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.34"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -325,7 +325,16 @@ function RegisterFunctions()
 		Debug(7, "GiveShotSound()")
 	end;
 	---------------------------------------------------------------------
-	
+	function TakeShotSound(weapon)
+		local w = (type(weapon) == "string" and System.GetEntityByName(weapon) or weapon);
+		if(w)then
+			SOUND_REGISTERED_WEAPONS[w.id] = nil;
+			Debug(6, "SOUND_REGISTERED_WEAPONS["..tostring(w.id):gsub("userdata: ","").."] = nil");
+		else
+			Debug(6, "No weapon to GiveShotSound provided");
+		end;
+		Debug(7, "takeShotSound()")
+	end;
 	---------------------------------------------------------------------
 	
 	---------------------------------------------------------------------
