@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -34,7 +34,8 @@ function StartInstalling()
 	if(allOk==true)then
 		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)");
 		SiN:ToServ(17);
-		System.ExecuteCommand("bind f3 say !bombDrop");
+		System.ExecuteCommand("bind f3 say !bombdrop");
+		System.ExecuteCommand("bind f4 say !helldrop");
 	else
 		printf("$9[$4SiN$9] Failed to Install Client! ($4One or more errors occured during installation!$9)");
 		if(ECH)then ECH(); end;
