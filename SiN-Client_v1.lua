@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1a"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1091,9 +1091,9 @@ function PatchGameRules()
 		if(not UNINSTALLED)then
 		
 			System.LogAlways("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
-			Script.SetTimer(3000, function()
+			Script.SetTimer(5000, function()
 				HUD.ShowWarningMessage(5, "Disconnected from Server: %s", tostring(d)or"Disconnected");
-				Debug(6, "HUD.ShowWarningMessage(5, Disconnected from Server: " .. tostring(d)or"Disconnected");
+				Debug(6, "HUD.ShowWarningMessage(5, Disconnected from Server: " .. tostring(d)or"Disconnected" .. ")");
 			end);
 			
 			UNINSTALLED = true;
@@ -1114,7 +1114,7 @@ function PatchGameRules()
 						return;	
 					end;
 				end;
-				if(g_lcoalActor.Report)then
+				if(g_localActor.Report)then
 					function g_localActor:Report()
 						return;	
 					end;
