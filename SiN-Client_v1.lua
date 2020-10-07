@@ -1092,9 +1092,11 @@ function PatchGameRules()
 		
 			System.LogAlways("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
 			Script.SetTimer(5000, function()
-				HUD.ShowWarningMessage(5, "Disconnected from Server: %s", tostring(d)or"Disconnected");
-				Debug(6, "HUD.ShowWarningMessage(5, Disconnected from Server: " .. tostring(d)or"Disconnected" .. ")");
+				--HUD.ShowWarningMessage(5, "Disconnected from Server: %s", tostring(d)or"Disconnected"); -- didn't work :'(
+				--Debug(6, "HUD.ShowWarningMessage(5, Disconnected from Server: " .. tostring(d)or"Disconnected" .. ")");
 			end);
+			
+			HUD.DisplayBigOverlayFlashMessage("Disconnected From Server: " .. tostring(d)or"Disconnected", 5, 500, 500, {1,0,0});
 			
 			UNINSTALLED = true;
 
