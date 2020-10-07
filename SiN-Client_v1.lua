@@ -1109,7 +1109,7 @@ function PatchGameRules()
 				end;
 			end;
 			
-			if(g_localActor)then
+			if(g_localActor)then --
 			
 				if(g_localActor.Client.OnUpdateNew)then
 					function g_localActor.Client:OnUpdateNew()
