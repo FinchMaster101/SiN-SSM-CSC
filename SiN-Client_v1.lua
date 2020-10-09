@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1v"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1x"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1139,13 +1139,13 @@ function PatchGameRules()
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolgod",					name="Vtol GOD", 			tag="bombDropper&hellBombDropper",			price=5000,		class="US_vtol", 					modification="MP",	buildtime=80,		category="@mp_catVehicles", loadout=0 },
 	
 	
-	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apclaw",					name="APC LAW",							price=600,		class="US_apc", 	tag="lawGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
-	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcexo",					name="APC Exocet",							price=700,		class="US_apc", 	tag="exocetGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apclaw",					name="APC LAW",							price=600,		class="US_apc", 	tag="lawGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apcexo",					name="APC Exocet",							price=700,		class="US_apc", 	tag="exocetGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
 	
-	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apccom",					name="APC COMET",							price=10000,		class="US_apc", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
-	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcmcom",					name="APC Mega Comet",							price=15000,		class="US_apc", 	tag="MegaCometGun",				buildtime=50,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apccom",					name="APC COMET",							price=10000,		class="US_apc", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apcmcom",					name="APC Mega Comet",							price=15000,		class="US_apc", 	tag="MegaCometGun",				buildtime=50,		category="@mp_catVehicles", loadout=0 },
 	
-	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcmine",					name="APC Mine",							price=2000,		class="US_apc", 	tag="mineGun",				buildtime=25,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apcmine",					name="APC Mine",							price=2000,		class="US_apc", 	tag="mineGun",				buildtime=25,		category="@mp_catVehicles", loadout=0 },
 	
 	{ vehicle=true,factories={air=false,small=false,war=false,prototype=true},id="apcsing",					name="APC Singularity",							price=15000,		class="US_apc", 	tag="singularityGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
 
@@ -1173,6 +1173,7 @@ function PatchGameRules()
 				rev[v.id] = i
 			end
 			for i,v in pairs(List) do
+				Debug(15, "Instralling new Buyable: " .. v.name )
 				if v.key then
 					g_gameRules[Key][v.key] = v;
 				else
