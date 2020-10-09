@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1a"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1b"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1409,14 +1409,17 @@ function PatchPlayer()
 		end;
 		local temp={}
 		local gw = g_localActor.inventory:GetCurrentItem();
-		local w;
+		local w,g,f,a;
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
 			if(w)then
-				local g = w.weapon;
+				g = w.weapon;
 				if(g)then
-					local f = g:IsFiring();
-					local a = g:GetAmmoCount() or 0;
+					f = g:IsFiring();
+					a = g:GetAmmoCount() or 0;
+					
+					Debug(20, "f = " .. tostring(f) .. " | a = " .. a .. " w = " .. tostring(w:GetName()));
+					
 					w.lastAmmoCount = w.lastAmmoCount or a+1;
 					w.lastWeaponClass = w.lastWeaponClass or w.class;
 					if(w.class ~= g_localActor.lastWeaponClass)then
@@ -1430,12 +1433,21 @@ function PatchPlayer()
 								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 							end;
 							
-							local s = v;
-							if(s and type(s) == "string")then
-								w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
-								Debug(3, "Playing shotSound on w("..tostring(w)..")");
+							local s = v.s;
+							if(v.private)then
+								if(s and type(s) == "string" and gw and w==gw)then
+									w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+									Debug(3, "Playing Private shotSound on w("..tostring(w)..")");
+								else
+									Debug(3, "no private shotSound or type invalid");
+								end;
 							else
-								Debug(3, "no shotSound or type invalid");
+								if(s and type(s) == "string")then
+									w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+									Debug(3, "Playing shotSound on w("..tostring(w)..")");
+								else
+									Debug(3, "no shotSound or type invalid");
+								end;
 							end;
 							
 							w.lastFireTime = _time;
@@ -1444,7 +1456,7 @@ function PatchPlayer()
 						DebugT(1, "OnFiring() cancelled due to " .. (a==w.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 					end;
 				else
-					SOUND_REGISTERED_WEAPONS[i] = nil;
+					TakeShotSound(i)
 				end;
 			end;
 		end;
