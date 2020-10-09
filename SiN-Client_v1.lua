@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1b"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1c"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -316,10 +316,10 @@ function RegisterFunctions()
 		return {x=vec3.x*-1,y=vec3.y*-1,z=vec3.z*-1};
 	end;
 	---------------------------------------------------------------------
-	function GiveShotSound(weapon, shotSound)
+	function GiveShotSound(weapon, shotSound,private)
 		local w = (type(weapon) == "string" and System.GetEntityByName(weapon) or weapon);
 		if(w)then
-			SOUND_REGISTERED_WEAPONS[w.id] = shotSound;
+			SOUND_REGISTERED_WEAPONS[w.id] = {s=shotSound,private=private or false};
 			Debug(6, "SOUND_REGISTERED_WEAPONS["..tostring(w.id):gsub("userdata: ","").."] = \"" .. shotSound .. "\"");
 		else
 			Debug(6, "No weapon to GiveShotSound provided");
@@ -1426,7 +1426,7 @@ function PatchPlayer()
 						w.lastAmmoCount = a;
 						g_localActor.lastWeaponClass = w.class;
 					end;
-					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
+					if((f or gw~=w) and (w.class~="Fists") and (w.lastAmmoCount~=a))then
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
 							if(gw and w==gw)then
