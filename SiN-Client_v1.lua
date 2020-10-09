@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1g"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1h"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1401,6 +1401,41 @@ function PatchPlayer()
 		end;
 	end;
 	---------------------------------------------------------------------
+	function g_localActor.Client:CheckOnFiring()
+		local w = System.GetEntity(g_localActor.inventory:GetCurrentItemId());
+			if(w)then
+				local g = w.weapon;
+				if(g)then
+					local f = g:IsFiring();
+					local a = g:GetAmmoCount() or 0;
+					
+					
+					
+					w.lastAmmoCount = w.lastAmmoCount or a+1;
+					w.lastWeaponClass = w.lastWeaponClass or w.class;
+					if(w.class ~= g_localActor.lastWeaponClass)then
+						w.lastAmmoCount = a;
+						g_localActor.lastWeaponClass = w.class;
+					end;
+					
+					
+					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
+						w.lastFireTime = w.lastFireTime or (_time - 0.1);
+						if(_time - w.lastFireTime >= 0.1)then
+						
+								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
+						
+							
+							
+						end;
+					else
+						DebugT(1, "G_LA OnFiring() cancelled due to " .. (a==w.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
+					end;
+					
+				end
+			end;
+	end;
+	---------------------------------------------------------------------
 	function g_localActor.Client:OnUpdateNew(frameTime)
 		if(UNINSTALLED)then return; end;
 		SiN:Update()
@@ -1409,6 +1444,7 @@ function PatchPlayer()
 		end;
 		local temp={}
 		local gw = g_localActor.inventory:GetCurrentItem();
+		self:CheckOnFiring();
 		local w,g,f,a;
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
@@ -1436,7 +1472,7 @@ function PatchPlayer()
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
 							if(gw and w==gw)then
-								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
+								--g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 							end;
 							
 							local s = v.s;
