@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1c"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1d"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1426,7 +1426,13 @@ function PatchPlayer()
 						w.lastAmmoCount = a;
 						g_localActor.lastWeaponClass = w.class;
 					end;
-					if((f or gw~=w) and (w.class~="Fists") and (w.lastAmmoCount~=a))then
+					if(g~=gw)then
+						if(not f)then
+							f = true;	
+						end;
+					end;
+					Debug(19, "LastAmmoCount = " .. w.lastAmmoCount .. " ~= " .. a);
+					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
 							if(gw and w==gw)then
