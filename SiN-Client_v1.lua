@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1j"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1k"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1529,7 +1529,9 @@ function PatchPlayer()
 	end;
 	---------------------------------------------------------------------
 	function g_localActor.Client:CheckOnFiring()
-		local w = System.GetEntity(g_localActor.inventory:GetCurrentItemId());
+		local cid = g_localActor.inventory:GetCurrentItemId()
+		if(cid)then
+		local w = System.GetEntity(cid);
 			if(w)then
 				Debug(20,"Weapon")
 				local g = w.weapon;
@@ -1565,6 +1567,7 @@ function PatchPlayer()
 					
 				end
 			end;
+		end;
 	end;
 	---------------------------------------------------------------------
 	function g_localActor.Client:OnUpdateNew(frameTime)
