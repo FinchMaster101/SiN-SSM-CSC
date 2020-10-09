@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1h"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1i"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1404,8 +1404,10 @@ function PatchPlayer()
 	function g_localActor.Client:CheckOnFiring()
 		local w = System.GetEntity(g_localActor.inventory:GetCurrentItemId());
 			if(w)then
+				Debug(20,"Weapon")
 				local g = w.weapon;
 				if(g)then
+					Debug(20,"Weapon.weapon")
 					local f = g:IsFiring();
 					local a = g:GetAmmoCount() or 0;
 					
@@ -1414,15 +1416,17 @@ function PatchPlayer()
 					w.lastAmmoCount = w.lastAmmoCount or a+1;
 					w.lastWeaponClass = w.lastWeaponClass or w.class;
 					if(w.class ~= g_localActor.lastWeaponClass)then
+						Debug(20,"weapoin class changed")
 						w.lastAmmoCount = a;
 						g_localActor.lastWeaponClass = w.class;
 					end;
 					
 					
 					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
+					Debug(20,"params")
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
-						
+						Debug(20,"OnFiring")
 								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 						
 							
@@ -1454,7 +1458,7 @@ function PatchPlayer()
 					f = g:IsFiring();
 					a = g:GetAmmoCount() or 0;
 					
-					Debug(20, "f = " .. tostring(f) .. " | a = " .. a .. " w = " .. tostring(w:GetName()));
+					--Debug(20, "f = " .. tostring(f) .. " | a = " .. a .. " w = " .. tostring(w:GetName()));
 					
 					w.lastAmmoCount = w.lastAmmoCount or a+1;
 					w.lastWeaponClass = w.lastWeaponClass or w.class;
@@ -1467,7 +1471,7 @@ function PatchPlayer()
 							f = true;	
 						end;
 					end;
-					Debug(19, "LastAmmoCount = " .. w.lastAmmoCount .. " ~= " .. a);
+					--Debug(19, "LastAmmoCount = " .. w.lastAmmoCount .. " ~= " .. a);
 					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
