@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1i"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.36e1j"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1067,6 +1067,133 @@ function PatchScout()
 end;
 
 function PatchGameRules()
+	-------------------------------------------------------------
+	g_gameRules.weaponList_new ={
+	{ id="flashbang",name="@mp_eFlashbang",price=25, amount=1, ammo=true, weapon=false, category="@mp_catExplosives", loadout=1},
+	{ id="smokegrenade",name="@mp_eSmokeGrenade",price=10, amount=1, ammo=true, weapon=false, category="@mp_catExplosives", loadout=1 },
+	{ id="explosivegrenade",name="@mp_eFragGrenade",price=25, amount=1, ammo=true, weapon=false, category="@mp_catExplosives", loadout=1 },
+	{ id="empgrenade",name="@mp_eEMPGrenade",price=50,amount=1, ammo=true, weapon=false, category="@mp_catExplosives", loadout=1 },
+	{ id="pistol",name="@mp_ePistol", price=50, class="SOCOM",category="@mp_catWeapons"},
+	{ id="claymore",name="@mp_eClaymore",price=25,class="Claymore",buyammo="claymoreexplosive",category="@mp_catExplosives", loadout=1 },
+	{ id="supercly",name="UltraClaymore",price=100,class="Claymore",tag2="ultraClay",buyammo="claymoreexplosive",category="@mp_catExplosives", loadout=1 },
+	{ id="avmine",name="@mp_eMine",price=25,class="AVMine",buyammo="avexplosive",category="@mp_catExplosives", loadout=1 },
+	{ id="c4",name="@mp_eExplosive", price=50, class="C4", buyammo="c4explosive",category="@mp_catExplosives", loadout=1 },
+	{ id="shotgun",name="@mp_eShotgun", price=50, class="Shotgun", uniqueId=4,category="@mp_catWeapons", loadout=1 },
+	{ id="smg",name="@mp_eSMG", price=75, class="SMG", uniqueId=7,category="@mp_catWeapons", loadout=1 },
+	{ id="fy71",name="@mp_eFY71", price=125, class="FY71", uniqueId=8,category="@mp_catWeapons", loadout=1 },
+	{ id="macs",name="@mp_eSCAR", price=150, class="SCAR", uniqueId=9,category="@mp_catWeapons", loadout=1 },
+	{ id="rpg",name="@mp_eML";price=200;class="LAW";uniqueId=13,category="@mp_catExplosives";loadout=1 },
+	{ id="dsg1",name="@mp_eSniper",price=200;class="DSG1";uniqueId=16,category="@mp_catWeapons";loadout=1 },
+	{ id="gauss",name="@mp_eGauss";price=600;class="GaussRifle",uniqueId=17,category="@mp_catWeapons";loadout=1 },
+	{ id="alienrpg",name="AlienLAW";price=600;class="LAW";tag="megaSingularityGun",uniqueId=15,category="@mp_catExplosives";loadout=1 },
+	{ id="quadlawlauncher",name="QuadLAW";price=400;class="LAW";tag="quadLAWGun",uniqueId=14,category="@mp_catExplosives";loadout=1 },
+	{ id="gaussshotgun",name="GaussShotgun",price=600, class="Shotgun", tag="gaussShotgun",uniqueId=5,category="@mp_catWeapons", loadout=1 },
+	{ id="gaussscar",name="GaussScar",price=350;class="SCAR";tag="smallGauss",uniqueId=10,category="@mp_catWeapons";loadout=1 },
+	{ id="electroscar",name="ElectroSCAR",price=250;class="SCAR";tag="electroGun",uniqueId=1,category="@mp_catWeapons";loadout=1 },
+	{ id="electroshotgun",name="ElectroShotgun",price=600, class="Shotgun", tag="electroShotgun",uniqueId=5,category="@mp_catWeapons", loadout=1 },
+	{ id="empsocom",name="EMPSocom",price=150, class="SOCOM", tag="empGun",uniqueId=18,category="@mp_catWeapons", loadout=1 },
+	{ id="simlaw",name="SimpleLAW";price=100;class="LAW";tag="simpleLAWGun",uniqueId=12,category="@mp_catExplosives";loadout=1 },
+	};
+
+	g_gameRules.protoList_new ={
+	{ id="moac",name="@mp_eAlienWeapon";price=300;class="AlienMount";level=50,uniqueId=11,category="@mp_catWeapons";loadout=1 },
+	{ id="moar",name="@mp_eAlienMOAR";price=100;class="MOARAttach";level=50,uniqueId=12,category="@mp_catWeapons";loadout=1 },
+	{ id="ultramoac",name="UltraMOAC";price=1000;class="AlienMount";tag="ultraMOARGun",level=50,uniqueId=18,category="@mp_catWeapons";loadout=1 },
+	{ id="minigun",name="@mp_eMinigun",price=250;class="Hurricane";level=50,uniqueId=13,category="@mp_catWeapons";loadout=1 },
+	{ id="tacgun",name="@mp_eTACLauncher";price=500;class="TACGun";level=100,energy=5;uniqueId=14,category="@mp_catWeapons";md=true;loadout=1 },
+	{ id="tacgun2",name="Dual TACLauncher";price=1200;class="TACGun";tag="dualTacGun",level=100,energy=5;uniqueId=15,category="@mp_catWeapons";md=true;loadout=1 },
+	{ id="tacgun3",name="FLAC Launcher";price=1500;class="TACGun";tag="bigTACGun",level=100,energy=5;uniqueId=16,category="@mp_catWeapons";md=true;loadout=1 },
+	{ id="usmoac4wd",name="@mp_eMOACVehicle",price=300;class="US_ltv";level=50;modification="MOAC";vehicle=true;buildtime=20,category="@mp_catVehicles";loadout=0 },
+	{ id="usmoar4wd",name="@mp_eMOARVehicle",price=350,class="US_ltv";level=50,modification="MOAR";vehicle=true;buildtime=20,category="@mp_catVehicles";loadout=0 },
+	{ id="ussingtank",name="@mp_eSingTank",price=800;class="US_tank";level=100;energy=10;modification="Singularity",vehicle=true;md=true;buildtime=60,category="@mp_catVehicles";loadout=0 },
+	{ id="ustactank",name="@mp_eTACTank",price=750,class="US_tank";level=100;energy=10;modification="TACCannon",vehicle=true;md=true;buildtime=60,category="@mp_catVehicles";loadout=0 },
+	};
+
+
+	
+	g_gameRules.vehicleList_new={	
+	{ id="light4wd",				name="@mp_eLightVehicle", 				price=0,			class="US_ltv",						modification="Unarmed", 		buildtime=5,		category="@mp_catVehicles", loadout=0 },
+	{ id="us4wd",					name="@mp_eHeavyVehicle", 			price=50,			class="US_ltv",						modification="MP", 		buildtime=5,					category="@mp_catVehicles", loadout=0 },
+	{ id="usgauss4wd",		name="@mp_eGaussVehicle",			price=200,		class="US_ltv", 						modification="Gauss", buildtime=10,					category="@mp_catVehicles", loadout=0 },
+	{ id="nktruck",				name="@mp_eTruck",						price=0,			class="Asian_truck", 				modification="Hardtop_MP", buildtime=5,			category="@mp_catVehicles", loadout=0 },
+	{ id="ussupplytruck",		name="@mp_eSupplyTruck",				price=300,		class="Asian_truck",				modification="spawntruck",	teamlimit=3, abandon=0, spawngroup=true,	buyzoneradius=6, servicezoneradius=16,	buyzoneflags=bor(bor(PowerStruggle.BUY_AMMO, PowerStruggle.BUY_WEAPON), PowerStruggle.BUY_EQUIPMENT),			buildtime=25,		category="@mp_catVehicles", loadout=0		},
+	{ id="usboat",					name="@mp_eSmallBoat", 				price=0,			class="US_smallboat", 			modification="MP", buildtime=5,				category="@mp_catVehicles", loadout=0 },
+	{ id="nkboat",					name="@mp_ePatrolBoat", 				price=100,		class="Asian_patrolboat", 		modification="MP", buildtime=5,				category="@mp_catVehicles", loadout=0 },
+	{ id="nkgaussboat",		name="@mp_eGaussPatrolBoat", 		price=200,		class="Asian_patrolboat", 		modification="Gauss", buildtime=10,		category="@mp_catVehicles", loadout=0 },
+	{ id="ushovercraft",		name="@mp_eHovercraft", 				price=100,		class="US_hovercraft",			modification="MP", buildtime=20,			category="@mp_catVehicles", loadout=0 },
+	{ id="nkaaa",					name="@mp_eAAVehicle",					price=200,		class="Asian_aaa", 				modification="MP",	buildtime=20,			category="@mp_catVehicles", loadout=0 },
+	{ id="usapc",					name="@mp_eICV",							price=350,		class="US_apc", 					buildtime=20,		category="@mp_catVehicles", loadout=0 },
+	{ id="nkapc",					name="@mp_eAPC",							price=450,		class="Asian_apc", 				buildtime=20,		category="@mp_catVehicles", loadout=0 },--[jeep]=true,
+	{ id="nktank",					name="@mp_eLightTank", 				price=400,		class="Asian_tank",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ id="ustank",					name="@mp_eBattleTank",				price=450,		class="US_tank", 					modification="GaussRifle", 	buildtime=40,		category="@mp_catVehicles", loadout=0 },
+	{ id="usgausstank",		name="@mp_eGaussTank",				price=600,		class="US_tank", 					modification="FullGauss", 	buildtime=60,		category="@mp_catVehicles", loadout=0 },
+	{ id="nkhelicopter",		name="@mp_eHelicopter", 				price=400,		class="Asian_helicopter",		modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+
+	{ id="usvtol",					name="@mp_eVTOL", 						price=600,		class="US_vtol", 					modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },	
+
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="nkhelibomb",		name="Helicopter Bomber", 				price=1500,		class="Asian_helicopter",	tag="bombDropper",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="nkhelihellbomb",		name="Helicopter HellBomber", 				price=2500,		class="Asian_helicopter",	tag="hellBombDropper",	modification="MP",	buildtime=60,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolhellbomber",					name="Vtol HellBomber", 			tag="hellBombDropper",			price=2000,		class="US_vtol", 					modification="MP",	buildtime=60,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolBomber",					name="Vtol Bomber", 			tag="bombDropper",			price=1400,		class="US_vtol", 					modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolgod",					name="Vtol GOD", 			tag="bombDropper&hellBombDropper",			price=5000,		class="US_vtol", 					modification="MP",	buildtime=80,		category="@mp_catVehicles", loadout=0 },
+	
+	};
+	-------------------------------------------------------------
+	function g_gameRules:UpdateBuyLists(params)
+		local veh_categs = {};
+		for Key, List in pairs(params) do
+			local rev = {};
+			for i,v in pairs(g_gameRules[Key]) do
+				rev[v.id] = i
+			end
+			for i,v in pairs(List) do
+				if v.key then
+					g_gameRules[Key][v.key] = v;
+				else
+					if not rev[v.id] then
+						g_gameRules[Key][#g_gameRules[Key] + 1] = v;
+					else
+						g_gameRules[Key][rev[v.id]] = v;
+					end
+				end
+				if v.factories and (Key == "vehicleList" or (v.vehicle)) then
+					for j, w in pairs(v.factories) do
+						if not veh_categs[j] then
+							veh_categs[j] = {}
+						end
+						veh_categs[j][v.id] = w
+					end
+				end
+			end
+		end
+		for i, f in pairs(g_gameRules.factories or {}) do
+			local tpe = f.Properties.szName
+			if f.vehicles and f.vehicles.us4wd then tpe = "small" end
+			if f.vehicles and f.vehicles.nktank then tpe = "war" end
+			
+			if veh_categs[tpe] then
+				for j, v in pairs(veh_categs[tpe]) do
+					f.vehicles[j] = v
+				end
+			end
+		end
+		
+		g_gameRules.buyList={};
+
+		if not jeep then
+			jeep = "special";
+		end
+		if not van then
+			van = "nkapc";
+		end
+		
+		for i,v in ipairs(g_gameRules.weaponList or {}) do g_gameRules.buyList[v.id]=v; if (type(v.weapon)=="nil") then v.weapon=true; end;	end;
+		for i,v in ipairs(g_gameRules.equipList or {}) do g_gameRules.buyList[v.id]=v; if (type(v.equip)=="nil") then	v.equip=true; end; end;
+		for i,v in ipairs(g_gameRules.protoList or {}) do g_gameRules.buyList[v.id]=v; if (type(v.proto)=="nil") then	v.proto=true; end; end;
+		for i,v in ipairs(g_gameRules.vehicleList or {}) do g_gameRules.buyList[v.id]=v; if (type(v[jeep])~="nil") then v[jeep]=true; end; if (type(v.vehicle)=="nil") then v.vehicle=true; end; end;
+		for i,v in ipairs(g_gameRules.ammoList or {}) do g_gameRules.buyList[v.id]=v; if (type(v.ammo)=="nil") then v.ammo=true; end; end;
+	end;
 	-------------------------------------------------------------
 	function g_gameRules.Client:OnKill(p, s, w, d, m, h)
 		
