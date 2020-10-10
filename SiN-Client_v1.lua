@@ -1,4 +1,4 @@
-FILE_VERSION = "1.36e1x1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1107,6 +1107,8 @@ function PatchGameRules()
 	{ id="usmoar4wd",name="@mp_eMOARVehicle",price=350,class="US_ltv";level=50,modification="MOAR";vehicle=true;buildtime=20,category="@mp_catVehicles";loadout=0 },
 	{ id="ussingtank",name="@mp_eSingTank",price=800;class="US_tank";level=100;energy=10;modification="Singularity",vehicle=true;md=true;buildtime=60,category="@mp_catVehicles";loadout=0 },
 	{ id="ustactank",name="@mp_eTACTank",price=750,class="US_tank";level=100;energy=10;modification="TACCannon",vehicle=true;md=true;buildtime=60,category="@mp_catVehicles";loadout=0 },
+		{ vehicle=true,factories={air=false,small=false,war=false,prototype=true},id="apcsing",					name="APC Singularity",							price=15000,		class="US_apc", 	tag="singularityGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
+
 	};
 
 
@@ -1139,15 +1141,19 @@ function PatchGameRules()
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolgod",					name="Vtol GOD", 			tag="bombDropper&hellBombDropper",			price=5000,		class="US_vtol", 					modification="MP",	buildtime=80,		category="@mp_catVehicles", loadout=0 },
 	
 	
-	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apclaw",					name="APC LAW",							price=600,		class="US_apc", 	tag="lawGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
-	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apcexo",					name="APC Exocet",							price=700,		class="US_apc", 	tag="exocetGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apclaw",					name="APC LAW",							price=600,		class="US_apc", 	tag="lawGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcexo",					name="APC Exocet",							price=700,		class="US_apc", 	tag="exocetGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
 	
-	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apccom",					name="APC COMET",							price=10000,		class="US_apc", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
-	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apcmcom",					name="APC Mega Comet",							price=15000,		class="US_apc", 	tag="MegaCometGun",				buildtime=50,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apccom",					name="APC COMET",							price=10000,		class="US_apc", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcmcom",					name="APC Mega Comet",							price=15000,		class="US_apc", 	tag="MegaCometGun",				buildtime=50,		category="@mp_catVehicles", loadout=0 },
 	
-	{ vehicle=true,factories={air=false,small=true,war=true,prototype=false},id="apcmine",					name="APC Mine",							price=2000,		class="US_apc", 	tag="mineGun",				buildtime=25,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcmine",					name="APC Mine",							price=2000,		class="US_apc", 	tag="mineGun",				buildtime=25,		category="@mp_catVehicles", loadout=0 },
 	
-	{ vehicle=true,factories={air=false,small=false,war=false,prototype=true},id="apcsing",					name="APC Singularity",							price=15000,		class="US_apc", 	tag="singularityGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
+	
+	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcomg",					name="APC OMG",							price=1000,		class="US_apc", 	tag="explosiveGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+
+{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="tanksidewinder",					name="Tank SideWinder",							price=1000,		class="Asian_tank", 	tag="sideWinderGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+
 
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolcomet",					name="VTOL COMET",							price=5000,		class="US_vtol", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolcomet",					name="VTOL Mega COMET",							price=9000,		class="US_vtol", 	tag="MegaCometGun",				buildtime=60,		category="@mp_catVehicles", loadout=0 },
@@ -1156,13 +1162,17 @@ function PatchGameRules()
 	
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolomg",					name="VTOL OMG",							price=20000,		class="US_vtol", 	tag="explosiveGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
 	
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolemp",					name="VTOL EMP",							price=6500,		class="US_vtol", 	tag="superEmpGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolemp",					name="VTOL EMP",							price=900,		class="US_vtol", 	tag="superEmpGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmortar",					name="VTOL Mortar",							price=3000,		class="US_vtol", 	tag="moartarGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolsmalltac",					name="VTOL Small TAC",							price=12000,		class="US_vtol", 	tag="TacGun",				buildtime=60,		category="@mp_catVehicles", loadout=0 },
 	
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="nkmegaexocet",		name="Helicopter Mega Exocet", 				price=6000,		class="Asian_helicopter",	tag="ultraMegaExocetGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="helising",		name="Helicopter Singularity", 				price=1000,		class="Asian_helicopter",	tag="singularityGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolsing",		name="VTOL Singularity", 				price=3000,		class="US_vtol",	tag="singularityGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbigtac",		name="VTOL Big TAC", 				price=8000,		class="US_vtol",	tag="bigTACGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	};
 	-------------------------------------------------------------
 	function g_gameRules:UpdateBuyLists(params)
