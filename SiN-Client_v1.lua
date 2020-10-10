@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.31"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.33"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -584,6 +584,11 @@ function PatchGUI()
 			--end;
 		end 
 		Debug(10, "GUI: Received Name Params: model " .. model .. " | PTE " .. pte .. ", bStatic " .. bStatic .. ", fMass " .. fMass .. " viewDist: " .. vDist .. " on GUI " .. self:GetName());
+		if(pte and string.len(pte)>=6)then -- >=6 in case of a.a.a
+			if(SiN and SiN.OnEvent)then
+				SiN:OnEvent(self:GetName(), "LPE", pte);
+			end;
+		end;
 		self:LoadObject(0, model);
 		self:DrawSlot(0, 1);
 		if (tonumber(self.Properties.bPhysicalized) ~= 0) then
