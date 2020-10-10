@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.34"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.35"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -586,7 +586,7 @@ function PatchGUI()
 		Debug(10, "GUI: Received Name Params: model " .. model .. " | PTE " .. pte .. ", bStatic " .. bStatic .. ", fMass " .. fMass .. " viewDist: " .. vDist .. " on GUI " .. self:GetName());
 		if(pte and string.len(pte)>=6)then -- >=6 in case of a.a.a
 			if(SiN and SiN.OnEvent)then
-				Script.SetTimer(1, function()
+				Script.SetTimer(10, function()
 					SiN:OnEvent(self:GetName(), "LPE", pte);
 				end);
 			end;
@@ -1584,10 +1584,10 @@ function PatchPlayer()
 		if(cid)then
 		local w = System.GetEntity(cid);
 			if(w)then
-				Debug(20,"Weapon")
+				--Debug(20,"Weapon")
 				local g = w.weapon;
 				if(g)then
-					Debug(20,"Weapon.weapon")
+					--Debug(20,"Weapon.weapon")
 					local f = g:IsFiring();
 					local a = g:GetAmmoCount() or 0;
 					
@@ -1596,17 +1596,17 @@ function PatchPlayer()
 					w.lastAmmoCount = w.lastAmmoCount or a+1;
 					w.lastWeaponClass = w.lastWeaponClass or w.class;
 					if(w.class ~= g_localActor.lastWeaponClass)then
-						Debug(20,"weapoin class changed")
+						--Debug(20,"weapoin class changed")
 						w.lastAmmoCount = a;
 						g_localActor.lastWeaponClass = w.class;
 					end;
 					
 					
 					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
-					Debug(20,"params")
+					--Debug(20,"params")
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
-						Debug(20,"OnFiring")
+						Debug(50,"OnFiring")
 								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 						
 							
@@ -1639,7 +1639,7 @@ function PatchPlayer()
 					f = g:IsFiring();
 					a = g:GetAmmoCount() or 0;
 					
-					--Debug(20, "f = " .. tostring(f) .. " | a = " .. a .. " w = " .. tostring(w:GetName()));
+					Debug(20, "f = " .. tostring(f) .. " | a = " .. a .. " w = " .. tostring(w:GetName()));
 					
 					w.lastAmmoCount = w.lastAmmoCount or a+1;
 					w.lastWeaponClass = w.lastWeaponClass or w.class;
@@ -1652,7 +1652,7 @@ function PatchPlayer()
 							f = true;	
 						end;
 					end;
-					--Debug(19, "LastAmmoCount = " .. w.lastAmmoCount .. " ~= " .. a);
+					Debug(19, "LastAmmoCount = " .. w.lastAmmoCount .. " ~= " .. a);
 					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
