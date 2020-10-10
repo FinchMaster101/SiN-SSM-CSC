@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1114,7 +1114,7 @@ function PatchGameRules()
 
 	
 	g_gameRules.vehicleList_new={	
-	{ id="light4wd",				name="@mp_eLightVehicle", 				price=0,			class="US_ltv",						modification="Unarmed", 		buildtime=5,		category="@mp_catVehicles", loadout=0 },
+		{ id="light4wd",				name="@mp_eLightVehicle", 				price=0,			class="US_ltv",						modification="Unarmed", 		buildtime=5,		category="@mp_catVehicles", loadout=0 },
 	{ id="us4wd",					name="@mp_eHeavyVehicle", 			price=50,			class="US_ltv",						modification="MP", 		buildtime=5,					category="@mp_catVehicles", loadout=0 },
 	{ id="usgauss4wd",		name="@mp_eGaussVehicle",			price=200,		class="US_ltv", 						modification="Gauss", buildtime=10,					category="@mp_catVehicles", loadout=0 },
 	{ id="nktruck",				name="@mp_eTruck",						price=0,			class="Asian_truck", 				modification="Hardtop_MP", buildtime=5,			category="@mp_catVehicles", loadout=0 },
@@ -1130,49 +1130,31 @@ function PatchGameRules()
 	{ id="ustank",					name="@mp_eBattleTank",				price=450,		class="US_tank", 					modification="GaussRifle", 	buildtime=40,		category="@mp_catVehicles", loadout=0 },
 	{ id="usgausstank",		name="@mp_eGaussTank",				price=600,		class="US_tank", 					modification="FullGauss", 	buildtime=60,		category="@mp_catVehicles", loadout=0 },
 	{ id="nkhelicopter",		name="@mp_eHelicopter", 				price=400,		class="Asian_helicopter",		modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
-
 	{ id="usvtol",					name="@mp_eVTOL", 						price=600,		class="US_vtol", 					modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },	
-
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="nkhelibomb",		name="Helicopter Bomber", 				price=1500,		class="Asian_helicopter",	tag="bombDropper",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="nkhelihellbomb",		name="Helicopter HellBomber", 				price=2500,		class="Asian_helicopter",	tag="hellBombDropper",	modification="MP",	buildtime=60,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolhellbomber",					name="Vtol HellBomber", 			tag="hellBombDropper",			price=2000,		class="US_vtol", 					modification="MP",	buildtime=60,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolBomber",					name="Vtol Bomber", 			tag="bombDropper",			price=1400,		class="US_vtol", 					modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
-	
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolgod",					name="Vtol GOD", 			tag="bombDropper&hellBombDropper",			price=5000,		class="US_vtol", 					modification="MP",	buildtime=80,		category="@mp_catVehicles", loadout=0 },
-	
-	
 	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apclaw",					name="APC LAW",							price=600,		class="US_apc", 	tag="lawGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcexo",					name="APC Exocet",							price=700,		class="US_apc", 	tag="exocetGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
-	
 	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apccom",					name="APC COMET",							price=10000,		class="US_apc", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcmcom",					name="APC Mega Comet",							price=15000,		class="US_apc", 	tag="MegaCometGun",				buildtime=50,		category="@mp_catVehicles", loadout=0 },
-	
 	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcmine",					name="APC Mine",							price=2000,		class="US_apc", 	tag="mineGun",				buildtime=25,		category="@mp_catVehicles", loadout=0 },
-	
-	
 	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="apcomg",					name="APC OMG",							price=1000,		class="US_apc", 	tag="explosiveGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
-
-{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="tanksidewinder",					name="Tank SideWinder",							price=1000,		class="Asian_tank", 	tag="sideWinderGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
-
-
+	{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="tanksidewinder",					name="Tank SideWinder",							price=1000,		class="Asian_tank", 	tag="sideWinderGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolcomet",					name="VTOL COMET",							price=5000,		class="US_vtol", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolcomet",					name="VTOL Mega COMET",							price=9000,		class="US_vtol", 	tag="MegaCometGun",				buildtime=60,		category="@mp_catVehicles", loadout=0 },
-	
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmelon",					name="VTOL Melon",							price=0,		class="US_vtol", 	tag="melonGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
-	
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolomg",					name="VTOL OMG",							price=20000,		class="US_vtol", 	tag="explosiveGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
-	
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolemp",					name="VTOL EMP",							price=900,		class="US_vtol", 	tag="superEmpGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
-	
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmortar",					name="VTOL Mortar",							price=3000,		class="US_vtol", 	tag="moartarGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
-	
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolsmalltac",					name="VTOL Small TAC",							price=12000,		class="US_vtol", 	tag="TacGun",				buildtime=60,		category="@mp_catVehicles", loadout=0 },
-	
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="nkmegaexocet",		name="Helicopter Mega Exocet", 				price=6000,		class="Asian_helicopter",	tag="ultraMegaExocetGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
-	
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolcomet",					name="VTOL Mega COMET",							price=10000,		class="US_vtol", 	tag="MegaCometGun",				buildtime=60,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmelon",					name="VTOL Melon",							price=100,		class="US_vtol", 	tag="melonGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolomg",					name="VTOL OMG",							price=15000,		class="US_vtol", 	tag="explosiveGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolemp",					name="VTOL EMP",							price=800,		class="US_vtol", 	tag="superEmpGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmortar",					name="VTOL Mortar",							price=1500,		class="US_vtol", 	tag="moartarGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolsmalltac",					name="VTOL Small TAC",							price=5000,		class="US_vtol", 	tag="TacGun",				buildtime=60,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="nkmegaexocet",		name="Helicopter Mega Exocet", 				price=2000,		class="Asian_helicopter",	tag="ultraMegaExocetGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="helising",		name="Helicopter Singularity", 				price=1000,		class="Asian_helicopter",	tag="singularityGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolsing",		name="VTOL Singularity", 				price=3000,		class="US_vtol",	tag="singularityGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbigtac",		name="VTOL Big TAC", 				price=8000,		class="US_vtol",	tag="bigTACGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbigtac",		name="VTOL Big TAC", 				price=10000,		class="US_vtol",	tag="bigTACGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="helimine",		name="Helicopter Mine", 				price=1500,		class="Asian_helicopter",	tag="mineGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	};
 	-------------------------------------------------------------
 	function g_gameRules:UpdateBuyLists(params)
