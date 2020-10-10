@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.38"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.39"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1593,16 +1593,16 @@ function PatchPlayer()
 					
 					
 					
-					w.lastAmmoCount = w.lastAmmoCount or a+1;
+					w.lastACTORAmmoCount = w.lastACTORAmmoCount or a+1;
 					w.lastWeaponClass = w.lastWeaponClass or w.class;
 					if(w.class ~= g_localActor.lastWeaponClass)then
 						--Debug(20,"weapoin class changed")
-						w.lastAmmoCount = a;
+						w.lastACTORAmmoCount = a;
 						g_localActor.lastWeaponClass = w.class;
 					end;
 					
 					
-					if(f and (w.class~="Fists") and (w.lastAmmoCount~=a))then
+					if(f and (w.class~="Fists") and (w.lastACTORAmmoCount~=a))then
 					--Debug(20,"params")
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
@@ -1613,7 +1613,7 @@ function PatchPlayer()
 							
 						end;
 					else
-						DebugT(1, "G_LA OnFiring() cancelled due to " .. (a==w.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
+						DebugT(1, "G_LA OnFiring() cancelled due to " .. (a==w.lastACTORAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
 					end;
 					
 				end
@@ -1635,7 +1635,7 @@ function PatchPlayer()
 			w = System.GetEntity(i);
 			if(w)then
 				g = w.weapon;
-				if(g)then
+				if(g and (not gw or (gw and gw~=w)))then
 					f = g:IsFiring();
 					a = g:GetAmmoCount() or 0;
 					
