@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.37"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.38"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1641,21 +1641,19 @@ function PatchPlayer()
 					
 					Debug(20, "f = " .. tostring(f) .. " | a = " .. a .. " w = " .. tostring(w:GetName()));
 					
-					w.lastAmmoCount = w.lastAmmoCount or a+1;
+					--w.lastAmmoCount = w.lastAmmoCount or a+1;
 				
-				
-					if(g~=gw)then
-						if(not f)then
-							f = true;	
+						if(not w.lastAmmoCount)then
+						w.lastAmmoCount=a+1
+						Debug(18, "AMMO COUNT RESET")
 						end;
-					end;
+				
+					
 					Debug(19, "LastAmmoCount = " .. w.lastAmmoCount .. " ~= " .. a);
 					if((w.class~="Fists") and (w.lastAmmoCount~=a))then
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
-							if(gw and w==gw)then
-								--g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
-							end;
+						
 							
 							local s = v.s;
 							if(v.private)then
@@ -1673,6 +1671,7 @@ function PatchPlayer()
 									Debug(3, "no shotSound or type invalid");
 								end;
 							end;
+							Debug(20, "FIRED")
 							w.lastAmmoCount = a;
 							w.lastFireTime = _time;
 						end;
