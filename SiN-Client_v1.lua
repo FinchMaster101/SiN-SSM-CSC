@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -571,16 +571,19 @@ function PatchGUI()
 		self.Properties.bUsable = nil;
 		self:SetUpdatePolicy(ENTITY_UPDATE_VISIBLE);
 		local model=self.Properties.objModel;
-		local modelName, bStatic, fMass, vDist = "", 0, self.Properties.fMass, self.Properties.fViewDist;
-		modelName, bStatic, fMass, vDist = self:GetName():match("(.*)|(.*)|(.*)|(.*)");
+		local modelName, bStatic, fMass, vDist, pte = "", 0, self.Properties.fMass, self.Properties.fViewDist,"";
+		modelName, bStatic, fMass, vDist,pte = self:GetName():match("(.*)|(.*)|(.*)|(.*)|(.*)");
 		fMass = tonumber(fMass)or 35;
 		bStatic = tonumber(bStatic)or 0;
 		vDist = tonumber(vDist)or 50;
 		local t=modelName:sub(-4);
 		if(t==".cga" or t==".cgf")then 
 			model=modelName;
+			if(model:sub(8):lower()~="objects/")then
+				model = "objects/"..model
+			end;
 		end 
-		Debug(10, "GUI: Received Name Params: model " .. model .. " | bStatic " .. bStatic .. " fMass " .. fMass .. " viewDist: " .. vDist .. " on GUI " .. self:GetName());
+		Debug(10, "GUI: Received Name Params: model " .. model .. " | PTE " .. pte .. ", bStatic " .. bStatic .. ", fMass " .. fMass .. " viewDist: " .. vDist .. " on GUI " .. self:GetName());
 		self:LoadObject(0, model);
 		self:DrawSlot(0, 1);
 		if (tonumber(self.Properties.bPhysicalized) ~= 0) then
@@ -612,6 +615,20 @@ function PatchGUI()
 end;
 
 function PatchCAP()
+	if(CustomAmmoPickup)then
+		CustomAmmoPickup.Client = CustomAmmoPickup.Client or {};
+		if(CustomAmmoPickup.Client.OnUpdate)then
+			CustomAmmoPickup.Client.OldOnUpdate = CustomAmmoPickup.Client.OnUpdate;
+		end;
+		CustomAmmoPickup.Client.OnUpdate = function(self, ...)
+			if(self.OldOnUodate)then self:OldOnUpdate(...); end;
+			if(not self.synced)then
+				SyncNameParams(self);
+				self.synced = true;
+			end;
+		end;
+	end;
+	-------------------------
 	for i,v in ipairs(System.GetEntitiesByClass("CustomAmmoPickup") or {}) do
 		if(not v.synced)then
 			SyncNameParams(v)
@@ -630,6 +647,15 @@ function PatchCAP()
 		if(not v.synced)then
 			SyncNameParams(v)
 			v.synced = true;
+		end;
+	end;
+	-------------------------
+	function UpdateCAP() -- dunno if i should move this to OnUpdate :s -- probably not
+		for i,v in ipairs(System.GetEntitiesByClass("CustomAmmoPickup") or {}) do
+			if(not v.synced)then
+				SyncNameParams(v)
+				v.synced = true;
+			end;
 		end;
 	end;
 end;
