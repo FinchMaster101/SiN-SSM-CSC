@@ -579,9 +579,9 @@ function PatchGUI()
 		local t=(modelName or "NULL.NULL"):sub(-4);
 		if(t==".cga" or t==".cgf")then 
 			model=modelName;
-			if(model:sub(8):lower()~="objects/")then
-				model = "objects/"..model
-			end;
+			--if(model:sub(8):lower()~="objects/")then -- BAD idea
+			--	model = "objects/"..model
+			--end;
 		end 
 		Debug(10, "GUI: Received Name Params: model " .. model .. " | PTE " .. pte .. ", bStatic " .. bStatic .. ", fMass " .. fMass .. " viewDist: " .. vDist .. " on GUI " .. self:GetName());
 		self:LoadObject(0, model);
