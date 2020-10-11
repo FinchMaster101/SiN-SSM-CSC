@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.41.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.41.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1631,60 +1631,62 @@ function PatchPlayer()
 			g_localActor:UpdatePLMode(frameTime)
 		end;
 		local temp={}
+		
 		local gw = g_localActor.inventory:GetCurrentItem();
+		
 		self:CheckOnFiring();
-		local w,g,f,a;
+		
+		local w,g,firing,ammoCount;
+		
+		local excluded = {
+			["Fists"] = true;
+			["OffHand"] = true;
+		};
+		
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
 			if(w)then
 				g = w.weapon;
 				if(g)then
-					f = g:IsFiring();
-					a = g:GetAmmoCount() or 0;
-					
-					Debug(20, "f = " .. tostring(f) .. " | a = " .. a .. " w = " .. tostring(w:GetName()));
-					
-					--w.lastAmmoCount = w.lastAmmoCount or a+1;
-				
-						if(not w.lastAmmoCount)then
-						w.lastAmmoCount=a+1
-						Debug(18, "AMMO COUNT RESET")
+						ammoCount = g:GetAmmoCount();
+						firing = true; --g:IsFiring();
+
+						skipThisCheck = false;
+
+						if(not w.ammoCount or ammoCount<w.ammoCount)then
+							skipThisCheck = (ammoCount<w.ammoCount and true or false);
+							w.ammoCount = ammoCount;	
 						end;
-				
-					
-					Debug(19, "LastAmmoCount = " .. w.lastAmmoCount .. " ~= " .. a);
-					if((w.class~="Fists") and (w.lastAmmoCount~=a))then
-						w.lastFireTime = w.lastFireTime or (_time - 0.1);
-						if(_time - w.lastFireTime >= 0.1)then
+
 						
-							
-							local s = v.s;
-							if(v.private)then
-								if(s and type(s) == "string" and gw and w==gw)then
-									w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
-									Debug(3, "Playing Private shotSound on w("..tostring(w)..")");
+
+						if(not skipThisCheck and firing and excluded[w.class]==nil and (w.ammoCount > ammoCount))then
+							w.fireTime = w.fireTime or (_time - 0.1);
+							if(_time - w.fireTime >= 0.1)then
+								local s = v.s;
+								if(v.private)then
+									if(s and type(s) == "string" and gw and w==gw)then
+										w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+										Debug(3, "Playing Private shotSound on w("..tostring(w)..")");
+									else
+										Debug(3, "no private shotSound or type invalid");
+									end;
 								else
-									Debug(3, "no private shotSound or type invalid");
+									if(s and type(s) == "string")then
+										w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+										Debug(3, "Playing shotSound on w("..tostring(w)..")");
+									else
+										Debug(3, "no shotSound or type invalid");
+									end;
 								end;
-							else
-								if(s and type(s) == "string")then
-									w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
-									Debug(3, "Playing shotSound on w("..tostring(w)..")");
-								else
-									Debug(3, "no shotSound or type invalid");
-								end;
+								w.fireTime = _time;
+								w.ammoCount = ammoCount;
 							end;
-							Debug(18, "FIRED")
-							w.lastAmmoCount = g:GetAmmoCount();
-							w.lastFireTime = _time;
+
 						end;
-					else
-						DebugT(1, "OnFiring() cancelled due to " .. (a==w.lastAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
-					end;
-					
-				else
-					TakeShotSound(i)
 				end;
+			else
+				TakeShotSound(i);
 			end;
 		end;
 		
