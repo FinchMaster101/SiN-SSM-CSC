@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1644,56 +1644,59 @@ function PatchPlayer()
 			["Fists"] = true;
 			["OffHand"] = true;
 		};
-		
+		Debug(21,"TableSize: " .. #SOUND_REGISTERED_WEAPONS)
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
 			if(w)then
 				g = w.weapon;
 				if(g)then
-						ammoCount = g:GetAmmoCount() or 0;
-						firing = true; --g:IsFiring();
+					ammoCount = g:GetAmmoCount() or 0;
+					firing = true; --g:IsFiring();
 
-						skipThisCheck = false;
+					skipThisCheck = false;
 					
 					if(w.ammoCount and ammoCount>w.ammoCount)then
 						w.ammoCount = ammoCount;	
 					end;
 
-						if(not w.ammoCount or ammoCount<w.ammoCount)then
-							skipThisCheck = ((w.ammoCount and w.ammoCount<ammoCount) and true or false);
-							w.ammoCount = g:GetAmmoCount()+1;	
-						end;
+					if(not w.ammoCount or ammoCount<w.ammoCount)then
+						skipThisCheck = ((w.ammoCount and w.ammoCount<ammoCount) and true or false);
+						w.ammoCount = g:GetAmmoCount()+1;	
+					end;
 					
-						Debug(20, "S: " .. tostring(skipThisCheck) .. ", F: " .. tostring(firing) .. ", A: " .. ammoCount .. ", WEAPONLAST: " .. w.ammoCount .. " EX: " .. tostring(excluded[w.class]==nil))
+					Debug(20, "S: " .. tostring(skipThisCheck) .. ", F: " .. tostring(firing) .. ", A: " .. ammoCount .. ", WEAPONLAST: " .. w.ammoCount .. " EX: " .. tostring(excluded[w.class]==nil))
 
-						if(not skipThisCheck and firing and excluded[w.class]==nil and (w.ammoCount > ammoCount))then
-							Debug(2, "BEHIND CHECK!!!!!")
-							w.fireTime = w.fireTime or (_time - 0.1);
-							if(_time - w.fireTime >= 0.1)then
-								local s = v.s;
-								if(v.private)then
-									if(s and type(s) == "string" and gw and w==gw)then
-										w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
-										Debug(3, "Playing Private shotSound on w("..tostring(w)..")");
-									else
-										Debug(3, "no private shotSound or type invalid");
-									end;
+					if(not skipThisCheck and firing and excluded[w.class]==nil and (w.ammoCount > ammoCount))then
+						Debug(2, "BEHIND CHECK!!!!!")
+						w.fireTime = w.fireTime or (_time - 0.1);
+						if(_time - w.fireTime >= 0.1)then
+							local s = v.s;
+							if(v.private)then
+								if(s and type(s) == "string" and gw and w==gw)then
+									w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+									Debug(3, "Playing Private shotSound on w("..tostring(w)..")");
 								else
-									if(s and type(s) == "string")then
-										w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
-										Debug(3, "Playing shotSound on w("..tostring(w)..")");
-									else
-										Debug(3, "no shotSound or type invalid");
-									end;
+									Debug(3, "no private shotSound or type invalid");
 								end;
-								Debug(0, "FIRERED!!!!!!");
-								w.fireTime = _time;
-								w.ammoCount = g:GetAmmoCount();
+							else
+								if(s and type(s) == "string")then
+									w:PlaySoundEvent(s or "sounds/physics:bullet_impact:headshot_feedback_sp",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
+									Debug(3, "Playing shotSound on w("..tostring(w)..")");
+								else
+									Debug(3, "no shotSound or type invalid");
+								end;
 							end;
-
+							Debug(0, "FIRERED!!!!!!");
+							w.fireTime = _time;
+							w.ammoCount = g:GetAmmoCount();
 						end;
+
+					end;
+				else
+					Debug(1,"No .weapon")
 				end;
 			else
+				Debug(1,"Removed: " .. tostring(i))
 				SOUND_REGISTERED_WEAPONS[i] = nil;
 			end;
 		end;
