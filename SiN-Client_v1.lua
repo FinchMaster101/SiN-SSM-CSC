@@ -1,5 +1,5 @@
-FILE_VERSION = "1.37v.41"; -- this is the only global which is allowed to be outside of RegisterGlobals()
-UNINSTALLED = false; -- and this one too
+FILE_VERSION = "1.37v.41.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
 	--printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
