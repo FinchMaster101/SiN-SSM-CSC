@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.41.9.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.41.9.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1654,7 +1654,7 @@ function PatchPlayer()
 						skipThisCheck = false;
 
 						if(not w.ammoCount or ammoCount<w.ammoCount)then
-							skipThisCheck = ((w.ammoCount and ammoCount<w.ammoCount) and true or false);
+							skipThisCheck = ((w.ammoCount and w.ammoCount<ammoCount) and true or false);
 							w.ammoCount = g:GetAmmoCount()+1;	
 						end;
 
