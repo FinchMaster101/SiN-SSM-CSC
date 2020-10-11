@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.41.8"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.41.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1655,12 +1655,13 @@ function PatchPlayer()
 
 						if(not w.ammoCount or ammoCount<w.ammoCount)then
 							skipThisCheck = ((w.ammoCount and ammoCount<w.ammoCount) and true or false);
-							w.ammoCount = ammoCount;	
+							w.ammoCount = g:GetAmmoCount()+1;	
 						end;
 
 						Debug(1, "S: " .. tostring(skipThisCheck) .. ", F: " .. tostring(firing) .. ", A: " .. ammoCount .. ", WEAPONLAST: " .. w.ammoCount .. " EX: " .. tostring(excluded[w.class]==nil))
 
 						if(not skipThisCheck and firing and excluded[w.class]==nil and (w.ammoCount > ammoCount))then
+							Debug(2, "BEHIND CHECK!!!!!")
 							w.fireTime = w.fireTime or (_time - 0.1);
 							if(_time - w.fireTime >= 0.1)then
 								local s = v.s;
@@ -1681,7 +1682,7 @@ function PatchPlayer()
 								end;
 								Debug(0, "FIRERED!!!!!!");
 								w.fireTime = _time;
-								w.ammoCount = ammoCount;
+								w.ammoCount = g:GetAmmoCount();
 							end;
 
 						end;
