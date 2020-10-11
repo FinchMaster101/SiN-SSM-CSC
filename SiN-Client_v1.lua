@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.40"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.41"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1674,8 +1674,8 @@ function PatchPlayer()
 									Debug(3, "no shotSound or type invalid");
 								end;
 							end;
-							Debug(20, "FIRED")
-							w.lastAmmoCount = a;
+							Debug(18, "FIRED")
+							w.lastAmmoCount = g:GetAmmoCount();
 							w.lastFireTime = _time;
 						end;
 					else
