@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.92"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.93"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1671,10 +1671,10 @@ function PatchPlayer()
 						w.ammoCount = g:GetAmmoCount()+1;	
 					end;
 					
-					Debug(20, "S: " .. tostring(skipThisCheck) .. ", F: " .. tostring(firing) .. ", A: " .. ammoCount .. ", WEAPONLAST: " .. w.ammoCount .. " EX: " .. tostring(excluded[w.class]==nil))
+					Debug(50, "S: " .. tostring(skipThisCheck) .. ", F: " .. tostring(firing) .. ", A: " .. ammoCount .. ", WEAPONLAST: " .. w.ammoCount .. " EX: " .. tostring(excluded[w.class]==nil))
 
 					if(not skipThisCheck and firing and excluded[w.class]==nil and (w.ammoCount > ammoCount))then
-						Debug(2, "BEHIND CHECK!!!!!")
+						--Debug(2, "BEHIND CHECK!!!!!")
 						w.fireTime = w.fireTime or (_time - 0.1);
 						if(_time - w.fireTime >= 0.1)then
 							local s = v.s;
@@ -1693,17 +1693,17 @@ function PatchPlayer()
 									Debug(3, "no shotSound or type invalid");
 								end;
 							end;
-							Debug(0, "FIRERED!!!!!!");
+						--	Debug(0, "FIRERED!!!!!!");
 							w.fireTime = _time;
 							w.ammoCount = g:GetAmmoCount();
 						end;
 
 					end;
 				else
-					Debug(1,"No .weapon")
+					--Debug(1,"No .weapon")
 				end;
 			else
-				Debug(1,"Removed: " .. tostring(i))
+				--Debug(1,"Removed: " .. tostring(i))
 				SOUND_REGISTERED_WEAPONS[i] = nil;
 			end;
 		end;
@@ -1713,7 +1713,7 @@ function PatchPlayer()
 			if(g_localActor.OnTimer ~= nil)then
 				g_localActor:OnTimer(1, _time);
 			else
-				Debug(50, "OnTimer is NIL")	
+				Debug(51, "OnTimer is NIL")	
 			end;
 			MINUTE_TIMER = _time;
 		end;
@@ -1724,7 +1724,7 @@ function PatchPlayer()
 			end;
 			QM_TIMER = _time;
 		else
-			Debug(50, "OnTimer is NIL")	
+			Debug(51, "OnTimer is NIL")	
 		end;
 	end
 	---------------------------------------------------------------------
