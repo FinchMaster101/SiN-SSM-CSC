@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.41.9.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1111,6 +1111,7 @@ function PatchGameRules()
 	{ id="supercly",name="UltraClaymore",price=100,class="Claymore",tag2="ultraClay",buyammo="claymoreexplosive",category="@mp_catExplosives", loadout=1 },
 	{ id="avmine",name="@mp_eMine",price=25,class="AVMine",buyammo="avexplosive",category="@mp_catExplosives", loadout=1 },
 	{ id="c4",name="@mp_eExplosive", price=50, class="C4", buyammo="c4explosive",category="@mp_catExplosives", loadout=1 },
+	{ id="c4",name="@mp_eExplosive", price=50, class="C4", buyammo="c4explosive",category="@mp_catExplosives", loadout=1 },
 	{ id="shotgun",name="@mp_eShotgun", price=50, class="Shotgun", uniqueId=4,category="@mp_catWeapons", loadout=1 },
 	{ id="smg",name="@mp_eSMG", price=75, class="SMG", uniqueId=7,category="@mp_catWeapons", loadout=1 },
 	{ id="fy71",name="@mp_eFY71", price=125, class="FY71", uniqueId=8,category="@mp_catWeapons", loadout=1 },
@@ -1141,7 +1142,8 @@ function PatchGameRules()
 	{ id="ussingtank",name="@mp_eSingTank",price=800;class="US_tank";level=100;energy=10;modification="Singularity",vehicle=true;md=true;buildtime=60,category="@mp_catVehicles";loadout=0 },
 	{ id="ustactank",name="@mp_eTACTank",price=750,class="US_tank";level=100;energy=10;modification="TACCannon",vehicle=true;md=true;buildtime=60,category="@mp_catVehicles";loadout=0 },
 		{ vehicle=true,factories={air=false,small=false,war=false,prototype=true},id="apcsing",					name="APC Singularity",							price=15000,		class="US_apc", 	tag="singularityGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
-
+{ vehicle=true,factories={air=false,small=false,war=false,prototype=true},level=60;energy=5;id="tanksmalltac",					name="Small TAC Tank",							price=600,		class="US_tank", 	tag="TacGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
+{ vehicle=true,factories={air=false,small=false,war=false,prototype=true},level=60;energy=5;id="tanksmallsing",					name="Small Singularity Tank",							price=1000,		class="US_tank", 	tag="megaSingularityGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
 	};
 
 
