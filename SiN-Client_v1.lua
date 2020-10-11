@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.41.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.41.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1658,7 +1658,7 @@ function PatchPlayer()
 							w.ammoCount = ammoCount;	
 						end;
 
-						
+						Debug(1, "S: " .. tostring(skipThisCheck) .. ", F: " .. tostring(firing) .. ", A: " .. ammoCount .. ", WEAPONLAST: " .. w.ammoCount .. " EX: " .. tostring(excluded[w.class]==nil))
 
 						if(not skipThisCheck and firing and excluded[w.class]==nil and (w.ammoCount > ammoCount))then
 							w.fireTime = w.fireTime or (_time - 0.1);
@@ -1679,6 +1679,7 @@ function PatchPlayer()
 										Debug(3, "no shotSound or type invalid");
 									end;
 								end;
+								Debug(0, "FIRERED!!!!!!");
 								w.fireTime = _time;
 								w.ammoCount = ammoCount;
 							end;
@@ -1686,7 +1687,7 @@ function PatchPlayer()
 						end;
 				end;
 			else
-				TakeShotSound(i);
+				SOUND_REGISTERED_WEAPONS[i] = nil;
 			end;
 		end;
 		
