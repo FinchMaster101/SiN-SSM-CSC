@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.39"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.40"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too
 
 function StartInstalling()
@@ -1610,6 +1610,9 @@ function PatchPlayer()
 								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 						
 							
+							if(SOUND_REGISTERED_WEAPONS[w.id])then
+								
+							end;
 							
 						end;
 					else
@@ -1635,7 +1638,7 @@ function PatchPlayer()
 			w = System.GetEntity(i);
 			if(w)then
 				g = w.weapon;
-				if(g and (not gw or (gw and gw~=w)))then
+				if(g)then
 					f = g:IsFiring();
 					a = g:GetAmmoCount() or 0;
 					
