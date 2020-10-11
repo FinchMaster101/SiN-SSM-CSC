@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.91"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1644,7 +1644,7 @@ function PatchPlayer()
 			["Fists"] = true;
 			["OffHand"] = true;
 		};
-		Debug(21,"TableSize: " .. #SOUND_REGISTERED_WEAPONS)
+		Debug(21,"TableSize: " .. tostring(SOUND_REGISTERED_WEAPONS))
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
 			if(w)then
