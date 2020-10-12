@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.93"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.94"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1191,6 +1191,8 @@ function PatchGameRules()
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolsing",		name="VTOL Singularity", 				price=3000,		class="US_vtol",	tag="singularityGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbigtac",		name="VTOL Big TAC", 				price=10000,		class="US_vtol",	tag="bigTACGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="helimine",		name="Helicopter Mine", 				price=1500,		class="Asian_helicopter",	tag="mineGun",	modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtoltrans",		name="VTOL Transport", 				price=300, 		class="US_vtol",		modification="MP",	buildtime=30,		category="@mp_catVehicles", loadout=0 },
+	
 		};
 	end;
 	-------------------------------------------------------------
