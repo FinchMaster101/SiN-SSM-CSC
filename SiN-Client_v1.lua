@@ -572,7 +572,7 @@ function PatchGUI()
 		self:SetUpdatePolicy(ENTITY_UPDATE_VISIBLE);
 		local model=self.Properties.objModel;
 		local modelName, bStatic, fMass, vDist, pte = "", 0, self.Properties.fMass, self.Properties.fViewDist,"";
-		modelName, bStatic, fMass, vDist,pte = self:GetName():match("(.*)|(.*)|(.*)|(.*)|(.*)");
+		modelName, bStatic, fMass, vDist,pte = self:GetName():match("(.*)|(.*)|(.*)|(.*)|(.*)|");
 		fMass = tonumber(fMass)or 35;
 		bStatic = tonumber(bStatic)or 0;
 		vDist = tonumber(vDist)or 50;
