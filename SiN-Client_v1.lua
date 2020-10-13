@@ -1620,7 +1620,7 @@ function PatchPlayer()
 						Debug(50,"OnFiring")
 								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 						
-							
+							w.lastFireTime=_time
 					
 							
 						end;
