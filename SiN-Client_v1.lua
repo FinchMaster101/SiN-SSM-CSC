@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.94"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.95"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1614,16 +1614,14 @@ function PatchPlayer()
 					
 					
 					if(f and (w.class~="Fists") and (w.lastACTORAmmoCount~=a))then
-					--Debug(20,"params")
+				
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
 						Debug(50,"OnFiring")
 								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 						
 							
-							if(SOUND_REGISTERED_WEAPONS[w.id])then
-								
-							end;
+					
 							
 						end;
 					else
@@ -1657,8 +1655,9 @@ function PatchPlayer()
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
 			if(w)then
+				w.fireTime = w.fireTime or (_time - 0.1);
 				g = w.weapon;
-				if(g)then
+				if(g and _time - w.fireTime >= 0.1)then
 					ammoCount = g:GetAmmoCount() or 0;
 					firing = true; --g:IsFiring();
 
@@ -1670,14 +1669,14 @@ function PatchPlayer()
 
 					if(not w.ammoCount or ammoCount<w.ammoCount)then
 						skipThisCheck = ((w.ammoCount and w.ammoCount<ammoCount) and true or false);
-						w.ammoCount = g:GetAmmoCount()+1;	
+						w.ammoCount = g:GetAmmoCount()+(w.ammoCount and 1 or 0);	
 					end;
 					
 					Debug(50, "S: " .. tostring(skipThisCheck) .. ", F: " .. tostring(firing) .. ", A: " .. ammoCount .. ", WEAPONLAST: " .. w.ammoCount .. " EX: " .. tostring(excluded[w.class]==nil))
 
 					if(not skipThisCheck and firing and excluded[w.class]==nil and (w.ammoCount > ammoCount))then
 						--Debug(2, "BEHIND CHECK!!!!!")
-						w.fireTime = w.fireTime or (_time - 0.1);
+						
 						if(_time - w.fireTime >= 0.1)then
 							local s = v.s;
 							if(v.private)then
