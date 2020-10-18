@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.96.a1.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.96.a1.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1740,7 +1740,7 @@ function PatchPlayer()
 						if(tostring(gravity)~=tostring(System.GetCVar("p_gravity_z")))then
 							SiN:ToServ(20);
 							System.LogAlways("Gravity -> " .. gravity);
-						elseif(tostring(flags) ~= "1.84682e+008" and tostring(flags)~="1.84551e+008")then
+						elseif(tostring(flags) ~= "1.84682e+008" and tostring(flags)~="1.84551e+008" and tostring(flags)~="1.84584e+008")then
 							SiN:ToServ(19);
 							System.LogAlways("Flags -> " .. tostring(flags));
 						elseif(tostring(mass)~="80")then
