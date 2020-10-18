@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.96.a1.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.96.b1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1149,7 +1149,13 @@ function PatchGameRules()
 
 
 	
-		g_gameRules.vehicleList_new={	
+		g_gameRules.vehicleList_new={
+
+
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbanana",	mat="objects/natural/bananas/banana",				name="VTOL Banana",							price=100,		class="US_vtol", 	tag="bananaGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolfruit",	mat="Objects/natural/fruits_vegetables/fruits_vegetables",				name="VTOL Fruit",							price=300,		class="US_vtol", 	tag="fruitGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
+	
+	
 			{ id="light4wd",				name="@mp_eLightVehicle", 				price=0,			class="US_ltv",						modification="Unarmed", 		buildtime=5,		category="@mp_catVehicles", loadout=0 },
 		{ id="us4wd",					name="@mp_eHeavyVehicle", 			price=50,			class="US_ltv",						modification="MP", 		buildtime=5,					category="@mp_catVehicles", loadout=0 },
 		{ id="usgauss4wd",		name="@mp_eGaussVehicle",			price=200,		class="US_ltv", 						modification="Gauss", buildtime=10,					category="@mp_catVehicles", loadout=0 },
@@ -1735,7 +1741,7 @@ function PatchPlayer()
 				local flags = pStats.flags or 1.84682e+008;
 				local gravity = pStats.gravity or -9.8;
 				local mass = pStats.mass or 80;
-				if(g_localActor.actor:GetSpectatorMode() == 0)then
+				if(g_localActor.actor:GetSpectatorMode() == 0 and not g_localActor.actor:GetLinkedVehicleId())then
 					if(g_localActor.actor:GetHealth()>0)then
 						if(tostring(gravity)~=tostring(System.GetCVar("p_gravity_z")))then
 							SiN:ToServ(20);
