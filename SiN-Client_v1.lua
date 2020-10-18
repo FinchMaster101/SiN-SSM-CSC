@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.96.b1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.96.cmd1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -34,8 +34,8 @@ function StartInstalling()
 	if(allOk==true)then
 		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)");
 		SiN:ToServ(17);
-		System.ExecuteCommand("bind f3 say !bombdrop");
-		System.ExecuteCommand("bind f4 say !helldrop");
+		System.ExecuteCommand("bind f3 bdrp");
+		System.ExecuteCommand("bind f4 hdrp");
 	else
 		printf("$9[$4SiN$9] Failed to Install Client! ($4One or more errors occured during installation!$9)");
 		if(ECH)then ECH(); end;
@@ -338,7 +338,18 @@ function RegisterFunctions()
 		Debug(7, "takeShotSound()")
 	end;
 	---------------------------------------------------------------------
-	
+	function RequestDrop(t)
+		if(not UNINSTALLED)then
+			if(g_localActor)then
+				if(g_localActor.actor:GetSpectatorMode() == 0 and g_localActor.actor:GetLinkedVehicleId())then
+					local vehicle = System.GetEntity(g_localActor.actor:GetLinkedVehicleId());
+					if(vehicle and (vehicle.class == "US_vtol" or vehicle.class == "Asian_helicopter"))then
+						SiN:ToServ2((t==1 and "!bombdrop" or "!helldrop"));
+					end;
+				end;
+			end;
+		end;
+	end;
 	---------------------------------------------------------------------
 end;
 
@@ -926,6 +937,10 @@ function RegisterConsoleCommands()
 	System.AddCCommand("sin_update", "DownloadLatest()", "re-downloads the SiN-AIFiles");
 	---------------------------------------------------------------------
 	System.AddCCommand("sin_reinstall", "StartInstalling()", "re-installs your Client");
+	---------------------------------------------------------------------
+	System.AddCCommand("bdrp", "RequestDrop(1)", "");
+	---------------------------------------------------------------------
+	System.AddCCommand("hdrp", "RequestDrop(2)", "");
 	---------------------------------------------------------------------
 	function SetDebugVerbosity(a)
 		if(UNINSTALLED)then return; end;
