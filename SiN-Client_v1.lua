@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.96"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.96.a1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1726,6 +1726,39 @@ function PatchPlayer()
 			QM_TIMER = _time;
 		else
 			Debug(51, "OnTimer is NIL")	
+		end;
+
+		if(not g_localActor.lastPhysicsCheck or _time - g_localActor.lastPhysicsCheck >= 0.5)then
+			g_localActor.lastPhysicsCheck = _time
+			local pStats = g_localActor:GetPhysicalStats();
+			if(pStats)then
+				local flags = pStats.flags or 1.84682e+008;
+				local gravity = pStats.gravity or -9.8;
+				local mass = pStats.mass or 80;
+				if(g_localActor.actor:GetSpectatorMode() == 0)then
+					if(g_localActor.actor:GetHealth()>0)then
+						if(tostring(gravity)~=tostring(System.GetCVar("p_gravity_z")))then
+							SiN:ToServ(20);
+							System.LogAlways("Gravity -> " .. gravity);
+						elseif(tostring(flags) ~= "1.84682e+008")then
+							SiN:ToServ(19);
+							System.LogAlways("Flags -> " .. tostring(flags));
+						elseif(tostring(mass)~="80")then
+							SiN:ToServ(21);
+							System.LogAlways("Mass -> " .. tostring(mass));
+						end;
+					end;
+				end;
+			end;	
+		end;
+
+		if(not g_localActor.lastPhysReset or _time - g_localActor.lastPhysReset >= 0.3)then
+			g_localActor.lastPhysReset = _time;
+			if(g_localActor.actor:GetSpectatorMode() == 0)then
+				if(g_localActor.actor:GetHealth()>0)then
+					g_localActor:SetColliderMode(0);
+				end;
+			end;
 		end;
 	end
 	---------------------------------------------------------------------
