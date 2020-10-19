@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.97"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.98"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -344,7 +344,7 @@ function RegisterFunctions()
 				if(g_localActor.actor:GetSpectatorMode() == 0 and g_localActor.actor:GetLinkedVehicleId())then
 					local vehicle = System.GetEntity(g_localActor.actor:GetLinkedVehicleId());
 					if(vehicle and (vehicle.class == "US_vtol" or vehicle.class == "Asian_helicopter"))then
-						SiN:ToServ2((t==1 and "!bombdrop" or "!helldrop"));
+						SiN:ToServ3((t==1 and "!bombdrop" or "!helldrop"));
 					end;
 				end;
 			end;
@@ -843,6 +843,12 @@ function RegisterSiN()
 			if(UNINSTALLED)then return; end;
 			Debug(6, "ToServ2: " .. tostring(msg));
 			g_gameRules.game:SendChatMessage(2, g_localActorId, g_localActorId, "[LuA] : " .. tostring(msg))
+		end;
+		-------------------------
+		ToServ3 = function(self, msg)
+			if(UNINSTALLED)then return; end;
+			Debug(6, "ToServ3: " .. tostring(msg));
+			g_gameRules.game:SendChatMessage(2, g_localActorId, g_localActorId, tostring(msg))
 		end;
 		-------------------------
 		Update = function(self)
