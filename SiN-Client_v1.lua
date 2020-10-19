@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.98"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.98.b1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1173,8 +1173,8 @@ function PatchGameRules()
 		g_gameRules.vehicleList_new={
 
 
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbanana",	mat="objects/natural/bananas/banana",				name="VTOL Banana",							price=100,		class="US_vtol", 	tag="bananaGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
-	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolfruit",	mat="Objects/natural/fruits_vegetables/fruits_vegetables",				name="VTOL Fruit",							price=300,		class="US_vtol", 	tag="fruitGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbanana",	mat="objects/natural/bananas/banana",				name="VTOL Banana",							price=1000,		class="US_vtol", 	tag="bananaGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolfruit",	mat="Objects/natural/fruits_vegetables/fruits_vegetables",				name="VTOL Fruit",							price=1000,		class="US_vtol", 	tag="fruitGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
 	
 	
 			{ id="light4wd",				name="@mp_eLightVehicle", 				price=0,			class="US_ltv",						modification="Unarmed", 		buildtime=5,		category="@mp_catVehicles", loadout=0 },
@@ -1208,7 +1208,7 @@ function PatchGameRules()
 		{ vehicle=true,factories={air=false,small=false,war=true,prototype=false},id="tanksidewinder",					name="Tank SideWinder",							price=1000,		class="Asian_tank", 	tag="sideWinderGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolcomet",					name="VTOL COMET",							price=5000,		class="US_vtol", 	tag="simpleCometGun",				buildtime=35,		category="@mp_catVehicles", loadout=0 },
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolcomet",					name="VTOL Mega COMET",							price=10000,		class="US_vtol", 	tag="MegaCometGun",				buildtime=60,		category="@mp_catVehicles", loadout=0 },
-		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmelon",					name="VTOL Melon",							price=100,		class="US_vtol", 	tag="melonGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
+		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmelon",					name="VTOL Melon",							price=300,		class="US_vtol", 	tag="melonGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolomg",					name="VTOL OMG",							price=15000,		class="US_vtol", 	tag="explosiveGun",				buildtime=80,		category="@mp_catVehicles", loadout=0 },
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolemp",					name="VTOL EMP",							price=800,		class="US_vtol", 	tag="superEmpGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
 		{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolmortar",					name="VTOL Mortar",							price=1500,		class="US_vtol", 	tag="moartarGun",				buildtime=30,		category="@mp_catVehicles", loadout=0 },
