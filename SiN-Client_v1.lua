@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.98.b1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.g"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -583,7 +583,8 @@ function PatchGUI()
 		self:SetUpdatePolicy(ENTITY_UPDATE_VISIBLE);
 		local model=self.Properties.objModel;
 		local modelName, bStatic, fMass, vDist, pte = "", 0, self.Properties.fMass, self.Properties.fViewDist,"";
-		modelName, bStatic, fMass, vDist,pte = self:GetName():match("(.*)|(.*)|(.*)|(.*)|(.*)");
+		local garbage;
+		modelName, bStatic, fMass, vDist,pte,garbage = self:GetName():match("(.*)|(.*)|(.*)|(.*)|(.*)|(.*)");
 		fMass = tonumber(fMass)or 35;
 		bStatic = tonumber(bStatic)or 0;
 		vDist = tonumber(vDist)or 50;
