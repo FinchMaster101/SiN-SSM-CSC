@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.g"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.v"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -60,7 +60,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_BASE_SPEED)then
-		PL_MODE_BASE_SPEED = 10000; -- base speed
+		PL_MODE_BASE_SPEED = 50000; -- base speed
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_DIR_UP)then
@@ -96,7 +96,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not SIN_AI_UPDATE_DELAY)then
-		SIN_AI_UPDATE_DELAY = 50;
+		SIN_AI_UPDATE_DELAY = 10;
 	end;
 	---------------------------------------------------------------------
 	if(not UPDATE_AI_ENTITIES)then
@@ -1442,16 +1442,10 @@ function PatchPlayer()
 		local vehicleId = self.actor:GetLinkedVehicleId();
 		if(vehicleId and not UNINSTALLED)then
 			local vehicle = System.GetEntity(vehicleId);
-			if(vehicle)then
-				PL_MODE_TIME = _time; -- not sure where to place this.
-				-- -->> maximum space-saver lol
+			if(vehicle and vehicle.isJet)then
 				if(action=="v_brake")then -- start
-					if(vehicle.plMode==0)then vehicle.plMode=1;else vehicle.plMode=0;end;
-				elseif(action=="v_moveforward")then if(vehicle.plMode==1)then if(activation=="press")then vehicle.impMode=1;else vehicle.impMode=nil;end;end;
-				elseif(action=="v_moveback")then
-					if(vehicle.plMode==1)then if(activation=="press")then vehicle.impMode=2;else vehicle.impMode=nil;end;end;
-				elseif(action=="v_rollleft" or action=="v_turnleft")then if(vehicle.plMode==1)then vehicle.impDir=value+2;end;
-				elseif(action=="v_rollright" or action=="turnright")then if(vehicle.plMode==1)then vehicle.impDir=value;end;end;
+					if(vehicle.isJet==0)then vehicle.isJet=1;else vehicle.isJet=0;end;
+				end;
 			end;
 		end;
 		
@@ -1577,21 +1571,21 @@ function PatchPlayer()
 		if(vehicleId)then
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle)then
-				if(vehicle.plMode)then
-					if(vehicle.plMode == 1)then
+				if(vehicle.isJet)then
+					if(vehicle.isJet== 1)then
 						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_BASE_RATE);
 						if(_time - vehicle.lastImpulseTime >= PL_MODE_BASE_RATE)then
-							local dir = (not PL_MODE_USE_PLAYER_DIR and vehicle:GetDirectionVector() or g_localActor.actor:GetHeadDir());
-							if(PL_MODE_USE_PLAYER_DIR)then
+							local dir = vehicle:GetDirectionVector();
+							--[[if(PL_MODE_USE_PLAYER_DIR)then
 								vehicle:SetDirectionVector(dir);
-							end;
-							if(vehicle.impMode)then
+							end;--]]
+							--[[if(vehicle.impMode)then
 								if(vehicle.impMode==1)then
 									--dir.z = dir.z - PL_MODE_DIR_DOWN; -- unused
 								elseif(vehicle.impMode==2)then
 									--dir.z = dir.z + PL_MODE_DIR_UP; -- unused
 								end;
-							end;
+							end;--]]
 							PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME; -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
 							PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
 							if(((_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)) and (tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)<=tonumber(PL_MODE_BASE_SPEED)))then -- !!prevent Infinite impulseadd
