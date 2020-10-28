@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.v"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.v.d1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -365,6 +365,7 @@ function ReloadEntityScripts()
 	if(not GUI)then Script.ReloadScript("Scripts/Entities/Others/GUI.lua"); end;
 	if(not Player)then Script.ReloadScript("Scripts/Entities/Actor/Player.lua"); end;
 	if(not Door)then Script.ReloadScript("Scripts/Entities/Doors/Door.lua"); end;
+	if(not AnimDoor)then Script.ReloadScript("Scripts/Entities/Doors/AnimDoor.lua"); end;
 	if(not Grunt)then Script.ReloadScript("Scripts/Entities/AI/Grunt.lua"); end;
 	if(not BasicAI)then Script.ReloadScript("Scripts/Entities/AI/Shared/BasicAI.lua"); end;
 end;
@@ -501,9 +502,9 @@ function PatchDoor()
   	};
 	-------------------------
 	for i, door in ipairs(System.GetEntitiesByClass("Door")or{})do
-		if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
+		--if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
 			door:Reset(); -- reset it
-		end;
+		--end;
 	end;
 	-------------------------
 	Door.DoPhysicalize = function(self)
@@ -524,6 +525,79 @@ function PatchDoor()
 		end
 		self.currModel = self.Properties.fileModel;
 	end
+
+	-------------------------
+	AnimDoor.Properties.Sounds = { snd_Close ="environment/storage_vs2/door_trooper_close"; snd_Open ="door_troopee_open";  };
+	AnimDoor.Properties.bActivatePortal = 1;
+	AnimDoor.Properties.Animation = { anim_Open = "passage_door_open"; anim_Close = "passage_door_closed"; };
+	-------------------------
+	for i, door in ipairs(System.GetEntitiesByClass("AnimDoom")or{})do
+		--if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
+			door:Reset(); -- reset it
+			door.Event_Open = AnimDoor.Event_Open;
+			door.Event_Close = AnimDoor.Event_Close;
+		--end;
+	end;
+	-------------------------
+	AnimDoor.DoPhysicalize = function(self)
+		if (self.portal) then
+			System.ActivatePortal(self:GetWorldPos(), 0, self.id);
+		end
+
+		self.bLocked = false;
+		self.portal = self.Properties.bActivatePortal~=0;
+		self.bUseSameAnim = self.Properties.Animation.anim_Close == "";
+
+		local model = self.Properties.object_Model;
+		local t=self:GetName():sub(-4);
+		if(t==".cga" or t==".cgf")then 
+			model=self:GetName(); -- is case SOMEONE puts model name in entity name
+		end 
+
+		if (self.Properties.object_Model ~= "") then
+			self:LoadObject(0,model);
+		end
+
+		self.bNoAnims = self.Properties.Animation.anim_Open == "" and self.Properties.Animation.anim_Close == "";
+		
+		self:PhysicalizeThis();
+		self:DoStopSound();
+		
+		-- state setting, closed
+		self.nDirection = -1;
+		self.curAnim = "";
+		if AI then
+			AI.SetSmartObjectState( self.id, "Closed" );
+		end
+		if (self.Properties.bLocked ~= 0) then
+			self:Lock();
+		end
+	end
+	-------------------------
+	AnimDoor.Event_Open = function(self, doAction)
+		if(doAction == nil)then
+			if(SiN and SiN.ToServ)then
+				SiN:ToServ(23); -- ask server if we can open this door
+			end;
+		else
+			self:DoPlayAnimation(1,nil,true);
+		end;
+	end;
+	-------------------------
+	AnimDoor.Event_Close = function(self, doAction)
+		if(close == nil)then
+			if(SiN and SiN.ToServ)then
+				SiN:ToServ(22); -- ask server if we can open this door
+			end;
+		else
+			self:DoPlayAnimation(-1,nil,true);
+		end;
+	end;
+	
+	
+	
+	
+	
 end;
 
 function PatchTornado()
