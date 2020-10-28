@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.v.d3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.v.d4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -545,7 +545,7 @@ function PatchDoor()
 		local mn,trash=self:GetName():match("(.*)|(.*)");
 		local t=mn:sub(-4);
 		if(t==".cga" or t==".cgf")then 
-			model=self:GetName(); -- is case SOMEONE puts model name in entity name
+			model=mn; -- is case SOMEONE puts model name in entity name
 		end 
 		Debug(6,"ModelName on AnimDoor: " .. model .. " , " .. trash)
 		if (model ~= "") then
