@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.v.d4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.v.d4.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -579,7 +579,7 @@ function PatchDoor()
 	end;
 	-------------------------
 	AnimDoor.Event_Close = function(self, doAction)
-		if(close == nil)then
+		if(doAction== nil)then
 			if(SiN and SiN.ToServ)then
 				SiN:ToServ(22); -- ask server if we can open this door
 			end;
