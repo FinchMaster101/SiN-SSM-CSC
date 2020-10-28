@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.v.d4.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.v.d4.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -527,7 +527,7 @@ function PatchDoor()
 		--end;
 	end;
 	-------------------------
-	AnimDoor.Properties.Sounds = { snd_Close ="sounds/environment/storage_vs2/door_trooper_close"; snd_Open ="sounds/environment/storage_vs2/door_trooper_open";  };
+	AnimDoor.Properties.Sounds = { snd_Close ="sounds/environment:storage_vs2:door_trooper_close"; snd_Open ="sounds/environment:storage_vs2:door_trooper_open";  };
 	AnimDoor.Properties.bActivatePortal = 1;
 	AnimDoor.Properties.Animation = { anim_Open = "passage_door_open"; anim_Close = "passage_door_closed"; };
 
