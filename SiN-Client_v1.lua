@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.v.d2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.v.d3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -500,12 +500,7 @@ function PatchDoor()
 		bSquashPlayers 			= 0,
 		bActivatePortal 		= 0,
   	};
-	-------------------------
-	for i, door in ipairs(System.GetEntitiesByClass("Door")or{})do
-		--if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
-			door:Reset(); -- reset it
-		--end;
-	end;
+
 	-------------------------
 	Door.DoPhysicalize = function(self)
 		if (self.currModel ~= self.Properties.fileModel) then
@@ -525,21 +520,19 @@ function PatchDoor()
 		end
 		self.currModel = self.Properties.fileModel;
 	end
-
+	-------------------------
+	for i, door in ipairs(System.GetEntitiesByClass("Door")or{})do
+		--if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
+			door:Reset(); -- reset it
+		--end;
+	end;
 	-------------------------
 	AnimDoor.Properties.Sounds = { snd_Close ="environment/storage_vs2/door_trooper_close"; snd_Open ="door_troopee_open";  };
 	AnimDoor.Properties.bActivatePortal = 1;
 	AnimDoor.Properties.Animation = { anim_Open = "passage_door_open"; anim_Close = "passage_door_closed"; };
+
 	-------------------------
-	for i, door in ipairs(System.GetEntitiesByClass("AnimDoom")or{})do
-		--if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
-			door:Reset(); -- reset it
-			door.Event_Open = AnimDoor.Event_Open;
-			door.Event_Close = AnimDoor.Event_Close;
-		--end;
-	end;
-	-------------------------
-	AnimDoor.DoPhysicalize = function(self)
+	AnimDoor.Reset = function(self)
 		if (self.portal) then
 			System.ActivatePortal(self:GetWorldPos(), 0, self.id);
 		end
@@ -594,7 +587,14 @@ function PatchDoor()
 			self:DoPlayAnimation(-1,nil,true);
 		end;
 	end;
-	
+	-------------------------
+	for i, door in ipairs(System.GetEntitiesByClass("AnimDoom")or{})do
+		--if(door.Properties and door.Properties.fileModel == "Objects/library/furnishings/doors/toiletstall_door_local.cgf")then -- if a door was spawned before player joined the server
+			door:Reset(); -- reset it
+			door.Event_Open = AnimDoor.Event_Open;
+			door.Event_Close = AnimDoor.Event_Close;
+		--end;
+	end;
 	
 	
 	
