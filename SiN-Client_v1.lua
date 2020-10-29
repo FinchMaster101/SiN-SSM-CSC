@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1676,7 +1676,7 @@ function PatchPlayer()
 					if(vehicle.isJet== 1)then
 						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_BASE_RATE);
 						if(_time - vehicle.lastImpulseTime >= PL_MODE_BASE_RATE)then
-							local dir = vehicle:GetDirectionVector();
+							--local dir = vehicle:GetDirectionVector();
 
 
 							HandleImpulse();
@@ -1687,9 +1687,9 @@ function PatchPlayer()
 								endImpulse=endImpulse*5
 							end;
 
-							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, endImpulse, 1);
+							vehicle:AddImpulse(-1, vehicle:GetCenterOfMassPos(), vehicle:GetDirectionVector(), endImpulse, 1);
 							vehicle.lastImpulseTime = _time;
-							vehicle.lastDir = vehicle.lastDir or dir;
+							--vehicle.lastDir = vehicle.lastDir or dir;
 						end;
 					else
 						--vehicle:Event_DisableMovement();
