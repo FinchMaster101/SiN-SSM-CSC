@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.v.d4.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.99.v1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1247,6 +1247,11 @@ function PatchGameRules()
 
 	
 		g_gameRules.vehicleList_new={
+
+
+	{ vehicle=true,factories={airf=true,air=false,small=false,war=false,prototype=false},id="smallplane",		name="Small Plane", 				price=300, onSpawn={isJet=true},	vehicleModelParams={"objects/library/vehicles/aircraft/aircraft.cgf", "Small Plane",-3.9,-0.3,0,{x=0,y=0,z=0}};	class="US_vtol",		modification="MP",	buildtime=5,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={airf=true,air=false,small=false,war=false,prototype=false},id="usfighter",		name="US Fighter", 				price=300, 	onSpawn={isJet=true},vehicleModelParams={"objects/vehicles/us_fighter_b/us_fighter.cga",                                        "US Fighter",-2.2,0,0,{x=0,y=0,z=3.1439}};	class="US_vtol",		modification="MP",	buildtime=5,		category="@mp_catVehicles", loadout=0 },
+	{ vehicle=true,factories={airf=true,air=false,small=false,war=false,prototype=false},id="cargoplane",		name="Cargo Plane", 				price=300, 	onSpawn={isJet=true},vehicleModelParams={"objects/vehicles/us_cargoplane/us_cargoplane.cga",                                    "Cargoplane", -5.8,-21,0, {x=0,y=0,z=-1.574}};	class="US_vtol",		modification="MP",	buildtime=5,		category="@mp_catVehicles", loadout=0 },
 
 
 	{ vehicle=true,factories={air=true,small=false,war=false,prototype=false},id="vtolbanana",	mat="objects/natural/bananas/banana",				name="VTOL Banana",							price=1000,		class="US_vtol", 	tag="bananaGun",				buildtime=10,		category="@mp_catVehicles", loadout=0 },
