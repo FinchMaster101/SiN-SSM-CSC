@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1657,9 +1657,9 @@ function PatchPlayer()
 
 		PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or toAdd;
 
-		PL_MODE_TIME = PL_MODE_TIME or _time - toAdd/PL_MODE_BASE_SPEED;
+		PL_MODE_TIME = PL_MODE_TIME or _time - (toAdd/PL_MODE_BASE_SPEED)*10;
 
-		if(_time - PL_MODE_TIME >= toAdd/PL_MODE_BASE_SPEED and PL_MODE_CURR_IMPULSE_AMOUNT<=PL_MODE_BASE_SPEED)then
+		if(_time - PL_MODE_TIME >= (toAdd/PL_MODE_BASE_SPEED)*10 and PL_MODE_CURR_IMPULSE_AMOUNT<=PL_MODE_BASE_SPEED)then
 			PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
 			PL_MODE_TIME = _time;
 		end;
