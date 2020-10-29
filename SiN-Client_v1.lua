@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1672,30 +1672,22 @@ function PatchPlayer()
 		if(vehicleId)then
 			local v= System.GetEntity(vehicleId);
 			if(v and v.isJet and v.isJet==1)then
-				--if(v.isJet)then
-					--if(v.isJet== 1)then
 						v.lit= v.lit or (_time - PL_MODE_BASE_RATE);
 						if(_time - v.lit >= PL_MODE_BASE_RATE)then
 							--local dir = vehicle:GetDirectionVector();
 
 
-							HandleImpulse();
+							--[[HandleImpulse();
 
 							local endImpulse = tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)
 
 							if(PL_MODE_BOOST==1)then
 								endImpulse=endImpulse*5
-							end;
-							v:AddImpulse(-1, v:GetCenterOfMassPos(), v:GetDirectionVector(), endImpulse, 1)
-							--vehicle:AddImpulse(-1, vehicle:GetCenterOfMassPos(), vehicle:GetDirectionVector(), endImpulse, 1);
+							end;]]--
+Debug(3, "Adding impulse: " _time .. " / "  .. System.GetFrameTime())
+							v:AddImpulse(-1, v:GetCenterOfMassPos(), v:GetDirectionVector(), v:GetMass()*5, 1)
 							v.lit= _time;
-							--vehicle.lastDir = vehicle.lastDir or dir;
 						end;
-					--else
-						--vehicle:Event_DisableMovement();
-					--	PL_MODE_CURR_IMPULSE_AMOUNT = nil;
-					--end;
-				--end;
 			else
 				PL_MODE_CURR_IMPULSE_AMOUNT = nil;
 			end;
