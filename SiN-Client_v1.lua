@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1670,12 +1670,12 @@ function PatchPlayer()
 		if(UNINSTALLED)then return; end;
 		local vehicleId = g_localActor.actor:GetLinkedVehicleId();
 		if(vehicleId)then
-			local vehicle = System.GetEntity(vehicleId);
-			if(vehicle)then
-				if(vehicle.isJet)then
-					if(vehicle.isJet== 1)then
-						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_BASE_RATE);
-						if(_time - vehicle.lastImpulseTime >= PL_MODE_BASE_RATE)then
+			local v= System.GetEntity(vehicleId);
+			if(v)then
+				if(v.isJet)then
+					if(v.isJet== 1)then
+						--vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_BASE_RATE);
+						--if(_time - vehicle.lastImpulseTime >= PL_MODE_BASE_RATE)then
 							--local dir = vehicle:GetDirectionVector();
 
 
@@ -1686,11 +1686,11 @@ function PatchPlayer()
 							if(PL_MODE_BOOST==1)then
 								endImpulse=endImpulse*5
 							end;
-
-							vehicle:AddImpulse(-1, vehicle:GetCenterOfMassPos(), vehicle:GetDirectionVector(), endImpulse, 1);
-							vehicle.lastImpulseTime = _time;
+							v:AddImpulse(-1, v:GetCenterOfMassPos(), v:GetDirectionVector(), endImpulse, 1)
+							--vehicle:AddImpulse(-1, vehicle:GetCenterOfMassPos(), vehicle:GetDirectionVector(), endImpulse, 1);
+							--vehicle.lastImpulseTime = _time;
 							--vehicle.lastDir = vehicle.lastDir or dir;
-						end;
+						--end;
 					else
 						--vehicle:Event_DisableMovement();
 						PL_MODE_CURR_IMPULSE_AMOUNT = nil;
