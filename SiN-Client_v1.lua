@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -73,6 +73,10 @@ function RegisterGlobals()
 	---------------------------------------------------------------------
 	if(PL_MODE_REORIENTATE_VEHICLE==nil)then
 		PL_MODE_REORIENTATE_VEHICLE = false; -- reorientate vehicle?
+	end;
+	---------------------------------------------------------------------
+	if(PL_MODE_BOOST==nil)then
+		PL_MODE_BOOST = 0; -- boost impulses
 	end;
 	---------------------------------------------------------------------
 	if(PL_MODE_USE_PLAYER_DIR==nil)then
@@ -1523,8 +1527,13 @@ function PatchPlayer()
 		if(vehicleId and not UNINSTALLED)then
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle and vehicle.isJet)then
-				if(action=="v_brake")then -- start
+				if(action=="skip_cutscene")then -- start
 					if(vehicle.isJet==0)then vehicle.isJet=1;else vehicle.isJet=0;end;
+				end;
+				if(vehicle.isJet == 1)then
+					if(action == "v_boost")then
+						PL_MODE_BOOST = (activation=="press" and 1 or 0);
+					end;
 				end;
 			end;
 		end;
@@ -1672,8 +1681,13 @@ function PatchPlayer()
 
 							HandleImpulse();
 
+							local endImpulse = tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)
 
-							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_CURR_IMPULSE_AMOUNT, 1);
+							if(PL_MODE_BOOST==1)then
+								endImpulse=endImpulse*5
+							end;
+
+							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, endImpulse, 1);
 							vehicle.lastImpulseTime = _time;
 							vehicle.lastDir = vehicle.lastDir or dir;
 						end;
