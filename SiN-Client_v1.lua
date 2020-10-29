@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.99.v1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1643,6 +1643,18 @@ function PatchPlayer()
 			printf("$9[$8PlMode$9] " .. (PL_MODE==1 and "activated" or "deactivated"));
 		end;
 	end;
+	function HandleImpulse()
+		local toAdd = PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME;
+
+		PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or toAdd;
+
+		PL_MODE_TIME = PL_MODE_TIME or _time - toAdd/PL_MODE_BASE_SPEED;
+
+		if(_time - PL_MODE_TIME >= toAdd/PL_MODE_BASE_SPEED and PL_MODE_CURR_IMPULSE_AMOUNT<=PL_MODE_BASE_SPEED)then
+			PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
+			PL_MODE_TIME = _time;
+		end;
+	end;
 	---------------------------------------------------------------------
 	-- -> very VERY badly coded
 	function g_localActor:UpdatePLMode(frameTime)
@@ -1656,33 +1668,17 @@ function PatchPlayer()
 						vehicle.lastImpulseTime = vehicle.lastImpulseTime or (_time - PL_MODE_BASE_RATE);
 						if(_time - vehicle.lastImpulseTime >= PL_MODE_BASE_RATE)then
 							local dir = vehicle:GetDirectionVector();
-							--[[if(PL_MODE_USE_PLAYER_DIR)then
-								vehicle:SetDirectionVector(dir);
-							end;--]]
-							--[[if(vehicle.impMode)then
-								if(vehicle.impMode==1)then
-									--dir.z = dir.z - PL_MODE_DIR_DOWN; -- unused
-								elseif(vehicle.impMode==2)then
-									--dir.z = dir.z + PL_MODE_DIR_UP; -- unused
-								end;
-							end;--]]
-							PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME; -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
-							PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
-							if(((_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)) and (tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)<=tonumber(PL_MODE_BASE_SPEED)))then -- !!prevent Infinite impulseadd
-								PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
-								PL_MODE_TIME = _time;
-							end;
+
+
+							HandleImpulse();
+
+
 							vehicle:AddImpulse(0, vehicle:GetCenterOfMassPos(), dir, PL_MODE_CURR_IMPULSE_AMOUNT, 1);
 							vehicle.lastImpulseTime = _time;
 							vehicle.lastDir = vehicle.lastDir or dir;
 						end;
 					else
-						PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME; -- base speed / startup time (ex: 10000/10 = 1000, so it takes 10 seconds for full impusles
-						PL_MODE_TIME = PL_MODE_TIME or _time - (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME);
-						if(((_time - PL_MODE_TIME) > (PL_MODE_STARTUP_TIME/PL_MODE_STARTUP_ADDTIME)) and (tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)>=tonumber(PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME)))then -- !!prevent Infinite impulseadd
-							PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT - (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
-							PL_MODE_TIME = _time;
-						end;
+						PL_MODE_CURR_IMPULSE_AMOUNT = nil;
 					end;
 				end;
 			end;
