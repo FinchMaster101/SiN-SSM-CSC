@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -60,7 +60,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_BASE_SPEED)then
-		PL_MODE_BASE_SPEED = 50000; -- base speed
+		PL_MODE_BASE_SPEED = 20; -- base speed
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_DIR_UP)then
@@ -1045,14 +1045,14 @@ function RegisterConsoleCommands()
 		if(UNINSTALLED)then return; end;
 		a = tonumber(a);
 		if(not a)then
-			printf("$9[$8PlMode$9] BaseSpeed: " .. PL_MODE_BASE_SPEED)
+			printf("$9[$8PlMode$9] BaseSpeed Multiplier: " .. PL_MODE_BASE_SPEED)
 			return true;
 		end;
 		PL_MODE_BASE_SPEED = (a>1 and a or 1);
-		printf("$9[$8PlMode$9] BaseSpeed: " .. PL_MODE_BASE_SPEED)
+		printf("$9[$8PlMode$9] BaseSpeed Multiplier: " .. PL_MODE_BASE_SPEED)
 		return true;
 	end;
-	System.AddCCommand("plm_speed","SetPLModeSpeed(%%)","@plm_speed")
+	System.AddCCommand("plm_speedMult","SetPLModeSpeed(%%)","@plm_speed")
 	---------------------------------------------------------------------
 	function SetPLModeRate(a)
 		if(UNINSTALLED)then return; end;
@@ -1687,7 +1687,7 @@ HandleImpulse();
 							end;
 ]]--
 Debug(3, "Adding impulse: " .. _time .. " - "  .. System.GetFrameTime())
-							v:AddImpulse(-1, v:GetCenterOfMassPos(), v:GetDirectionVector(), v:GetMass()*5, 1)
+							v:AddImpulse(-1, v:GetCenterOfMassPos(), v:GetDirectionVector(), v:GetMass()*PL_MODE_BASE_SPEED, 1)
 							v.lit= _time;
 						end;
 			else
