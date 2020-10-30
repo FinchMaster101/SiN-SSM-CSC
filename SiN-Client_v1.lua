@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.38"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.39"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -60,7 +60,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_BASE_SPEED)then
-		PL_MODE_BASE_SPEED = 20; -- base speed
+		PL_MODE_BASE_SPEED = 300; -- base speed
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_DIR_UP)then
@@ -84,7 +84,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_STARTUP_TIME)then
-		PL_MODE_STARTUP_TIME = 10.0; -- maybe cvar?
+		PL_MODE_STARTUP_TIME = 15.0; -- maybe cvar?
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_TIME)then
@@ -92,7 +92,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_STARTUP_ADDTIME)then
-		PL_MODE_STARTUP_ADDTIME = 10.0; -- maybe cvar?
+		PL_MODE_STARTUP_ADDTIME = 30.0; -- maybe cvar?
 	end;
 	---------------------------------------------------------------------
 	if(not SYNC_LOCAL_ACTOR)then
@@ -1666,7 +1666,7 @@ function PatchPlayer()
 Debug(8, "-> " .. PL_MODE_CURR_IMPULSE_AMOUNT)
 	end;
 	function GetPLModeDirection(v)
-		return g_localActor.actor:GetHeadDir()
+		return v:GetDirectionVector() --g_localActor.actor:GetHeadDir()
 	end;
 	---------------------------------------------------------------------
 	-- -> very VERY badly coded
@@ -1686,12 +1686,16 @@ Debug(8, "-> " .. PL_MODE_CURR_IMPULSE_AMOUNT)
 							end;
 
 							Debug(3, "Adding impulse: " .. _time .. " - "  .. System.GetFrameTime())
+Script.SetTimer(10, function()
 							local dir = GetPLModeDirection(v)
 							if(v:GetPos().z - System.GetTerrainElevation(v:GetPos()) < 5)then
 								dir.z=dir.z+0.3
 							end;
+
 							v:AddImpulse(-1, v:GetCenterOfMassPos(), dir, endImpulse*PL_MODE_BASE_SPEED, 1)
+end);
 							v.lit= _time;
+
 						end;
 			else
 				PL_MODE_CURR_IMPULSE_AMOUNT = nil;
