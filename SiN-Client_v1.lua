@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1528,7 +1528,7 @@ function PatchPlayer()
 			local vehicle = System.GetEntity(vehicleId);
 			if(vehicle and vehicle.isJet)then
 				if(action=="skip_cutscene")then -- start
-					if(vehicle.isJet==0)then SiN:ToServ(24);vehicle:Event_EnableMovement();vehicle.isJet=1;else vehicle.isJet=0;SiN:ToServ(25);vehicle:Event_DisableMovement();end;
+					if(vehicle.isJet==0)then SiN:ToServ(24);else SiN:ToServ(25);end;
 				end;
 				if(vehicle.isJet == 1)then
 					if(action == "v_boost")then
