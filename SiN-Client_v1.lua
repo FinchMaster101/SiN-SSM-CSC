@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.39"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.40"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -130,6 +130,10 @@ function RegisterFunctions()
 	function SpawnCounter()
 		spawnCounter = (spawnCounter or 0) + 1;
 		return spawnCounter;
+	end;
+	---------------------------------------------------------------------
+	function GetEnt(entName) -- short name for function called below.. for faster stc
+		return System.GetEntityByName(entName);
 	end;
 	---------------------------------------------------------------------
 	function VehicleLoadModel(vehicleName, modelName, position, angles,physics)
