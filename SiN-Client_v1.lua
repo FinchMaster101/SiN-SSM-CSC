@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.34"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1664,6 +1664,9 @@ function PatchPlayer()
 			PL_MODE_TIME = _time;
 		end;
 	end;
+	function GetPLModeDirection(v)
+		return g_localActor.actor:GetHeadDir()
+	end;
 	---------------------------------------------------------------------
 	-- -> very VERY badly coded
 	function g_localActor:UpdatePLMode(frameTime)
@@ -1687,7 +1690,11 @@ HandleImpulse();
 							end;
 ]]--
 Debug(3, "Adding impulse: " .. _time .. " - "  .. System.GetFrameTime())
-							v:AddImpulse(-1, v:GetCenterOfMassPos(), System.GetViewCameraDir(), v:GetMass()*PL_MODE_BASE_SPEED, 1)
+local dir = GetPLModeDirection(v)
+if(v:GetPos().z - System.GetTerrainElevation(v:GetPos()) < 5)then
+dir.z=dir.z+0.8
+end;
+							v:AddImpulse(-1, dir, System.GetViewCameraDir(), v:GetMass()*PL_MODE_BASE_SPEED, 1)
 							v.lit= _time;
 						end;
 			else
