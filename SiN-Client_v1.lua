@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.37"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.38"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1652,7 +1652,7 @@ function PatchPlayer()
 			printf("$9[$8PlMode$9] " .. (PL_MODE==1 and "activated" or "deactivated"));
 		end;
 	end;
-	function HandleImpulse()
+	function HandleImpulse(v)
 		local toAdd = PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME;
 
 		PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT or toAdd;
@@ -1663,6 +1663,7 @@ function PatchPlayer()
 			PL_MODE_CURR_IMPULSE_AMOUNT = PL_MODE_CURR_IMPULSE_AMOUNT + (PL_MODE_BASE_SPEED/PL_MODE_STARTUP_TIME);
 			PL_MODE_TIME = _time;
 		end;
+Debug(8, "-> " .. PL_MODE_CURR_IMPULSE_AMOUNT)
 	end;
 	function GetPLModeDirection(v)
 		return g_localActor.actor:GetHeadDir()
@@ -1678,7 +1679,7 @@ function PatchPlayer()
 						v.lit= v.lit or (_time - PL_MODE_BASE_RATE);
 						if(_time - v.lit >= PL_MODE_BASE_RATE)then
 
-							HandleImpulse();
+							HandleImpulse(v);
 							local endImpulse = tonumber(PL_MODE_CURR_IMPULSE_AMOUNT)
 							if(PL_MODE_BOOST==1)then
 								endImpulse=endImpulse*5
