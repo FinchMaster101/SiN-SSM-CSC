@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1687,7 +1687,7 @@ HandleImpulse();
 							end;
 ]]--
 Debug(3, "Adding impulse: " .. _time .. " - "  .. System.GetFrameTime())
-							v:AddImpulse(-1, v:GetCenterOfMassPos(), v:GetDirectionVector(), v:GetMass()*PL_MODE_BASE_SPEED, 1)
+							v:AddImpulse(-1, v:GetCenterOfMassPos(), System.GetViewCameraDir(), v:GetMass()*PL_MODE_BASE_SPEED, 1)
 							v.lit= _time;
 						end;
 			else
