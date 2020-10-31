@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.41"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.42"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1479,6 +1479,7 @@ function PatchPlayer()
 			OLD.player_onUpdate(self,dt)
 		end;
 		if(UNINSTALLED)then return; end;
+		Grunt.Client.UpdateGrunt(self,dt)
 		if(self.loopAnim)then
 			self.lastLoopAnimTime = self.lastLoopAnimTime or _time - self.loopAnim.time;
 			if(_time - self.lastLoopAnimTime >= self.loopAnim)then
