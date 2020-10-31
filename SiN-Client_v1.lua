@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.40"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.41"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -56,11 +56,11 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_BASE_RATE)then 
-		PL_MODE_BASE_RATE = 0.3; -- update delay (in seconds)
+		PL_MODE_BASE_RATE = 0.05; -- update delay (in seconds)
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_BASE_SPEED)then
-		PL_MODE_BASE_SPEED = 300; -- base speed
+		PL_MODE_BASE_SPEED = 1200; -- base speed multiplier (vehicle mass * this number * 5 * speed boost)
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_DIR_UP)then
@@ -84,7 +84,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_STARTUP_TIME)then
-		PL_MODE_STARTUP_TIME = 15.0; -- maybe cvar?
+		PL_MODE_STARTUP_TIME = 10.0; -- maybe cvar?
 	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE_TIME)then
