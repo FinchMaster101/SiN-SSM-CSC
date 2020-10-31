@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.42"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.43"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1588,9 +1588,9 @@ function PatchPlayer()
 			else
 				Debug(7, "Cannot create WallSplat, hits<0 or splat.dist>1.5 ("..(splat and splat.dist or 0.0)..")")	
 			end;
-			local e=hit.target;if(e)then e:FreeSlot(e.EFFECT_SLOT);e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=1});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
+			local e=hit.target;if(e)then if(e.EFFECT_SLOT)thene:FreeSlot(e.EFFECT_SLOT);end;e.EFFECT_SLOT = e:LoadParticleEffect(-1,"misc.blood_fx.ground",{Scale=0.4});e:SetSlotWorldTM(e.EFFECT_SLOT,hit.pos,hit.normal);end;
 			local distance = GetVectorDistance(hit.target,hit.shooter)
-			if(distance<1)then
+			if(distance<1 and hit.shooter==g_localActor)then
 				g_localActor:PlaySoundEvent("sounds/interface:hud:hud_blood", g_Vectors.v000, g_Vectors.v010, SOUND_2D, SOUND_SEMANTIC_PLAYER_FOLEY);
 				Debug(5, "PLaying hud_blood sound on g_localActor")
 				local tm = 0
@@ -1605,7 +1605,7 @@ function PatchPlayer()
 			else
 				Debug(5, "Cannot create BloodPLats, " .. distance)	
 			end;
-			if(hit.target.actor:GetHealth() < 50 and hit.target.actor:GetHealth() > 1)then
+			if(hit.target.actor:GetHealth() < 50 and hit.target.actor:GetHealth() > 1 and hit.target:IsPlayer())then
 				self.lastHBSTime = self.lastHBSTime or _time - 5;
 				if(_time - self.lastHBSTime >= 5)then
 					self:PlaySoundEvent("sounds/interface:suit:heartbeat",g_Vectors.v000,g_Vectors.v010,SOUND_EVENT,SOUND_SEMANTIC_SOUNDSPOT);
