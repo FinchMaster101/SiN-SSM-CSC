@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.46"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.47"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -49,6 +49,10 @@ function RegisterGlobals()
 	---------------------------------------------------------------------
 	if(not PL_MODE)then 
 		PL_MODE = 0;
+	end;
+	---------------------------------------------------------------------
+	if(not FLY_MODE_IMPULSE)then
+		FLY_MODE_IMPULSE = 25;
 	end;
 	---------------------------------------------------------------------
 	if(not CHAT_EFFECT)then
@@ -969,7 +973,7 @@ function RegisterSiN()
 			
 			if(g_localActor.flyMode and g_localActor.flyMode == 1)then
 				if(g_localActor.actor:GetHealth()>0 and not g_localActor.actor:GetLinkedVehicleId() and g_localActor.actor:IsFlying())then
-					local imp = 10;
+					local imp = FLY_MODE_IMPULSE;
 					local cd = System.GetViewCameraDir()
 					if(cd.z < -0.8)then
 						cd.z=cd.z+0.5	
