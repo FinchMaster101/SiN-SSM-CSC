@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.48"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.38.p5.7.49"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -855,7 +855,7 @@ function RegisterSiN()
 							ent:FreeSlot(ent.particleId)
 						end;
 					end;
-					ifa=="all")then
+					if(a=="all")then
 						for i,v in pairs(ent.SLOTS or {}) do
 							ent:FreeSlot(v)
 							Debug(6, "Slot " .. v .." cleared!");
