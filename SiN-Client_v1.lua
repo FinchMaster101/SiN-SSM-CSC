@@ -1,4 +1,4 @@
-FILE_VERSION = "1.38.p5.7.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.39"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -130,7 +130,44 @@ function RegisterFunctions()
 			end;
 		end;
 	end;
-		
+	function LoadLightOnPlayer(playerName, enable, lightColor, styleId)
+		local e=GetEnt(playerName);
+		if(e)then
+			
+			for i,v in pairs(Light.Properties) do
+				if(e.Properties[i]==nil)then
+				e.Properties[i] = v;
+				end;
+			end;
+				
+			local dir=e:GetBoneDir("Bip01 head")
+			VecRotateMinus90_Z(dir)
+				
+			e._LightTable=Light._LightTable
+			e.Properties.Projector.texture_Texture="textures/lights/flashlight1.dds";
+			e.Properties.Projector.fProjectorFov=60;
+			e.Properties.Options.bCastShadow=1;
+				
+			e.Properties.Radius=25
+			e.Properties.Color=Light.Properties.Color
+				
+			if(lightColor)then
+				e.Properties.Color.clrDiffuse = lightColor
+			end;
+			if(styleId)then
+				e.Properties.Style.nLightStyle = styleId;
+			end;
+				
+			if(not enable)then
+				e:FreeSlot(5);
+			else
+				Light.LoadLightToSlot(e,5);
+				local pos=e:GetBonePos("Bip01 head");
+				pos.z=pos.z+0.3;
+				e:SetSlotWorldTM(5,pos,dir);
+			end;
+		end;
+	end;
 	function SpawnCounter()
 		spawnCounter = (spawnCounter or 0) + 1;
 		return spawnCounter;
@@ -380,6 +417,7 @@ function ReloadEntityScripts()
 	if(not AnimDoor)then Script.ReloadScript("Scripts/Entities/Doors/AnimDoor.lua"); end;
 	if(not Grunt)then Script.ReloadScript("Scripts/Entities/AI/Grunt.lua"); end;
 	if(not BasicAI)then Script.ReloadScript("Scripts/Entities/AI/Shared/BasicAI.lua"); end;
+	if(not Light)then Script.ReloadScript("Scripts/Entities/Lights/Light.lua"); end;
 end;
 
 function PatchEntities()
