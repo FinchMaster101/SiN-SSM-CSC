@@ -1,4 +1,4 @@
-FILE_VERSION = "1.39.p3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.39.p31"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -581,7 +581,7 @@ if(dist2Bcn>2 and self.animTime)then
 		--v.Client.OnUpdate = BasicActor.Client.OnUpdate;
 	end;
 end;
-
+end
 function PatchOther()
 	PatchGameRules(); -- here wo go, extra function for misc scripts.
 end;
