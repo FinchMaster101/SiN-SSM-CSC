@@ -1,4 +1,4 @@
-FILE_VERSION = "1.39.p2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.39.p3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -475,7 +475,76 @@ function PatchGrunt()
 				dir = GetDirectionVector(self:GetWorldPos(), self.lastTarget, true);
 			end;
 			
-			if(dir)then
+
+local dist2Bcn=GetVectorDistance(self:GetWorldPos(),self.lastPos)
+
+if(dist2Bcn>2 and self.animTime)then
+				--Debug("Cirtical Beacon position distance")
+				self.animTime=_time-999
+			end;
+			
+			if(not (self.lastAnimationEvent or self.animTime) or _time-self.lastAnimationEvent>=self.animTime)then
+						
+				local wc = self.inventory:GetCurrentItem();
+				self.currAnim,animCase = "",-1;
+				
+				if(dist2Bcn>0.1)then
+					animCase=0; -- walk
+				end;
+				if(dist2Bcn>0.3)then
+					animCase=1; -- run
+				end;
+				if(dist2Bcn>0.5)then
+					animCase=2; -- sprint
+				end;
+				--Debug("Animation CASE: " .. animCase)
+				
+				if(wc.class=="LAW")then -- special
+					_pref="ROCKET";
+				elseif(wc.class=="SOCOM")then -- special
+					_pref="PISTOL";
+				elseif(wc.class=="Hurricane")then -- special
+					_pref="MG";
+				else
+					_pref="RIFLE";
+				end;
+				local isLastEvent,isFirst=false,false
+				--Debug(isLastEvent)
+				--Debug(isFirst)
+					if(animCase==0)then
+						if(isLastEvent)then
+							--ai.currAnim="_COMBAT_WALK2IDLE_".._pref.."_01"
+						elseif(isFirst)then
+							--ai.currAnim="_COMBAT_IDLE2WALK_".._pref.."_01";
+						else
+							self.currAnim="_COMBAT_WALKSTRAFE_".._pref.."_01";
+						end;
+					elseif(animCase==1)then
+						if(isLastEvent)then
+							--ai.currAnim="_COMBAT_RUN2IDLE_".._pref.."_01"
+						elseif(isFirst)then
+							--ai.currAnim="_COMBAT_IDLE2RUN_".._pref.."_01";
+						else
+							self.currAnim="_COMBAT_RUNSTRAFE_".._pref.."_01";
+						end;
+					elseif(animCase==2)then
+						if(isLastEvent)then
+							--ai.currAnim="_COMBAT_RUN2IDLE_".._pref.."_01"
+						elseif(isFirst)then
+							--ai.currAnim="_COMBAT_IDLE2RUN_".._pref.."_01";
+						else
+							self.currAnim="_COMBAT_SPRINTSTRAFE_".._pref.."_01";
+						end;
+					end;
+						SiN:OnEvent(self:GetName(),"Anim",self.currAnim)	
+				self.animTime=self:GetAnimationLength(0,self.currAnim) * 1000.0;
+							
+				--ExecuteOnAll("SiN:OnEvent(\""..ai:GetName().."\",\"Anim\",\""..ai.currAnim.."\")");
+				self.lastAnimationEvent=_time
+
+
+--[[
+			--if(dir)then
 				self:SetWorldAngles(dir);
 				if(not self.actor:IsFlying() and (not self.animLng or (self.animLng and _time - self.animLng >= 0)))then
 					local anims_f = {"_COMBAT_RUNSTRAFE_RIFLE_01"};
@@ -495,9 +564,11 @@ function PatchGrunt()
 					
 					Debug(20, "Grunt " .. self:GetName() .. " is playing animation: " .. anim .. " time: " .. self.animLng .. " dist: " .. GetVectorDistance(self:GetWorldPos(), self.lastPos))
 				end;
-			else
-				Debug(21, "Grunt " .. self:GetName() .. " cant get direction vector!! " .. GetVectorDistance(self:GetWorldPos(),self.lastPos));
-			end;
+			--else
+				--Debug(21, "Grunt " .. self:GetName() .. " cant get direction vector!! " .. GetVectorDistance(self:GetWorldPos(),self.lastPos));
+			--end;
+
+--]]
 			
 		end;
 		
