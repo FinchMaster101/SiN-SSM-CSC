@@ -1,4 +1,4 @@
-FILE_VERSION = "1.39.p1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.39.p2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1837,8 +1837,10 @@ end);
 			["OffHand"] = true;
 		};
 for i,v in ipairs(System.GetEntitiesByClass('Player')or{}) do
-Grunt.Client.UpdateGrunt(v,System.GetFrameTime())
-end
+if(not v.actor:IsPlayer())then
+Grunt.Client.UpdateGrunt(v,System.GetFrameTime());
+end;
+end;
 		Debug(21,"TableSize: " .. tostring(SOUND_REGISTERED_WEAPONS))
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
