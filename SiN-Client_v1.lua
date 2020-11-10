@@ -1,4 +1,4 @@
-FILE_VERSION = "1.39"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.39.p1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -501,7 +501,7 @@ function PatchGrunt()
 			
 		end;
 		
-		Debug(21, "Grunt " .. self:GetName() .. ":OnUpdate("..frameTime..")")
+		Debug(51, "Grunt " .. self:GetName() .. ":OnUpdate("..frameTime..")")
 		
 		self.lastPos = self:GetWorldPos();
 	end;
@@ -1535,7 +1535,7 @@ function PatchPlayer()
 			OLD.player_onUpdate(self,dt)
 		end;
 		if(UNINSTALLED)then return; end;
-		Grunt.Client.UpdateGrunt(self,dt)
+		--Grunt.Client.UpdateGrunt(self,dt)
 		if(self.loopAnim)then
 			self.lastLoopAnimTime = self.lastLoopAnimTime or _time - self.loopAnim.time;
 			if(_time - self.lastLoopAnimTime >= self.loopAnim)then
@@ -1836,6 +1836,9 @@ end);
 			["Fists"] = true;
 			["OffHand"] = true;
 		};
+for i,v in ipairs(System.GetEntitiesByClass('Player')or{}) do
+Grunt.Client.UpdateGrunt(v,System.GetFrameTime())
+end
 		Debug(21,"TableSize: " .. tostring(SOUND_REGISTERED_WEAPONS))
 		for i,v in pairs(SOUND_REGISTERED_WEAPONS or{})do
 			w = System.GetEntity(i);
