@@ -1,4 +1,4 @@
-FILE_VERSION = "1.39.p31"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -429,9 +429,17 @@ function PatchEntities()
 	PatchDoor();
 	PatchGrunt();
 	PatchBA();
+	PatchTurrets()
 	-- PatchGameRules(); -- it's not an entity, is it? :D. so it deserves its own function!
 end;
 
+function PatchTurrets()
+	local Turret = _G["AutoTurret"];
+	Turret.Properties.objModel="objects/weapons/multiplayer/air_unit_radar.cgf";
+	Turret.Properties.objBarrel="objects/weapons/multiplayer/ground_unit_gun.cgf";
+	Turret.Properties.objBase="objects/weapons/multiplayer/ground_unit_mount.cgf";
+	Turret.Properties.objDestroyed="objects/weapons/multiplayer/air_unit_destroyed.cgf";
+end;
 function PatchBA()
 	function BasicAI.Client.OnUpdate(self, frameTime)
 		if(OLD and OLD.basicActor_onUpdate)then
