@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -793,7 +793,7 @@ function PatchGUI()
 		bStatic = tonumber(bStatic)or 0;
 		vDist = tonumber(vDist)or 50;
 		local t=(modelName or "NULL.NULL"):sub(-4);
-		if(t==".cga" or t==".cgf")then 
+		if(t==".cga" or t==".cgf" or t==".chr" or t==".cdf")then 
 			model=modelName;
 			--if(model:sub(8):lower()~="objects/")then -- BAD idea
 			--	model = "objects/"..model
