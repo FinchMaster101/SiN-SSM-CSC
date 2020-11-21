@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -418,6 +418,16 @@ function ReloadEntityScripts()
 	if(not Grunt)then Script.ReloadScript("Scripts/Entities/AI/Grunt.lua"); end;
 	if(not BasicAI)then Script.ReloadScript("Scripts/Entities/AI/Shared/BasicAI.lua"); end;
 	if(not Light)then Script.ReloadScript("Scripts/Entities/Lights/Light.lua"); end;
+	if(not Boid)then Script.ReloadScript("Scripts/Entities/Boids/Boid.lua"); end;
+
+	if(not Chickens)then Script.ReloadScript("Scripts/Entities/Boids/Chickens.lua"); end;
+	if(not Birds)then Script.ReloadScript("Scripts/Entities/Boids/Birds.lua"); end;
+	if(not Bugs)then Script.ReloadScript("Scripts/Entities/Boids/Bugs.lua"); end;
+	if(not Crabs)then Script.ReloadScript("Scripts/Entities/Boids/Crabs.lua"); end;
+	if(not Fish)then Script.ReloadScript("Scripts/Entities/Boids/Fish.lua"); end;
+	if(not Frogs)then Script.ReloadScript("Scripts/Entities/Boids/Frogs.lua"); end;
+	if(not Plover)then Script.ReloadScript("Scripts/Entities/Boids/Plover.lua"); end;
+	if(not Turtles)then Script.ReloadScript("Scripts/Entities/Boids/Turtles.lua"); end;
 end;
 
 function PatchEntities()
@@ -429,10 +439,14 @@ function PatchEntities()
 	PatchDoor();
 	PatchGrunt();
 	PatchBA();
-	PatchTurrets()
+	PatchTurrets();
+	PatchBoids();
 	-- PatchGameRules(); -- it's not an entity, is it? :D. so it deserves its own function!
 end;
 
+function PatchBoids()
+	 -- ...
+end;
 function PatchTurrets()
 	local Turret = _G["AutoTurret"];
 	Turret.Properties.objModel="objects/weapons/multiplayer/air_unit_radar.cgf";
