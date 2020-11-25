@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.95"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.96"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 UNINSTALLED = false; -- and this one too.
 
@@ -1314,21 +1314,87 @@ function PatchCAP()
 
 	end;
 
+
+
+	CustomAmmoPickup.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickup.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickup.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	
+	CustomAmmoPickupSmall.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupSmall.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupSmall.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	
+	CustomAmmoPickupMedium.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupMedium.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupMedium.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	
+	CustomAmmoPickupLarge.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupLarge.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupLarge.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+
 	-------------------------
 
 	function UpdateCAP() -- dunno if i should move this to OnUpdate :s -- probably not
 
-		for i,v in ipairs(System.GetEntitiesByClass("CustomAmmoPickup") or {}) do
+		--for i,v in ipairs(System.GetEntitiesByClass("CustomAmmoPickup") or {}) do
 
-			if(not v.synced)then
+		--	if(not v.synced)then
 
-				SyncNameParams(v)
+		--		SyncNameParams(v)
 
-				v.synced = true;
+		--		v.synced = true;
 
-			end;
+		--	end;
 
-		end;
+		--end;
 
 	end;
 
