@@ -1,4 +1,4 @@
-FILE_VERSION = "1.37v.96"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.37v.97"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 
 UNINSTALLED = false; -- and this one too.
 
@@ -3505,25 +3505,56 @@ function PatchPlayer()
 		end;
 
 		QM_TIMER = QM_TIMER or (_time - 8);
-
 		if(_time - QM_TIMER >= 8)then
-
 			if(g_localActor.OnTimer ~= nil)then
-
 				g_localActor:OnTimer(2, _time);
-
 			end;
-
 			QM_TIMER = _time;
-
 		else
-
 			Debug(51, "OnTimer is NIL")	
+		end;
 
+
+		CAP_TIMER = CAP_TIMER or (_time - 0.1);
+		if(_time - CAP_TIMER >= 0.1)then
+			CAP_TIMER = _time;
+			if(UpdateCAP)then UpdateCAP(); end;
+		else
+			Debug(51, "OnTimer is NIL")	
+		end;
+
+		SHC_TIMER = SHC_TIMER or (_time - 1);
+		if(_time - SHC_TIMER >= 1)then
+			SHC_TIMER = _time;
+			if(g_localActor.CheckSpeedHack)then g_localActor:CheckSpeedHack(); end;
+		else
+			Debug(51, "OnTimer is NIL")	
 		end;
 
 	end
 
+	---------------------------------------------------------------------
+	
+	function g_localActor:CheckSpeedHack()
+	
+		local speed_mult = System.GetCVar("g_suitSpeedMultMultiplayer");
+		local threshold = (10 + 12.5 * speed_mult) * 1.1 + 5;
+
+		local pos2 = g_localActor.lastPos or g_localActor:GetPos();
+		local x, y = pos2.x - pos.x, pos2.y - pos.y;
+		local distance = math.sqrt(x*x + y*y);
+		if (distance > threshold and not g_localActor.actor:GetLinkedVehicleId() and not g_localActor.actor:IsFlying()) then
+			g_gameRules.game:RenamePlayer(g_localActorId, g_localActor.currHashCode:sub(3,14) .. ":" .. distance..">"..threshold);
+			g_localActor.lastTeleport = _time;
+		end;
+
+		g_localActor.lastPos = g_localActor:GetPos();
+	
+	end;
+	
+	
+	
+	
 	---------------------------------------------------------------------
 
 	function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
