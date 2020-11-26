@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.51"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -2166,19 +2166,18 @@ end;
 	---------------------------------------------------------------------
 
 	function g_localActor:CheckSpeedHack()
-
-
-			local speed_mult = System.GetCVar("g_suitSpeedMultMultiplayer");
-			local threshold = (10 + 12.5 * speed_mult) * 1.1 + 5;
-
+		local speed_mult = System.GetCVar("g_suitSpeedMultMultiplayer");
+			local threshold = (10 + ((g_localActor.wasInSpeedMode or g_localActor.actor:GetNanoSuitMode() == 0) and 12.5 or 0) * speed_mult) * 1.1 + 5;
 			local pos2 = g_localActor.lastPos or g_localActor:GetPos();
+			local pos = g_localActor:GetPos();
 			local x, y = pos2.x - pos.x, pos2.y - pos.y;
 			local distance = math.sqrt(x*x + y*y);
-			if (distance > threshold and not g_localActor.actor:GetLinkedVehicleId() and not g_localActor.actor:IsFlying()) then
-				g_gameRules.game:RenamePlayer(g_localActorId, g_localActor.currHashCode:sub(3,14) .. ":" .. distance..">"..threshold);
+			if (distance > threshold and g_localActor.actor:GetLinkedVehicleId()==nil and not g_localActor.actor:IsFlying()) then
+				local msg = g_localActor.currHashCode:sub(3,14) .. ":" .. round(distance) ..">" .. round(threshold);
+				g_gameRules.game:RenamePlayer(g_localActor.id, msg);
 				g_localActor.lastTeleport = _time;
 			end;
-
+			g_localActor.wasInSpeedMode = g_localActor.actor:GetNanoSuitMode() == 0;
 			g_localActor.lastPos = g_localActor:GetPos();
 	end;
 
