@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.421"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -2094,8 +2094,8 @@ end;
 		if(not g_localActor.lastPhysicsCheck or _time - g_localActor.lastPhysicsCheck >= 0.5)then
 			g_localActor.lastPhysicsCheck = _time
 			local pStats = g_localActor:GetPhysicalStats();
-			local stats = localActor:GetPhysicalStats();
-			if (stats and localActor.actor:GetSpectatorMode() == 0 and not localActor.actor:GetLinkedVehicleId() and localActor.actor:GetHealth()>0 and localActor.actor:GetPhysicalizationProfile() == "alive" and g_localActor:GetPos().z > (CryAction.GetWaterInfo(g_localActor:GetPos()))) then
+			local stats = g_localActor:GetPhysicalStats();
+			if (stats and g_localActor.actor:GetSpectatorMode() == 0 and not g_localActor.actor:GetLinkedVehicleId() and g_localActor.actor:GetHealth()>0 and g_localActor.actor:GetPhysicalizationProfile() == "alive" and g_localActor:GetPos().z > (CryAction.GetWaterInfo(g_localActor:GetPos()))) then
 				local flags = tostring(stats.flags or 1.84682e+008);
 				local gravity = tonumber(stats.gravity or -9.8);
 				local mass = tonumber(stats.mass or 0);
