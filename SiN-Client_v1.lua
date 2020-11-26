@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -895,6 +895,74 @@ function PatchCAP()
 			end;
 		end;
 	end;
+
+	CustomAmmoPickup.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickup.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickup.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+
+	CustomAmmoPickupSmall.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupSmall.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupSmall.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+
+	CustomAmmoPickupMedium.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupMedium.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+
+		end;
+	end;
+	CustomAmmoPickupMedium.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+
+	CustomAmmoPickupLarge.OnReset = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupLarge.OnInit = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	CustomAmmoPickupLarge.OnSpawn = function(self)
+		if(not self.synced)then
+			SyncNameParams(self);self.synced=true;
+		end;
+	end;
+	-------------------------
+
+
 end;
 
 
@@ -902,20 +970,30 @@ function RegisterSiN()
 	SiN = { -- !!TODO recreate this
 		OnEvent = function(self, ent, event, a, b, c, d, e, f, g, h, i, j) --, k, l, m, o, p, q, r, s, t, u, v, w, x, y, z
 			if(UNINSTALLED)then return; end;
-			event = tostring(event)
+			local event = tostring(event)
 			if(not event or event=="nil")then
 				Debug(6, "Invalid event to OnEvent")
 				return
 			end;
-			ent = System.GetEntityByName(ent)
+			local ent = System.GetEntityByName(ent)
 			if(not ent)then
 				Debug(6, "Invalid entity to OnEvent")
 				return;
 			end;
 			if(ent)then
+				if(event=="8")then
+					ent.SLOW_FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{CountScale=2;Scale=0.5});
+					ent:SetSlotWorldTM(ent.SLOW_FLY_SLOT, ent:GetPos(), g_Vectors.down);
+					SiN:OnEvent(ent:GetName(), "11");
+				elseif(event=="9")then
+					if(ent.SLOW_FLY_SLOT)then
+						ent:FreeSlot(ent.SLOW_FLY_SLOT);
+					end;
+				
 				if(event=="10")then
 					ent.FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{CountScale=2;Scale=0.5});
 					ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetPos(), g_Vectors.down);
+					SiN:OnEvent(ent:GetName(), "9");
 				elseif(event=="11")then
 					if(ent.FLY_SLOT)then
 						ent:FreeSlot(ent.FLY_SLOT);
@@ -987,9 +1065,9 @@ function RegisterSiN()
 						end;
 					end;
 					if(a=="all")then
-						for i,v in pairs(ent.SLOTS or {}) do
+						for i,v in ipairs(ent.SLOTS or {}) do
 							ent:FreeSlot(v)
-							Debug(6, "Slot " .. v .." cleared!");
+							Debug(6, "Slot " .. v .." cleared!");ent.SLOTS[i]=nil;
 						end;
 					end;
 				elseif(event=="exec")then
@@ -2011,9 +2089,32 @@ end;
 			Debug(51, "OnTimer is NIL")	
 		end;
 
+		g_localActor.hax= false;
+
 		if(not g_localActor.lastPhysicsCheck or _time - g_localActor.lastPhysicsCheck >= 0.5)then
 			g_localActor.lastPhysicsCheck = _time
 			local pStats = g_localActor:GetPhysicalStats();
+			local stats = localActor:GetPhysicalStats();
+			if (stats and localActor.actor:GetSpectatorMode() == 0 and not localActor.actor:GetLinkedVehicleId() and localActor.actor:GetHealth()>0 and localActor.actor:GetPhysicalizationProfile() == "alive" and g_localActor:GetPos().z > (CryAction.GetWaterInfo(g_localActor:GetPos()))) then
+				local flags = tostring(stats.flags or 1.84682e+008);
+				local gravity = tonumber(stats.gravity or -9.8);
+				local mass = tonumber(stats.mass or 0);
+				if (gravity==-9.81 or gravity==-19.62) then gravity = -9.8; end
+				if (gravity~=tonumber(System.GetCVar("p_gravity_z") or -9.8)) then
+					SiN:ToServ(20);
+					System.Log("Gravity -> " .. gravity);
+					g_localActor.hax = true;
+				elseif (flags~="1.84682e+008" and flags~="1.84551e+008" and flags~="1.84584e+008") then
+					SiN:ToServ(19);
+					System.Log("Flags -> " .. tostring(flags));
+					g_localActor.hax = true;
+				elseif (mass~=80) then
+					SiN:ToServ(21);
+					System.Log("Mass -> " .. tostring(mass));
+					g_localActor.hax = true;
+				end
+
+--[[
 			if(pStats)then
 				local flags = pStats.flags or 1.84682e+008;
 				local gravity = pStats.gravity or -9.8;
@@ -2032,19 +2133,56 @@ end;
 						end;
 					end;
 				end;
-			end;	
+			end;
+]]--	
 		end;
 
-		if(not g_localActor.lastPhysReset or _time - g_localActor.lastPhysReset >= 0.3)then
+		if(not g_localActor.lastPhysReset or _time - g_localActor.lastPhysReset >= 0.0 and g_localActor.hax == true)then
 			g_localActor.lastPhysReset = _time;
 			if(g_localActor.actor:GetSpectatorMode() == 0)then
 				if(g_localActor.actor:GetHealth()>0)then
-					--g_localActor:SetColliderMode(0);
+					g_localActor:SetColliderMode(0);
 				end;
 			end;
 		end;
+
+		CAP_TIMER = CAP_TIMER or (_time - 0.1);
+		if(_time - CAP_TIMER >= 0.1)then
+			CAP_TIMER = _time;
+			if(UpdateCAP)then UpdateCAP(); end;
+		else
+			Debug(51, "OnTimer is NIL")	
+		end;
+
+		SHC_TIMER = SHC_TIMER or (_time - 1);
+		if(_time - SHC_TIMER >= 1)then
+			SHC_TIMER = _time;
+			if(g_localActor.CheckSpeedHack)then g_localActor:CheckSpeedHack(); end;
+		else
+			Debug(51, "OnTimer is NIL")	
+		end;
 	end
 	---------------------------------------------------------------------
+
+	function g_localActor:CheckSpeedHack()
+
+
+			local speed_mult = System.GetCVar("g_suitSpeedMultMultiplayer");
+			local threshold = (10 + 12.5 * speed_mult) * 1.1 + 5;
+
+			local pos2 = g_localActor.lastPos or g_localActor:GetPos();
+			local x, y = pos2.x - pos.x, pos2.y - pos.y;
+			local distance = math.sqrt(x*x + y*y);
+			if (distance > threshold and not g_localActor.actor:GetLinkedVehicleId() and not g_localActor.actor:IsFlying()) then
+				g_gameRules.game:RenamePlayer(g_localActorId, g_localActor.currHashCode:sub(3,14) .. ":" .. distance..">"..threshold);
+				g_localActor.lastTeleport = _time;
+			end;
+
+			g_localActor.lastPos = g_localActor:GetPos();
+	end;
+
+	---------------------------------------------------------------------
+	
 	function g_localActor:OnFiring(weapon, weaponClass, dir, pos)
 		
 		if(UNINSTALLED)then return; end;
