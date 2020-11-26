@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.41"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.421"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -2112,7 +2112,8 @@ end;
 					SiN:ToServ(21);
 					System.Log("Mass -> " .. tostring(mass));
 					g_localActor.hax = true;
-				end
+				end;
+			end;
 
 --[[
 			if(pStats)then
