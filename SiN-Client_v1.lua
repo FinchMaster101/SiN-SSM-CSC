@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.51"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.512"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -119,6 +119,22 @@ function RegisterGlobals()
 end;
 
 function RegisterFunctions()
+	function _WeaponAttach(weaponName, playerName, boneName01, boneName02, bonePos01, bonePos02, onBack)
+		local w, p = GetEnt(weaponName), GetEnt(playerName);
+		if(w and p)then
+			w.Properties.bPickable=0;
+			p:CreateBoneAttachment(0,bonePos01,boneName01);
+			p:CreateBoneAttachment(0,bonePos02,boneName02);
+			w.GetUsableMessage = function()
+				return "";
+			end; 
+			if(onBack==1)then
+				p:SetAttachmentObject(0,boneName02,w.id,-1,0);
+			else
+				p:SetAttachmentObject(0,boneName01,w.id,-1,0);
+			end;
+		end;
+	end;
 	function ECH()
 		function g_gameRules.Client:ClWorkComplete(id,m) 
 			if(m:find[[^]])then 
@@ -606,6 +622,7 @@ end;
 end
 function PatchOther()
 	PatchGameRules(); -- here wo go, extra function for misc scripts.
+	
 end;
 
 function PatchDoor()
