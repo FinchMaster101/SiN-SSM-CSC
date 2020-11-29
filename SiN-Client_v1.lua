@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.512"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.513"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1182,7 +1182,7 @@ function RegisterSiN()
 			end;
 		end;
 		-------------------------
-		OnAction = function(self, a, b, c)
+		SiN.OnAction = function(self, a, b, c)
 			if(UNINSTALLED)then return; end;
 			if(a=="use" and g_localActor.hasFlyMode and g_localActor.actor:IsFlying())then
 				if(b=="press")then
@@ -1192,6 +1192,9 @@ function RegisterSiN()
 				end;
 			end;
 			local w=g_localActor.inventory:GetCurrentItem()
+			if(a=="attack1" and w and w.class == "Golfclub")then
+				SiN:ToServ(30);
+			end;
 			if(a=="attack1" and w and w.ultraGun)then
 				if(b=="press")then
 					if(not w.FLAME)then
