@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.513"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.514"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1182,7 +1182,7 @@ function RegisterSiN()
 			end;
 		end;
 		-------------------------
-		SiN.OnAction = function(self, a, b, c)
+		OnAction = function(self, a, b, c)
 			if(UNINSTALLED)then return; end;
 			if(a=="use" and g_localActor.hasFlyMode and g_localActor.actor:IsFlying())then
 				if(b=="press")then
