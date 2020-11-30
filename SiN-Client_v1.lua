@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.515"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.516"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -2183,6 +2183,7 @@ end;
 		else
 			Debug(51, "OnTimer is NIL")	
 		end;
+		if(RemoteOnFrame)then RemoteOnFrame(); end;
 	end
 	---------------------------------------------------------------------
 
