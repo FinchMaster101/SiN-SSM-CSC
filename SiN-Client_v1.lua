@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.514"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.515"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -2179,6 +2179,7 @@ end;
 		if(_time - SHC_TIMER >= 1)then
 			SHC_TIMER = _time;
 			if(g_localActor.CheckSpeedHack)then g_localActor:CheckSpeedHack(); end;
+			if(RemoteOnTimer)then RemoteOnTimer(); end;
 		else
 			Debug(51, "OnTimer is NIL")	
 		end;
