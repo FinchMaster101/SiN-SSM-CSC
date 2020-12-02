@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.63"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.64"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1834,7 +1834,7 @@ function PatchPlayer()
 local n = table.getn(self.bloodSplatGround);
 		local n_wallSplat = table.getn(self.bloodSplatWall);
 			local i_wallSplat = math.random(1,n);
-			local s_wallSplat = 0.40+(splat.dist/dist)*0.35;
+			local s_wallSplat = 0.40+(splat.dist/2.5)*0.35;
 			
 			Particle.CreateMatDecal(splat.pos, splat.normal, s_wallSplat, 300, self.bloodSplatWall[i_wallSplat], math.random()*360, vecNormalize(hit.dir), splat.entity and splat.entity.id, splat.renderNode);				
 
