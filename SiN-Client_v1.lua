@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.516"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1830,7 +1830,7 @@ function PatchPlayer()
 			local splat = g_HitTable[1];
 			if (hits > 0 and splat and ((splat.dist or 0)<1.5)) then
 				if splat.entity and splat.entity.actor then return end
-				local a = Particle.CreateMatDecal(splat.pos, splat.normal, math.random(0,8,1.3), 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil, 0, false);
+				local a = Particle.CreateMatDecal(splat.pos, splat.normal, math.random(0,8,1.3), 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, splat.dir, nil, nil);
 				Debug(7, "Creating WallSplat particle")
 			else
 				Debug(7, "Cannot create WallSplat, hits<0 or splat.dist>1.5 ("..(splat and splat.dist or 0.0)..")")	
