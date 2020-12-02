@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.64"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.65"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1143,6 +1143,7 @@ function RegisterSiN()
 				local i = player.lastHitInfo;
 				if(i)then
 					player:AddImpulse(i.part, i.pos, i.dir, math.min(1000,i.dmg*30), 1);
+					player:DoBloodPool();
 				end;
 			end;
 		end;
@@ -1826,7 +1827,7 @@ function PatchPlayer()
 
 		if(hit.target and hit.shooter and hit.weapon and hit.weapon.class~="Fists")then
 			local dir = vecScale(GNV(hit.dir), 2);
-			local hits = Physics.RayWorldIntersection(hit.pos,dir,2,-1,hit.targetId,nil,g_HitTable);
+			local hits = Physics.RayWorldIntersection(hit.pos,dir,2,ent_all,hit.targetId,nil,g_HitTable);
 			local splat = g_HitTable[1];
 			if (hits > 0 and splat and ((splat.dist or 0)<1.5)) then
 				if splat.entity and splat.entity.actor then return end
@@ -1836,7 +1837,7 @@ local n = table.getn(self.bloodSplatGround);
 			local i_wallSplat = math.random(1,n);
 			local s_wallSplat = 0.40+(splat.dist/2.5)*0.35;
 			
-			Particle.CreateMatDecal(splat.pos, splat.normal, s_wallSplat, 300, self.bloodSplatWall[i_wallSplat], math.random()*360, vecNormalize(hit.dir), splat.entity and splat.entity.id, splat.renderNode);				
+			Particle.CreateMatDecal(splat.pos, splat.normal, s_wallSplat, 300, hit.target.bloodSplatWall[math.random(#hit.target.bloodSplatWall)], math.random()*360, vecNormalize(hit.dir), splat.entity and splat.entity.id, splat.renderNode);				
 
 				Debug(7, "Creating WallSplat particle")
 			else
