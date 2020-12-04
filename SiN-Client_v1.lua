@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.7.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.7.21"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1298,7 +1298,7 @@ function RegisterConsoleCommands()
 	---------------------------------------------------------------------
 	System.AddCCommand("bdrp", "RequestDrop(1)", "");
 	---------------------------------------------------------------------
-	System.AddCCommand("sin_fireTire", "RequestFireTires()", "");
+	System.AddCCommand("sin_fireTires", "RequestFireTires()", "");
 	---------------------------------------------------------------------
 	System.AddCCommand("hdrp", "RequestDrop(2)", "");
 	---------------------------------------------------------------------
