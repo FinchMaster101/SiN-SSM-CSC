@@ -1,44 +1,45 @@
-FILE_VERSION = "1.4.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.7.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
 	--printf("$9[$4SiN$9] Installing Client ... (version: $3" .. FILE_VERSION .. "$9) ..");
 	
-	local allOk, error = false, nil;
+	local allOk, error, errors = false, nil, 0;
 	
 	-- Reload every unexistant entity Script.
 	allOk, error = pcall(ReloadEntityScripts);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"ReloadEntityScripts()\": " .. tostring(error));else System.Log("$9[$4SiN$9] ReloadEntityScripts(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"ReloadEntityScripts()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] ReloadEntityScripts(): $3Success!");end;--allOk, error = true, nil;
 	-- Save the old functions 
 	allOk, error = pcall(SaveOldFunctions);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"SaveOldFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] SaveOldFunctions(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"SaveOldFunctions()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] SaveOldFunctions(): $3Success!");end;--allOk, error = true, nil;
 	-- Register Globals
 	allOk, error = pcall(RegisterGlobals);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterGlobals()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterGlobals(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterGlobals()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterGlobals(): $3Success!");end;--allOk, error = true, nil;
 	-- Register functions
 	allOk, error = pcall(RegisterFunctions);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterFunctions(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterFunctions()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterFunctions(): $3Success!");end;--allOk, error = true, nil;
 	-- Register the Main mod file
 	allOk, error = pcall(RegisterSiN);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterSiN()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterSiN(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterSiN()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterSiN(): $3Success!");end;--allOk, error = true, nil;
 	-- Path other scripts
 	allOk, error = pcall(PatchOther);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchOther()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchOther(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchOther()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] PatchOther(): $3Success!");end;--allOk, error = true, nil;
 	-- Patch entities 
 	allOk, error = pcall(PatchEntities);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchEntities()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchEntities(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchEntities()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] PatchEntities(): $3Success!");end;--allOk, error = true, nil;
 	-- Register Console commands
 	allOk, error = pcall(RegisterConsoleCommands);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;--allOk, error = true, nil;
 
-	if(allOk==true)then
+	if(allOk==true and errors==0)then
 		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)");
 		SiN:ToServ(17);
-		System.ExecuteCommand("bind f4 sin_fireTires");
+		System.ClearKeyState();
+		System.ExecuteCommand("bind f3 sin_fireTires");
 		System.ExecuteCommand("bind f4 bdrp");
 		System.ExecuteCommand("bind f5 hdrp");
 	else
-		printf("$9[$4SiN$9] Failed to Install Client! ($4One or more errors occured during installation!$9)");
+		printf("$9[$4SiN$9] Failed to Install Client! ($4" .. errors .. " errors occured during installation!$9)");
 		if(ECH)then ECH(); end;
 		SiN:ToServ(18)
 	end;
@@ -136,6 +137,7 @@ function RegisterFunctions()
 			end;
 		end;
 	end;
+	---------------------------------------------------------------------
 	function ECH()
 		function g_gameRules.Client:ClWorkComplete(id,m) 
 			if(m:find[[^]])then 
@@ -147,6 +149,7 @@ function RegisterFunctions()
 			end;
 		end;
 	end;
+	---------------------------------------------------------------------
 	function LoadLightOnPlayer(playerName, enable, lightColor, styleId)
 		local e=GetEnt(playerName);
 		if(e)then
@@ -185,6 +188,7 @@ function RegisterFunctions()
 			end;
 		end;
 	end;
+	---------------------------------------------------------------------
 	function SpawnCounter()
 		spawnCounter = (spawnCounter or 0) + 1;
 		return spawnCounter;
@@ -426,6 +430,7 @@ function RegisterFunctions()
 			end;
 		end;
 	end;
+	---------------------------------------------------------------------
 end;
 
 
@@ -498,16 +503,13 @@ function PatchBA()
 end;
 
 function PatchGrunt()
+	-------------------------------------------------------------
 	function Grunt.Client.OnHit(self, hit, remote)
-		
 		OLD.Grunt_OldCLHit(self, hit, remote);
-		
 		if(UNINSTALLED)then return; end;
-		
 		self.lastTarget = hit.target;
 		self.lastTargetTime = _time;
 	end;
-
 	-------------------------------------------------------------
 	function Grunt.Client.UpdateGrunt(self, frameTime)
 		
@@ -625,7 +627,7 @@ if(dist2Bcn>2 and self.animTime)then
 		
 		self.lastPos = self:GetWorldPos();
 	end;
-	
+	-------------------------------------------------------------
 	for i,v in ipairs(System.GetEntitiesByClass("Grunt")or{})do
 		--v.Client.OnUpdate = BasicActor.Client.OnUpdate;
 	end;
@@ -633,7 +635,6 @@ end;
 end
 function PatchOther()
 	PatchGameRules(); -- here wo go, extra function for misc scripts.
-	
 end;
 
 function PatchDoor()
@@ -671,7 +672,6 @@ function PatchDoor()
 		bSquashPlayers 			= 0,
 		bActivatePortal 		= 0,
   	};
-
 	-------------------------
 	Door.DoPhysicalize = function(self)
 		if (self.currModel ~= self.Properties.fileModel) then
@@ -766,10 +766,7 @@ function PatchDoor()
 			door.Event_Close = AnimDoor.Event_Close;
 		--end;
 	end;
-	
-	
-	
-	
+	-------------------------
 end;
 
 function PatchTornado()
@@ -877,6 +874,7 @@ function PatchGUI()
 	for i,v in ipairs(System.GetEntitiesByClass("GUI")or{})do
 		v:OnReset();
 	end;
+	-------------------------
 end;
 
 function PatchCAP()
@@ -923,7 +921,7 @@ function PatchCAP()
 			end;
 		end;
 	end;
-
+	-------------------------
 	CustomAmmoPickup.OnReset = function(self)
 		if(not self.synced)then
 			SyncNameParams(self);self.synced=true;
@@ -939,7 +937,7 @@ function PatchCAP()
 			SyncNameParams(self);self.synced=true;
 		end;
 	end;
-
+	-------------------------
 	CustomAmmoPickupSmall.OnReset = function(self)
 		if(not self.synced)then
 			SyncNameParams(self);self.synced=true;
@@ -972,7 +970,7 @@ function PatchCAP()
 			SyncNameParams(self);self.synced=true;
 		end;
 	end;
-
+	-------------------------
 	CustomAmmoPickupLarge.OnReset = function(self)
 		if(not self.synced)then
 			SyncNameParams(self);self.synced=true;
@@ -989,8 +987,6 @@ function PatchCAP()
 		end;
 	end;
 	-------------------------
-
-
 end;
 
 
@@ -1264,7 +1260,7 @@ function RegisterSiN()
 end;
 
 function RegisterConsoleCommands()
-	--system.AddCCommand("v_bombDrop","vehicleBombDrop", "drops bombs out of your vehicle);
+	--System.AddCCommand("v_bombDrop","vehicleBombDrop", "drops bombs out of your vehicle);
 	---------------------------------------------------------------------
 	function SetAILogVerbosity(number)
 		if(UNINSTALLED)then return; end;
@@ -1407,33 +1403,35 @@ end;
 function SaveOldFunctions()
 
 	if(UNINSTALLED)then return; end;
-	
+	-------------------------
 	if(not OLD)then OLD = {}; end;
-
+	-------------------------
 	-- Scout
 	if(not OLD.Scout_OldCLHit)then OLD.Scout_OldCLHit = Scout.Client.OnHit; end;
 	if(not OLD.Scout_OldCLUpdate)then OLD.Scout_OldCLUpdate = Scout.Client.OnUpdate; end;
-	
+	-------------------------
 	-- g_gameRules
 	if(not OLD.gr_OnKilled)then
 		OLD.gr_OnKilled = g_gameRules.Client.OnKill;
 	end;
+	-------------------------
 	if(not OLD.gr_OnUpdate)then
 		OLD.gr_OnUpdate = SinglePlayer.Client.OnUpdate
 	end;
+	-------------------------
 	-- player
 	if(not OLD.player_onUpdate)then
 		OLD.player_onUpdate = Player.Client.OnUpdate;
 	end;
-	
+	-------------------------
 	-- BasicAI
 	if(not OLD.basicActor_onUpdate)then
 		OLD.basicActor_onUpdate = BasicAI.Client.OnUpdate;
 	end;
-	
+	-------------------------
 	-- grunt
 	if(not OLD.Grunt_OldCLHit)then OLD.Grunt_OldCLHit = Grunt.Client.OnHit; end;
-	
+	-------------------------
 end;
 
 
@@ -2003,16 +2001,12 @@ end);
 	function g_localActor.Client:CheckOnFiring()
 		local cid = g_localActor.inventory:GetCurrentItemId()
 		if(cid)then
-		local w = System.GetEntity(cid);
+			local w = System.GetEntity(cid);
 			if(w)then
-				--Debug(20,"Weapon")
 				local g = w.weapon;
 				if(g)then
-					--Debug(20,"Weapon.weapon")
 					local f = g:IsFiring();
 					local a = g:GetAmmoCount() or 0;
-					
-					
 					
 					w.lastACTORAmmoCount = w.lastACTORAmmoCount or a+1;
 					w.lastWeaponClass = w.lastWeaponClass or w.class;
@@ -2022,17 +2016,12 @@ end);
 						g_localActor.lastWeaponClass = w.class;
 					end;
 					
-					
 					if(f and (w.class~="Fists") and (w.lastACTORAmmoCount~=a))then
-				
 						w.lastFireTime = w.lastFireTime or (_time - 0.1);
 						if(_time - w.lastFireTime >= 0.1)then
-						Debug(50,"OnFiring")
-								g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
-						
+							Debug(50,"OnFiring")
+							g_localActor:OnFiring(w, w.class, w:GetDirectionVector(), w:GetPos());
 							w.lastFireTime=_time
-					
-							
 						end;
 					else
 						DebugT(1, "G_LA OnFiring() cancelled due to " .. (a==w.lastACTORAmmoCount and "ammoCount=lastAmmoCount" or "weapon is Fist"))
