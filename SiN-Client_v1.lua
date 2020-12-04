@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.68"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.69"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1070,8 +1070,8 @@ function RegisterSiN()
 								AttachForm=tostring(g or "Surface"),		-- Vertices, Edges, Surface, Volume
 								PulsePeriod=tonumber(h or 0),					-- Restart continually at this period.
 							}
-						end;
-						ent.SLOTS[nextSlot] = ent:LoadParticleEffect( -1, tostring(a or nil), lpeParams);
+						end;if(ent.e_Slot)then ent:FreeSlot(ent.e_Slot);ent.e_Slot=nil;end;
+						ent.particleId = ent:LoadParticleEffect( -1, tostring(a or nil), lpeParams);
 						Debug(6, "OnEvent LPE: Loading Particle Effect " .. a .. " on " .. ent:GetName() .. "")
 						Debug(6, "Next Slot  is " .. nextSlot)
 					end;
@@ -1084,8 +1084,8 @@ function RegisterSiN()
 					if(a=="all")then
 						for i,v in ipairs(ent.SLOTS or {}) do
 							ent:FreeSlot(v)
-							Debug(6, "Slot " .. v .." cleared!");ent.SLOTS[i]=nil;
-						end;
+							Debug(6, "Slot " .. v .." cleared!");
+						end;ent.SLOTS=nil;
 					end;
 				elseif(event=="exec")then
 					local success, error = pcall(loadstring(a));
