@@ -425,7 +425,23 @@ function RegisterFunctions()
 		if(not UNINSTALLED)then
 			if(g_localActor)then
 				if(g_localActor.actor:GetSpectatorMode() == 0 and g_localActor.actor:GetLinkedVehicleId())then
-					-- code implementation ...
+					local vehicle = System.GetEntity(g_localActor.actor:GetLinkedVehicleId());
+					if(not FIRE_TIRES)then
+						FIRE_TIRES = true;
+						SiN:ToServ(35);
+						for i = 1, 100 do
+							Script.SetTimer(i*20, function()
+								HUD.SetProgressBar(true, i, ".: FIRE - " .. (vehicle.vehicle:IsDestroyed() and "WRECK" or "TIRES") .. " :.");
+								if(g_localActor.actor:GetLinkedVehicleId() and g_localActor.actor:GetLinkedVehicleId()==vehicle.id)then
+									vehicle:AddImpulse(-1, vehicle:GetCenterOfMassPos(), vehicle:GetDirectionVector(), i * 10, 1);
+								end;
+							end);
+						end;
+						Script.SetTimer(2300, function()
+							HUD.SetProgressBar(false, 0, "");
+							FIRE_TIRES = false;
+						end);
+					end;
 				end;
 			end;
 		end;
