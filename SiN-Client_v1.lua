@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.69"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -34,8 +34,9 @@ function StartInstalling()
 	if(allOk==true)then
 		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)");
 		SiN:ToServ(17);
-		System.ExecuteCommand("bind f3 bdrp");
-		System.ExecuteCommand("bind f4 hdrp");
+		System.ExecuteCommand("bind f4 sin_fireTires");
+		System.ExecuteCommand("bind f4 bdrp");
+		System.ExecuteCommand("bind f5 hdrp");
 	else
 		printf("$9[$4SiN$9] Failed to Install Client! ($4One or more errors occured during installation!$9)");
 		if(ECH)then ECH(); end;
@@ -416,6 +417,15 @@ function RegisterFunctions()
 		end;
 	end;
 	---------------------------------------------------------------------
+	function RequestFireTires(t)
+		if(not UNINSTALLED)then
+			if(g_localActor)then
+				if(g_localActor.actor:GetSpectatorMode() == 0 and g_localActor.actor:GetLinkedVehicleId())then
+					-- code implementation ...
+				end;
+			end;
+		end;
+	end;
 end;
 
 
@@ -435,6 +445,7 @@ function ReloadEntityScripts()
 	if(not BasicAI)then Script.ReloadScript("Scripts/Entities/AI/Shared/BasicAI.lua"); end;
 	if(not Light)then Script.ReloadScript("Scripts/Entities/Lights/Light.lua"); end;
 	if(not Boid)then Script.ReloadScript("Scripts/Entities/Boids/Boid.lua"); end;
+	if(not SoundSpot)then Script.ReloadScript("Scripts/Entities/Sound/SoundSpot.lua"); end;
 
 	if(not Chickens)then Script.ReloadScript("Scripts/Entities/Boids/Chickens.lua"); end;
 	if(not Birds)then Script.ReloadScript("Scripts/Entities/Boids/Birds.lua"); end;
@@ -1290,6 +1301,8 @@ function RegisterConsoleCommands()
 	System.AddCCommand("sin_reinstall", "StartInstalling()", "re-installs your Client");
 	---------------------------------------------------------------------
 	System.AddCCommand("bdrp", "RequestDrop(1)", "");
+	---------------------------------------------------------------------
+	System.AddCCommand("sin_fireTire", "RequestFireTires()", "");
 	---------------------------------------------------------------------
 	System.AddCCommand("hdrp", "RequestDrop(2)", "");
 	---------------------------------------------------------------------
