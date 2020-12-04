@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.7.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.4.7.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -8,28 +8,28 @@ function StartInstalling()
 	
 	-- Reload every unexistant entity Script.
 	allOk, error = pcall(ReloadEntityScripts);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"ReloadEntityScripts()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] ReloadEntityScripts(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"ReloadEntityScripts()\": " .. tostring(error));else System.Log("$9[$4SiN$9] ReloadEntityScripts(): $3Success!");end;--allOk, error = true, nil;
 	-- Save the old functions 
 	allOk, error = pcall(SaveOldFunctions);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"SaveOldFunctions()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] SaveOldFunctions(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"SaveOldFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] SaveOldFunctions(): $3Success!");end;--allOk, error = true, nil;
 	-- Register Globals
 	allOk, error = pcall(RegisterGlobals);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterGlobals()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterGlobals(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"RegisterGlobals()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterGlobals(): $3Success!");end;--allOk, error = true, nil;
 	-- Register functions
 	allOk, error = pcall(RegisterFunctions);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterFunctions()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterFunctions(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"RegisterFunctions()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterFunctions(): $3Success!");end;--allOk, error = true, nil;
 	-- Register the Main mod file
 	allOk, error = pcall(RegisterSiN);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterSiN()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterSiN(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"RegisterSiN()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterSiN(): $3Success!");end;--allOk, error = true, nil;
 	-- Path other scripts
 	allOk, error = pcall(PatchOther);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchOther()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] PatchOther(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"PatchOther()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchOther(): $3Success!");end;--allOk, error = true, nil;
 	-- Patch entities 
 	allOk, error = pcall(PatchEntities);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"PatchEntities()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] PatchEntities(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"PatchEntities()\": " .. tostring(error));else System.Log("$9[$4SiN$9] PatchEntities(): $3Success!");end;--allOk, error = true, nil;
 	-- Register Console commands
 	allOk, error = pcall(RegisterConsoleCommands);
-	if(not allOk)then printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else errors = errors + 1;System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;--allOk, error = true, nil;
+	if(not allOk)then errors = errors + 1;printf("$9[$4SiN$9] Error Executing \"RegisterConsoleCommands()\": " .. tostring(error));else System.Log("$9[$4SiN$9] RegisterConsoleCommands(): $3Success!");end;--allOk, error = true, nil;
 
 	if(allOk==true and errors==0)then
 		printf("$9[$4SiN$9] Client Successfully Installed! (version: $3"..FILE_VERSION.."$9)");
