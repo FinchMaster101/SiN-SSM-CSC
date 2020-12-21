@@ -1,4 +1,4 @@
-FILE_VERSION = "1.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.5.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -48,6 +48,26 @@ end;
 
 function RegisterGlobals()
 	LOG_VERBOSITY = LOG_VERBOSITY or 0;
+	---------------------------------------------------------------------
+	if(not PL_MODE)then 
+		PL_MODE = 0;
+	end;
+	---------------------------------------------------------------------
+	if(not FLY_MODE_EFFECT)then 
+		FLY_MODE_EFFECT = "smoke_and_fire.Vehicle_fires.burning_jet";
+	end;
+	---------------------------------------------------------------------
+	if(not FLY_MODE_PULSE)then 
+		FLY_MODE_PULSE = 0;
+	end;
+	---------------------------------------------------------------------
+	if(not SLOW_FLY_MODE_EFFECT)then 
+		SLOW_FLY_MODE_EFFECT = "explosions.jet_explosion.burning";
+	end;
+	---------------------------------------------------------------------
+	if(not SLOW_FLY_MODE_PULSE)then 
+		SLOW_FLY_MODE_PULSE = 0;
+	end;
 	---------------------------------------------------------------------
 	if(not PL_MODE)then 
 		PL_MODE = 0;
@@ -1022,7 +1042,7 @@ function RegisterSiN()
 			end;
 			if(ent)then
 				if(event=="8")then
-					ent.SLOW_FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{CountScale=2;Scale=0.5});
+					ent.SLOW_FLY_SLOT = ent:LoadParticleEffect(-1,SLOW_FLY_MODE_EFFECT,{CountScale=2;Scale=0.5;PulsePeriod=SLOW_FLY_MODE_PULSE});
 					ent:SetSlotWorldTM(ent.SLOW_FLY_SLOT, ent:GetPos(), g_Vectors.down);
 					SiN:OnEvent(ent:GetName(), "11");
 				elseif(event=="9")then
@@ -1031,7 +1051,7 @@ function RegisterSiN()
 					end;
 				
 				elseif(event=="10")then
-					ent.FLY_SLOT = ent:LoadParticleEffect(-1,"smoke_and_fire.Vehicle_fires.burning_jet",{CountScale=2;Scale=0.5});
+					ent.FLY_SLOT = ent:LoadParticleEffect(-1,FLY_MODE_EFFECT,{CountScale=2;Scale=0.5;PulsePeriod=FLY_MODE_PULSE});
 					ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetPos(), g_Vectors.down);
 					SiN:OnEvent(ent:GetName(), "9");
 				elseif(event=="11")then
