@@ -1,4 +1,4 @@
-FILE_VERSION = "1.5.2d"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.5.3t"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1043,22 +1043,24 @@ function RegisterSiN()
 			if(ent)then
 				if(event=="8")then
 					Debug(6, "SlowFlyMode: effect: " .. SLOW_FLY_MODE_EFFECT .. ", period: " .. SLOW_FLY_MODE_PULSE);
+					SiN:OnEvent(ent:GetName(), "11");
 					ent.SLOW_FLY_SLOT = ent:LoadParticleEffect(-1,SLOW_FLY_MODE_EFFECT,{CountScale=2;Scale=0.5;PulsePeriod=SLOW_FLY_MODE_PULSE});
 					ent:SetSlotWorldTM(ent.SLOW_FLY_SLOT, ent:GetPos(), g_Vectors.down);
-					SiN:OnEvent(ent:GetName(), "11");
 				elseif(event=="9")then
 					if(ent.SLOW_FLY_SLOT)then
 						ent:FreeSlot(ent.SLOW_FLY_SLOT);
+						ent.SLOW_FLY_SLOT = nil;
 					end;
 				
 				elseif(event=="10")then
+					SiN:OnEvent(ent:GetName(), "9");
 					Debug(6, "FlyMode: effect: " .. FLY_MODE_EFFECT .. ", period: " .. FLY_MODE_PULSE);
 					ent.FLY_SLOT = ent:LoadParticleEffect(-1,FLY_MODE_EFFECT,{CountScale=2;Scale=0.5;PulsePeriod=FLY_MODE_PULSE});
 					ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetPos(), g_Vectors.down);
-					SiN:OnEvent(ent:GetName(), "9");
 				elseif(event=="11")then
 					if(ent.FLY_SLOT)then
 						ent:FreeSlot(ent.FLY_SLOT);
+						ent.FLY_SLOT = nil;
 					end;
 				elseif(event=="12")then
 					
