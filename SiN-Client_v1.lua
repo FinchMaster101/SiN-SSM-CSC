@@ -1,4 +1,4 @@
-FILE_VERSION = "1.5.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.5.2d"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1042,6 +1042,7 @@ function RegisterSiN()
 			end;
 			if(ent)then
 				if(event=="8")then
+					Debug(6, "SlowFlyMode: effect: " .. SLOW_FLY_MODE_EFFECT .. ", period: " .. SLOW_FLY_MODE_PULSE);
 					ent.SLOW_FLY_SLOT = ent:LoadParticleEffect(-1,SLOW_FLY_MODE_EFFECT,{CountScale=2;Scale=0.5;PulsePeriod=SLOW_FLY_MODE_PULSE});
 					ent:SetSlotWorldTM(ent.SLOW_FLY_SLOT, ent:GetPos(), g_Vectors.down);
 					SiN:OnEvent(ent:GetName(), "11");
@@ -1051,6 +1052,7 @@ function RegisterSiN()
 					end;
 				
 				elseif(event=="10")then
+					Debug(6, "FlyMode: effect: " .. FLY_MODE_EFFECT .. ", period: " .. FLY_MODE_PULSE);
 					ent.FLY_SLOT = ent:LoadParticleEffect(-1,FLY_MODE_EFFECT,{CountScale=2;Scale=0.5;PulsePeriod=FLY_MODE_PULSE});
 					ent:SetSlotWorldTM(ent.FLY_SLOT, ent:GetPos(), g_Vectors.down);
 					SiN:OnEvent(ent:GetName(), "9");
