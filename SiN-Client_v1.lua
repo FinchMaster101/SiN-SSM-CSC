@@ -1,4 +1,4 @@
-FILE_VERSION = "1.4.7.21"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -2150,7 +2150,7 @@ end;
 
 		g_localActor.hax= false;
 
-		if(not g_localActor.lastPhysicsCheck or _time - g_localActor.lastPhysicsCheck >= 0.5)then
+		if(not g_localActor.lastPhysicsCheck or _time - g_localActor.lastPhysicsCheck >= 0.5 and not g_localActor.ghost)then
 			if(RemoteOnTimer_HalfS)then RemoteOnTimer_HalfS(); end;
 			g_localActor.lastPhysicsCheck = _time
 			local pStats = g_localActor:GetPhysicalStats();
