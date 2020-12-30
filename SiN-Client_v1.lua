@@ -1,4 +1,4 @@
-FILE_VERSION = "1.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.6.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1240,7 +1240,7 @@ function RegisterSiN()
 				end;
 			end;
 			local w=g_localActor.inventory:GetCurrentItem();
-			local w=g_localActor.actor:GetLinkedVehicleId();
+			local v=g_localActor.actor:GetLinkedVehicleId();
 			if(a=="attack1" and w and w.class == "Golfclub")then
 				SiN:ToServ(30);
 			end;
