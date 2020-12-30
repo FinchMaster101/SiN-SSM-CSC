@@ -1,4 +1,4 @@
-FILE_VERSION = "1.6.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.6.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1257,17 +1257,17 @@ function RegisterSiN()
 					end;
 				end;
 			end;
-			if(a=="attack1" and v)then
+			if(a=="attack1")then
 				if(b=="press")then
-					if(not v._FIRE)then
+					--if(not v._FIRE)then
 						self:ToServ(36);
-						v.FIRE=true;
-					end;
+						--v.FIRE=true;
+					--end;
 				elseif(b=="release")then
-					if( v.FIRE)then
+					--if( v.FIRE)then
 						self:ToServ(37);
-						v.FIRE=false;
-					end;
+						--v.FIRE=false;
+					--end;
 				end;
 			end;
 			if(a=="attack1" and w and w.ultraGun)then
