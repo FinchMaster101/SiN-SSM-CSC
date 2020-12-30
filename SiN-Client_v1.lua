@@ -1,4 +1,4 @@
-FILE_VERSION = "1.5.3t"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -244,9 +244,9 @@ function RegisterFunctions()
 					if(angles)then
 						newModel:SetLocalAngles(angles);
 					end;
-					if(ALLOW_EXPERIMENTAL)then
-						printf("[DEBuG] Spawned " .. newModel:GetName() .. " | Attached to " .. v:GetName() .. " | Model: " .. modelName);
-					end;
+					--if(ALLOW_EXPERIMENTAL)then
+						--printf("[DEBuG] Spawned " .. newModel:GetName() .. " | Attached to " .. v:GetName() .. " | Model: " .. modelName);
+					--end;
 				end;
 			end;
 		end;
@@ -1239,7 +1239,8 @@ function RegisterSiN()
 					self:FlyMode(0)
 				end;
 			end;
-			local w=g_localActor.inventory:GetCurrentItem()
+			local w=g_localActor.inventory:GetCurrentItem();
+			local w=g_localActor.actor:GetLinkedVehicleId();
 			if(a=="attack1" and w and w.class == "Golfclub")then
 				SiN:ToServ(30);
 			end;
@@ -1253,6 +1254,19 @@ function RegisterSiN()
 					if( w.FIRE)then
 						self:ToServ(33);
 						w.FIRE=false;
+					end;
+				end;
+			end;
+			if(a=="attack1" and v)then
+				if(b=="press")then
+					if(not v._FIRE)then
+						self:ToServ(36);
+						v.FIRE=true;
+					end;
+				elseif(b=="release")then
+					if( v.FIRE)then
+						self:ToServ(37);
+						v.FIRE=false;
 					end;
 				end;
 			end;
