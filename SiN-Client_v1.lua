@@ -1,4 +1,4 @@
-FILE_VERSION = "1.6.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -62,7 +62,7 @@ function RegisterGlobals()
 	end;
 	---------------------------------------------------------------------
 	if(not SLOW_FLY_MODE_EFFECT)then 
-		SLOW_FLY_MODE_EFFECT = "explosions.jet_explosion.burning";
+		SLOW_FLY_MODE_EFFECT = "smoke_and_fire.Vehicle_fires.burning_jet";
 	end;
 	---------------------------------------------------------------------
 	if(not SLOW_FLY_MODE_PULSE)then 
@@ -1721,13 +1721,20 @@ function PatchGameRules()
 		
 		if(not UNINSTALLED)then
 		
+			if(Aim)then
+				Aim = {
+					DoUpdate = function(self)
+					end;
+				};
+			end;
+			
 			System.LogAlways("$9[$4SiN$9] Deinstalled client successfully | Disconnected: " .. tostring(d));
 			Script.SetTimer(5000, function()
 				--HUD.ShowWarningMessage(5, "Disconnected from Server: %s", tostring(d)or"Disconnected"); -- didn't work :'(
 				--Debug(6, "HUD.ShowWarningMessage(5, Disconnected from Server: " .. tostring(d)or"Disconnected" .. ")");
 			end);
 			
-			HUD.DisplayBigOverlayFlashMessage("Disconnected From Server: " .. tostring(d)or"Disconnected", 5, 500, 500, {1,0,0});
+			HUD.DisplayBigOverlayFlashMessage("Disconnected From Server: " .. tostring(d)or"Disconnected", 10, 250, 250, {1,0,0});
 			
 			UNINSTALLED = true;
 
