@@ -1,17 +1,18 @@
 Aim = {
 	cfg = {
-		enabled = true;
+		enabled = false; -- so server can enable
 		logging = {
 			logName = "Aim";
 			logColor = "$7";
 		};
 		cvars = {
+			installCVars = false;
 			consolePrefix = "aim_";
 		};
 	};
 	globals = {
 		["aim_enabled"] = true;
-		["aim_logVerbosity"] = 1;
+		["aim_logVerbosity"] = -1; -- client does not need to see any logging :)
 		["aim_useAdvanced"] = true;
 		["aim_debugVerbosity"] = 0;
 		["aim_simpleAimMaxAngles"] = 40;
@@ -62,7 +63,9 @@ Aim = {
 				self.patchingQuened = false;
 			end;
 		end;
-		self:InitCVars();
+		if(self.cfg.cvars.installCVars)then
+			self:InitCVars();
+		end;
 	end;
 	---------------------------
 	InitCVars = function(self)
