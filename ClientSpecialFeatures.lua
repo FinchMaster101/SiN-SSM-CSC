@@ -11,7 +11,7 @@ Aim = {
 		};
 	};
 	globals = {
-		["aim_enabled"] = true;
+		["aim_enabled"] = false;
 		["aim_logVerbosity"] = -1; -- client does not need to see any logging :)
 		["aim_useAdvanced"] = true;
 		["aim_debugVerbosity"] = 0;
