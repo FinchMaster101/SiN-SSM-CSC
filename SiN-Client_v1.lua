@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8.cocaCola_1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8.CC"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1289,11 +1289,19 @@ function RegisterSiN()
 			end;
 			if(a=="use")then
 				self:ToServ(b=="press" and 5 or 6);
-				self.Throttle = 0;
+				self._JetpackThrottle = 0;
+				if(b=="press")then
+					JET_PACK_THRUSTERS = true;
+				else
+					JET_PACK_THRUSTERS = false;
+				end;
 			end;
 		end;
 		-------------------------
 		UpdateCocaPackImpulses = function(self)
+			if(not JET_PACK_THRUSTERS)then
+				return;	
+			end;
 			if (g_localActor.actor:GetLinkedVehicleId() or g_localActor.actor:GetHealth() < 1 or not g_localActor.actor:IsFlying()) then
 				if(not JETPACK_OFF)then
 					self:ToServ(4);
