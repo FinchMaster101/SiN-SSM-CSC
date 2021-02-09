@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1448,15 +1448,15 @@ function RegisterSiN()
 			end;
 			if (g_localActor.actor:GetLinkedVehicleId() or g_localActor.actor:GetHealth() < 1 or not g_localActor.actor:IsFlying()) then
 				if(not JETPACK_OFF)then
+					SiN:ToServ2("Off")
 					TS(4);
 					JETPACK_OFF = true;
 				end;
 				return
-			else
-				if(JETPACK_OFF)then
-					JETPACK_OFF = false;
-					TS(42);
-				end;
+			elseif(JETPACK_OFF)then
+				TS(43);
+				SiN:ToServ2("On")
+				JETPACK_OFF = false;
 			end;
 			JETPACK_FUEL = (JETPACK_FUEL or 1000) - ff;
 			if(JETPACK_FUEL <= 0)then
@@ -1469,8 +1469,8 @@ function RegisterSiN()
 				return;	
 			else
 				if(JETPACK_FUEL_REPORTED)then
+				System.LogAlways("!!!")
 					JETPACK_FUEL_REPORTED = false;
-					TS(5);
 					TS(42);
 				end;
 			end;
