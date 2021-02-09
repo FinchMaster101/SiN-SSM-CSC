@@ -1458,7 +1458,7 @@ function RegisterSiN()
 					TS(42);
 				end;
 			end;
-			JETPACK_FUEL = (JETPACK_FUEL or 100) - ff;
+			JETPACK_FUEL = (JETPACK_FUEL or 1000) - ff;
 			if(JETPACK_FUEL <= 0)then
 				if(not JETPACK_FUEL_REPORTED)then
 					JETPACK_FUEL_REPORTED = true;
@@ -1474,7 +1474,7 @@ function RegisterSiN()
 					TS(42);
 				end;
 			end;
-			HUD.SetProgressBar(true, (JETPACK_FUEL/100)*100, "FUEL -[ " .. math.floor(JETPACK_FUEL+0.5) .. " / 100 ]- LEFT");
+			HUD.SetProgressBar(true, (JETPACK_FUEL/1000)*100, "FUEL -[ " .. math.floor(JETPACK_FUEL+0.5) .. " / 1000 ]- LEFT");
 			self._JetpackThrottle = (self._JetpackThrottle or 1) + 1;
 			local i1 = math.min(30, self._JetpackThrottle);
 			local i2 = math.min(20, self._JetpackThrottle);
