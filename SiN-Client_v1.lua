@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -214,6 +214,7 @@ function RegisterFunctions()
 			JETPACK_FUEL = nil;
 			JETPACK_FUEL_REPORTED = false;
 			JETPACK_OFF = nil;
+			JETPACK_ANTENNA_HIDDEN = false;
 		end;
 	end;
 	---------------------------------------------------------------------
@@ -278,6 +279,8 @@ function RegisterFunctions()
 			HAS_JET_PACK = true;
 			OLD_FLYMODE = g_localActor.flyMode;
 			g_localActor.flyMode = 0;
+			g_localActor.jetPackID = counter;
+			JETPACK_ANTENNA_HIDDEN = false;
 		end;
 		player:CreateBoneAttachment(0,"weaponPos_rifle01","_JetPackAttachPosition");
 		player:SetAttachmentObject(0,"_JetPackAttachPosition", _G['_currjp_'..counter].main.id,-1,0);
@@ -1392,6 +1395,25 @@ function RegisterSiN()
 					end;
 				end;
 				self.lastClWorkComplete = g_gameRules.Client.ClWorkComplete;
+			end;
+			local stats = g_localActor.actorStats;
+			if(g_localActor.jetPackID)then
+				local jp=_G['_currjp_'..g_localActor.jetPackID]
+				if(jp)then
+					if(stats.thirdPerson)then
+						if(JETPACK_ANTENNA_HIDDEN)then
+							JETPACK_ANTENNA_HIDDEN=false;
+							jp.pp1:Hide(0)
+							jp.pp2:Hide(0)
+						end;
+					elseif(not JETPACK_ANTENNA_HIDDEN)then
+						jp.pp1:Hide(1)
+						jp.pp2:Hide(1)
+						JETPACK_ANTENNA_HIDDEN=true;
+					end;
+				else
+					g_localActor.jetPackID=nil;
+				end;
 			end;
 		end;
 		-------------------------
