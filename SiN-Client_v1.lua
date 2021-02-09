@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.4"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -283,7 +283,7 @@ function RegisterFunctions()
 		player:SetAttachmentObject(0,"_JetPackAttachPosition", _G['_currjp_'..counter].main.id,-1,0);
 	end;
 	---------------------------------------------------------------------
-	function JetPack_EnableCloaking(pName, c)
+	function JetPack_EnableCloaking(c)
 		if(_G['_currjp_'..c])then
 			for i, v in pairs(_G['_currjp_'..c]) do
 					if(CPPAPI.ApplyMaskOne)then
@@ -293,7 +293,7 @@ function RegisterFunctions()
 		end;
 	end;
 	---------------------------------------------------------------------
-	function JetPack_DisableCloaking(pName, c)
+	function JetPack_DisableCloaking(c)
 		if(_G['_currjp_'..c])then
 			for i, v in pairs(_G['_currjp_'..c]) do
 				if(CPPAPI.ApplyMaskOne)then
