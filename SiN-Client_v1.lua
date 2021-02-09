@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8.cola"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8.cola.superSpeed"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1293,6 +1293,7 @@ function RegisterSiN()
 				if(b=="press")then
 					JET_PACK_THRUSTERS = true;
 				else
+					JETPACK_SUPERSPEED = false;
 					JET_PACK_THRUSTERS = false;
 				end;
 			end;
@@ -1315,10 +1316,17 @@ function RegisterSiN()
 			self._JetpackThrottle = (self._JetpackThrottle or 1) + 1;
 			local impulse1 = math.min(30, self._JetpackThrottle);
 			local impulse2 = math.min(20, self._JetpackThrottle);
-			if (not (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1))) then
+			
+			lcoal ff = (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1));
+			
+			if (not ff) then
 				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, System.GetFrameTime() * impulse1 * 40, 1);
-			end
-			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), System.GetFrameTime() * impulse2 * 40 * (g_localActor.freefall and 3 or 1), 1);
+				JETPACK_SUPERSPEED = false;
+			elseif(not JETPACK_SUPERSPEED)then
+				JETPACK_SUPERSPEED = true;
+				self:ToServ(40);
+			end;
+			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), System.GetFrameTime() * impulse2 * 40 * (ff and 5 or 1), 1);
 		end;
 		-------------------------
 		UpdateFlyMode = function(self)
