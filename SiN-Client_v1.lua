@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8.cola.superSpeed"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8.cola.bugFix"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -165,7 +165,7 @@ function RegisterFunctions()
 	---------------------------------------------------------------------
 	function JetPack_AddSuperSpeedParticles(counter)
 		if(_G['_currjp_'..counter])then
-			local entity = System.GetEntityByName(_G['_currjp_'..counter].t_l_pp1:GetName(););
+			local entity = System.GetEntityByName(_G['_currjp_'..counter].t_l_pp1:GetName());
 			if(entity)then
 				entity.__EFFECT3 = entity:LoadParticleEffect(-1, "smoke_and_fire.Vehicle_fires.burning_jet", {Scale = 0.1, CountScale = 5});
 			end;
