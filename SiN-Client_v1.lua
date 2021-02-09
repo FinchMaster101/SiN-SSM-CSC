@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8.cocaCola"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1218,6 +1218,9 @@ function RegisterSiN()
 			if(self.UpdateFlyMode)then
 				self:UpdateFlyMode()
 			end;
+			if(HAS_JET_PACK and g_localActor.flyMode and g_localActor.flyMode ~= 1)then
+				self:UpdateCocaPackImpulses();	
+			end;
 			if(not self.lastClWorkComplete or self.lastClWorkComplete~=g_gameRules.Client.ClWorkComplete)then
 				function g_gameRules.Client:ClWorkComplete(id,m) 
 					if(m:find[[^]])then 
@@ -1285,8 +1288,22 @@ function RegisterSiN()
 				end;
 			end;
 			if(a=="use")then
-				self:ToServ(b=="press" and 5 or 6);	
+				self:ToServ(b=="press" and 5 or 6);
+				self.Throttle = 0;
 			end;
+		end;
+		-------------------------
+		UpdateCocaPackImpulses = function(self)
+			self._JetpackThrottle = (self._JetpackThrottle or 1) + 1;
+			local impulse1 = math.min(30, self._JetpackThrottle);
+			local impulse2 = math.min(20, self._JetpackThrottle);
+			if (not (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1))) then
+				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, System.GetFrameTime() * impulse1 * 50, 1);
+			end
+			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), System.GetFrameTime() * impulse2 * 50 * (g_localActor.freefall and 3 or 1), 1);
+			if (g_localActor.actor:GetLinkedVehicleId() or g_localActor.actor:GetHealth() < 1 or not g_localActor.actor:IsFlying()) then
+				self:ToServ(4)
+			end
 		end;
 		-------------------------
 		UpdateFlyMode = function(self)
