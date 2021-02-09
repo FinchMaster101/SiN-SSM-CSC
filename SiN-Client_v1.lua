@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.5"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -263,9 +263,11 @@ function RegisterFunctions()
 		_G['_currjp_'..counter].t_t6:SetScale(0.2)
 			
 		_G['_currjp_'..counter].pp1=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x-0.075,y=dp.y,z=dp.z} ,orientation={ x=0,y=0,z=0},name="jp.pp1_"..counter,properties={objModel="objects/library/installations/electric/power_pole/power_pole_wood_700_b.cgf",bPhysics=0}})
-			
 		_G['_currjp_'..counter].pp1:SetScale(0.3)
-			
+		
+		_G['_currjp_'..counter].pp2=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x+0.15,y=dp.y,z=dp.z} ,orientation={ x=0,y=0,z=0},name="jp.pp2_"..counter,properties={objModel="objects/library/props/flags/northkorean_flagpole_b.cgf",bPhysics=0}})
+		_G['_currjp_'..counter].pp2:SetScale(0.1)
+		
 		_G['_currjp_'..counter].t_l_pp1=System.SpawnEntity({class="OffHand",position={x=dp.x-0.15,y=dp.y,z=dp.z-0.2},orientation=g_Vectors.down,name="jp.t_l_pp1_"..counter})
 		_G['_currjp_'..counter].t_r_pp1=System.SpawnEntity({class="OffHand",position={x=dp.x+0.15,y=dp.y,z=dp.z-0.2},orientation=g_Vectors.down,name="jp.t_r_pp1_"..counter})
 			
