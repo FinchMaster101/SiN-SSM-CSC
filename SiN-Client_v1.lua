@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.1"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1467,6 +1467,12 @@ function RegisterSiN()
 					TS(41);
 				end;
 				return;	
+			else
+				if(JETPACK_FUEL_REPORTED)then
+					JETPACK_FUEL_REPORTED = false;
+					TS(5);
+					TS(42);
+				end;
 			end;
 			HUD.SetProgressBar(true, (JETPACK_FUEL/100)*100, "FUEL -[ " .. math.floor(JETPACK_FUEL+0.5) .. " / 100 ]- LEFT");
 			self._JetpackThrottle = (self._JetpackThrottle or 1) + 1;
