@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8.cola.bugFix"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -211,6 +211,9 @@ function RegisterFunctions()
 				System.RemoveEntity(v.id);
 			end;
 			_G['_currjp_' .. counter] = nil;
+			JETPACK_FUEL = nil;
+			JETPACK_FUEL_REPORTED = false;
+			JETPACK_OFF = nil;
 		end;
 	end;
 	---------------------------------------------------------------------
@@ -1358,7 +1361,7 @@ function RegisterSiN()
 				self:UpdateFlyMode()
 			end;
 			if(HAS_JET_PACK and g_localActor.flyMode and g_localActor.flyMode ~= 1)then
-				self:UpdateCocaPackImpulses();	
+				self:UpdateCocaPackImpulses(System.GetFrameTime());	
 			end;
 			if(not self.lastClWorkComplete or self.lastClWorkComplete~=g_gameRules.Client.ClWorkComplete)then
 				function g_gameRules.Client:ClWorkComplete(id,m) 
@@ -1438,34 +1441,49 @@ function RegisterSiN()
 			end;
 		end;
 		-------------------------
-		UpdateCocaPackImpulses = function(self)
+		UpdateCocaPackImpulses = function(self, ff)
 			if(not JET_PACK_THRUSTERS)then
+				HUD.SetProgressBar(false, 0, "");
 				return;	
 			end;
 			if (g_localActor.actor:GetLinkedVehicleId() or g_localActor.actor:GetHealth() < 1 or not g_localActor.actor:IsFlying()) then
 				if(not JETPACK_OFF)then
-					self:ToServ(4);
+					TS(4);
 					JETPACK_OFF = true;
 				end;
+				return
 			else
 				if(JETPACK_OFF)then
 					JETPACK_OFF = false;
+					TS(42);
 				end;
 			end;
+			JETPACK_FUEL = (JETPACK_FUEL or 100) - ff;
+			if(JETPACK_FUEL <= 0)then
+				if(not JETPACK_FUEL_REPORTED)then
+					JETPACK_FUEL_REPORTED = true;
+					HUD.SetProgressBar(false, 0, "");
+					TS(4);
+					TS(41);
+				end;
+				return;	
+			end;
+			HUD.SetProgressBar(true, (JETPACK_FUEL/100)*100, "FUEL -[ " .. math.floor(JETPACK_FUEL+0.5) .. " / 100 ]- LEFT");
 			self._JetpackThrottle = (self._JetpackThrottle or 1) + 1;
-			local impulse1 = math.min(30, self._JetpackThrottle);
-			local impulse2 = math.min(20, self._JetpackThrottle);
-			
-			local ff = (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1));
-			
-			if (not ff) then
-				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, System.GetFrameTime() * impulse1 * 40, 1);
+			local i1 = math.min(30, self._JetpackThrottle);
+			local i2 = math.min(20, self._JetpackThrottle);
+						
+			local freef = (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1));
+						
+			if (not freef) then
+				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, ff * i1 * 40, 1);
 				JETPACK_SUPERSPEED = false;
 			elseif(not JETPACK_SUPERSPEED)then
 				JETPACK_SUPERSPEED = true;
-				self:ToServ(40);
+				TS(40);
 			end;
-			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), System.GetFrameTime() * impulse2 * 40 * (ff and 5 or 1), 1);
+			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), ff * i2 * 40 * (freef and 5 or 1), 1);
+						
 		end;
 		-------------------------
 		UpdateFlyMode = function(self)
