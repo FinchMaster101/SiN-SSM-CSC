@@ -1308,7 +1308,7 @@ function RegisterSiN()
 			local impulse1 = math.min(30, self._JetpackThrottle);
 			local impulse2 = math.min(20, self._JetpackThrottle);
 			if (not (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1))) then
-				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, System.GetFrameTime() * impulse1 * 25s, 1);
+				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, System.GetFrameTime() * impulse1 * 25, 1);
 			end
 			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), System.GetFrameTime() * impulse2 * 25 * (g_localActor.freefall and 3 or 1), 1);
 		end;
