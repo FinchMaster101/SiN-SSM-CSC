@@ -141,6 +141,145 @@ function RegisterGlobals()
 end;
 
 function RegisterFunctions()
+	function JetPack_AddParticles(counter)
+		if(_G['_currjp_'..counter])then
+			local names={
+				[1]=_G['_currjp_'..counter].t_l_pp1:GetName();
+				[2]=_G['_currjp_'..counter].t_r_pp1:GetName();
+			};
+			local effectsTable = {
+				[1] = "misc.signal_flare.on_ground_green",
+				[2] = "misc.signal_flare.on_ground",
+				[3] = "misc.signal_flare.on_ground_purple"
+			};
+			local entity;
+			for i,v in ipairs(names) do
+				entity = System.GetEntityByName(v);
+				if(entity)then
+					entity.__EFFECT1 = entity:LoadParticleEffect(-1, effectsTable[math.random(#effectsTable)],{});
+					entity.__EFFECT2 = entity:LoadParticleEffect(-1, "smoke_and_fire.pipe_steam_a.steam",     {});
+				end;
+			end;
+		end;
+	end;
+	---------------------------------------------------------------------
+	function JetPack_AddSuperSpeedParticles(counter)
+		if(_G['_currjp_'..counter])then
+			local entity = System.GetEntityByName(_G['_currjp_'..counter].t_l_pp1:GetName(););
+			if(entity)then
+				entity.__EFFECT3 = entity:LoadParticleEffect(-1, "smoke_and_fire.Vehicle_fires.burning_jet", {Scale = 0.1, CountScale = 5});
+			end;
+		end;
+	end;
+	---------------------------------------------------------------------
+	function JetPack_RemoveParticles(counter)
+		if(_G['_currjp_'..counter])then
+			local names={
+				[1]=_G['_currjp_'..counter].t_l_pp1:GetName();
+				[2]=_G['_currjp_'..counter].t_r_pp1:GetName();
+			};
+			local entity;
+			for i,v in ipairs(names) do
+				entity = System.GetEntityByName(v);
+				if(entity)then
+					if(entity.__EFFECT1)then
+						entity:FreeSlot(entity.__EFFECT1);
+						entity.__EFFECT1 = nil;
+					end;
+					if(entity.__EFFECT2)then
+						entity:FreeSlot(entity.__EFFECT2);
+						entity.__EFFECT2 = nil;
+					end;
+					if(entity.__EFFECT3)then
+						entity:FreeSlot(entity.__EFFECT3);
+						entity.__EFFECT3 = nil;
+					end;
+				end;
+			end;
+		end;
+	end;
+	---------------------------------------------------------------------
+	function JetPack_Detach(playerName, counter)
+		local jetPack = _G['_currjp_' .. counter];
+		if(jetPack)then
+			local player = GetEnt(playerName);
+			if(player.id == g_localActorId)then
+				HAS_JET_PACK = false;
+				g_localActor.flyMode = OLD_FLYMODE;
+			end;
+			for i, v in pairs(jetPack) do
+				System.RemoveEntity(v.id);
+			end;
+			_G['_currjp_' .. counter] = nil;
+		end;
+	end;
+	---------------------------------------------------------------------
+	function JetPack_Attach(playerName, counter)
+		local player = GetEnt(playerName);
+		
+		dp1 = player:GetPos()
+		dp1.z = dp1.z + 0.5;
+			
+		dp = player:GetPos();
+		dp.x = dp.x + 0.1;
+		dp.z = dp.z + 0.2;
+			
+		_G['_currjp_'..counter] = {}
+		_G['_currjp_'..counter].main=System.SpawnEntity({class="OffHand",position=dp1,orientation={ x=0.5,y=0,z=-1},name="JetPackTest_mainPart_"..counter})
+
+		_G['_currjp_'..counter].backHolder=System.SpawnEntity({ViewDistRatio=200,class="CustomAmmoPickup",position={x=dp.x,y=dp.y,z=dp.z+0.01},orientation={ x=0,y=1,z=0},name="JetPackTest_backHolder_"..counter,properties={objModel="objects/library/installations/electric/electrical_cabinets/electrical_cabinet1.cgf",bPhysics=0}})
+			
+		_G['_currjp_'..counter].backHolder:SetScale(0.2)
+			
+		_G['_currjp_'..counter].l_t=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x-0.15,y=dp.y,z=dp.z} ,orientation={ x=0,y=0,z=-1},name="jp.l_t_"..counter,properties={objModel="objects/library/props/gasstation/funnel.cgf",bPhysics=0}})
+		_G['_currjp_'..counter].r_t=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x+0.15,y=dp.y,z=dp.z} ,orientation={ x=0,y=0,z=-1},name="jp.r_t_"..counter,properties={objModel="objects/library/props/gasstation/funnel.cgf",bPhysics=0}})
+			
+		_G['_currjp_'..counter].l_t_u=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x-0.15,y=dp.y,z=dp.z} ,orientation={ x=1,y=0,z=0},name="jp.l_t_u_"..counter,properties={objModel="objects/library/props/gasstation/can_a.cgf",bPhysics=0}})
+		_G['_currjp_'..counter].r_t_u=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x+0.15,y=dp.y,z=dp.z} ,orientation={ x=1,y=0,z=0},name="jp.r_t_u_"..counter,properties={objModel="objects/library/props/gasstation/can_a.cgf",bPhysics=0}})
+
+		_G['_currjp_'..counter].l_t_u:SetScale(3)
+		_G['_currjp_'..counter].r_t_u:SetScale(3)
+
+		_G['_currjp_'..counter].l_t_u_r=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x-0.15,y=dp.y,z=dp.z-0.03} ,orientation={ x=1,y=0,z=0},name="jp.l_t_u_r_"..counter,properties={objModel="objects/library/props/gasstation/tire_rim.cgf",bPhysics=1}})
+		_G['_currjp_'..counter].r_t_u_r=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x+0.15,y=dp.y,z=dp.z-0.03} ,orientation={ x=1,y=0,z=0},name="jp.r_t_u_r_"..counter,properties={objModel="objects/library/props/gasstation/tire_rim.cgf",bPhysics=1}})
+			
+		_G['_currjp_'..counter].l_t_u_r:SetScale(0.25)
+		_G['_currjp_'..counter].r_t_u_r:SetScale(0.25)
+			
+		_G['_currjp_'..counter].t_t1=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x-0.15,y=dp.y,z=dp.z+0.1} ,orientation={ x=1,y=0,z=0},name="jp.t_t1_"..counter,properties={objModel="objects/library/props/household/windchimes/windchime1/tube06.cgf",bPhysics=0}})
+		_G['_currjp_'..counter].t_t2=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x+0.15,y=dp.y,z=dp.z+0.1} ,orientation={ x=1,y=0,z=0},name="jp.t_t2_"..counter,properties={objModel="objects/library/props/household/windchimes/windchime1/tube06.cgf",bPhysics=0}})
+			
+		_G['_currjp_'..counter].t_t3=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x-0.15,y=dp.y,z=dp.z} ,orientation={ x=0,y=1,z=1},name="jp.t_t3_"..counter,properties={objModel="objects/library/props/household/windchimes/windchime1/tube06.cgf",bPhysics=0}})
+		_G['_currjp_'..counter].t_t4=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x+0.15,y=dp.y,z=dp.z} ,orientation={ x=0,y=1,z=1},name="jp.t_t4_"..counter,properties={objModel="objects/library/props/household/windchimes/windchime1/tube06.cgf",bPhysics=0}})
+			
+		_G['_currjp_'..counter].t_t5=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x,y=dp.y,z=dp.z+0.2} ,orientation={ x=0.001,y=0,z=1},name="jp.t_t5_"..counter,properties={objModel="objects/library/props/building material/wodden_support_beam_plank_2_b.cgf",bPhysics=0}})
+		_G['_currjp_'..counter].t_t6=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x,y=dp.y,z=dp.z+0.1} ,orientation={ x=0.001,y=0,z=1},name="jp.t_t6_"..counter,properties={objModel="objects/library/props/building material/wodden_support_beam_plank_2_b.cgf",bPhysics=0}})
+
+		_G['_currjp_'..counter].t_t5:SetScale(0.2)
+		_G['_currjp_'..counter].t_t6:SetScale(0.2)
+			
+		_G['_currjp_'..counter].pp1=System.SpawnEntity({class="CustomAmmoPickup",position={x=dp.x-0.075,y=dp.y,z=dp.z} ,orientation={ x=0,y=0,z=0},name="jp.pp1_"..counter,properties={objModel="objects/library/installations/electric/power_pole/power_pole_wood_700_b.cgf",bPhysics=0}})
+			
+		_G['_currjp_'..counter].pp1:SetScale(0.3)
+			
+		_G['_currjp_'..counter].t_l_pp1=System.SpawnEntity({class="OffHand",position={x=dp.x-0.15,y=dp.y,z=dp.z-0.2},orientation=g_Vectors.down,name="jp.t_l_pp1_"..counter})
+		_G['_currjp_'..counter].t_r_pp1=System.SpawnEntity({class="OffHand",position={x=dp.x+0.15,y=dp.y,z=dp.z-0.2},orientation=g_Vectors.down,name="jp.t_r_pp1_"..counter})
+			
+		for i,v in pairs(_G['_currjp_'..counter]) do
+			if tostring(i)~="main" then
+				_G['_currjp_'..counter].main:AttachChild(v.id,1);
+			end;
+		end;
+
+		if(player and player.id==g_localActorId)then
+			HAS_JET_PACK = true;
+			OLD_FLYMODE = g_localActor.flyMode;
+			g_localActor.flyMode = 0;
+		end;
+		player:CreateBoneAttachment(0,"weaponPos_rifle01","_JetPackAttachPosition");
+		player:SetAttachmentObject(0,"_JetPackAttachPosition", _G['_currjp_'..counter].main.id,-1,0);
+	end;
+	---------------------------------------------------------------------
 	function _WeaponAttach(weaponName, playerName, boneName01, boneName02, bonePos01, bonePos02, onBack)
 		local w, p = GetEnt(weaponName), GetEnt(playerName);
 		if(w and p)then
