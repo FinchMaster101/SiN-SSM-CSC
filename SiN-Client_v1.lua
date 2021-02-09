@@ -1448,14 +1448,14 @@ function RegisterSiN()
 			end;
 			if (g_localActor.actor:GetLinkedVehicleId() or g_localActor.actor:GetHealth() < 1 or not g_localActor.actor:IsFlying()) then
 				if(not JETPACK_OFF)then
-					SiN:ToServ2("Off")
+					--SiN:ToServ2("Off")
 					TS(4);
 					JETPACK_OFF = true;
 				end;
 				return
 			elseif(JETPACK_OFF)then
 				TS(43);
-				SiN:ToServ2("On")
+				--SiN:ToServ2("On")
 				JETPACK_OFF = false;
 			end;
 			JETPACK_FUEL = (JETPACK_FUEL or 1000) - ff;
