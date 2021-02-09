@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.2"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.3"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -281,6 +281,26 @@ function RegisterFunctions()
 		end;
 		player:CreateBoneAttachment(0,"weaponPos_rifle01","_JetPackAttachPosition");
 		player:SetAttachmentObject(0,"_JetPackAttachPosition", _G['_currjp_'..counter].main.id,-1,0);
+	end;
+	---------------------------------------------------------------------
+	function JetPack_EnableCloaking(pName, c)
+		if(_G['_currjp_'..c])then
+			for i, v in pairs(_G['_currjp_'..c]) do
+					if(CPPAPI.ApplyMaskOne)then
+					CPPAPI.ApplyMaskOne(v.id, MASK_CLOAK, 1);
+				end;
+			end;
+		end;
+	end;
+	---------------------------------------------------------------------
+	function JetPack_DisableCloaking(pName, c)
+		if(_G['_currjp_'..c])then
+			for i, v in pairs(_G['_currjp_'..c]) do
+				if(CPPAPI.ApplyMaskOne)then
+					CPPAPI.ApplyMaskOne(v.id, MASK_CLOAK, 0);
+				end;
+			end;
+		end;
 	end;
 	---------------------------------------------------------------------
 	function _WeaponAttach(weaponName, playerName, boneName01, boneName02, bonePos01, bonePos02, onBack)
