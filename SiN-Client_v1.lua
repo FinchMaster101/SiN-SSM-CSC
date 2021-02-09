@@ -1317,7 +1317,7 @@ function RegisterSiN()
 			local impulse1 = math.min(30, self._JetpackThrottle);
 			local impulse2 = math.min(20, self._JetpackThrottle);
 			
-			lcoal ff = (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1));
+			local ff = (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1));
 			
 			if (not ff) then
 				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, System.GetFrameTime() * impulse1 * 40, 1);
