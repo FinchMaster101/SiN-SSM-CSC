@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.6"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.7"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1513,7 +1513,7 @@ function RegisterSiN()
 				return;	
 			else
 				if(JETPACK_FUEL_REPORTED)then
-				System.LogAlways("!!!")
+					--System.LogAlways("!!!")
 					JETPACK_FUEL_REPORTED = false;
 					TS(42);
 				end;
@@ -1524,15 +1524,16 @@ function RegisterSiN()
 			local i2 = math.min(20, self._JetpackThrottle);
 						
 			local freef = (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1));
-						
-			if (not freef) then
+			local prone = (g_localActor.actorStats and (g_localActor.actorStats.stance == 2));
+			
+			if (not freef and not prone) then
 				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, ff * i1 * 40, 1);
 				JETPACK_SUPERSPEED = false;
-			elseif(not JETPACK_SUPERSPEED)then
+			elseif(not JETPACK_SUPERSPEED and freef)then
 				JETPACK_SUPERSPEED = true;
 				TS(40);
 			end;
-			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), ff * i2 * 40 * (freef and 5 or 1), 1);
+			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), ff * i2 * 40 * (freef and 3 or 1), 1);
 						
 		end;
 		-------------------------
