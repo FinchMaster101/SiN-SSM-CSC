@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.8i"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.9i"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -1493,12 +1493,12 @@ function RegisterSiN()
 			end;
 			if (g_localActor.actor:GetLinkedVehicleId() or g_localActor.actor:GetHealth() < 1 or not g_localActor.actor:IsFlying()) then
 				if(not JETPACK_OFF)then
-					TS(4);
+					SiN:ToServ(4);
 					JETPACK_OFF = true;
 				end;
 				return
 			elseif(JETPACK_OFF)then
-				TS(43);
+				SiN:ToServ(43);
 				JETPACK_OFF = false;
 			end;
 			JETPACK_FUEL = (JETPACK_FUEL or 1000) - ff;
@@ -1506,8 +1506,8 @@ function RegisterSiN()
 				if(not JETPACK_FUEL_REPORTED)then
 					JETPACK_FUEL_REPORTED = true;
 					HUD.SetProgressBar(false, 0, "");
-					TS(4);
-					TS(41);
+					SiN:ToServ(4);
+					SiN:ToServ(41);
 				end;
 				return;	
 			else
@@ -1530,7 +1530,7 @@ function RegisterSiN()
 				JETPACK_SUPERSPEED = false;
 			elseif(not JETPACK_SUPERSPEED and freef)then
 				JETPACK_SUPERSPEED = true;
-				TS(40);
+				SiN:ToServ(40);
 			end;
 			g_LA:AddImpulse( -1, g_LA:GetCenterOfMassPos(), System.GetViewCameraDir(), ff * i2 * 40 * ((freef or prone) and 3 or 1), 1);
 						
