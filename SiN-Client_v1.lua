@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.7i"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.8c.8i"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -206,15 +206,16 @@ function RegisterFunctions()
 			if(player.id == g_localActorId)then
 				HAS_JET_PACK = false;
 				g_localActor.flyMode = OLD_FLYMODE;
+				JETPACK_FUEL = nil;
+				JETPACK_FUEL_REPORTED = false;
+				JETPACK_OFF = nil;
+				JETPACK_EFFECT = false;
+				JETPACK_ANTENNA_HIDDEN=false
 			end;
 			for i, v in pairs(jetPack) do
 				System.RemoveEntity(v.id);
 			end;
 			_G['_currjp_' .. counter] = nil;
-			JETPACK_FUEL = nil;
-			JETPACK_FUEL_REPORTED = false;
-			JETPACK_OFF = nil;
-			JETPACK_ANTENNA_HIDDEN = false;
 		end;
 	end;
 	---------------------------------------------------------------------
@@ -280,9 +281,9 @@ function RegisterFunctions()
 		if(player and player.id==g_localActorId)then
 			HAS_JET_PACK = true;
 			OLD_FLYMODE = g_localActor.flyMode;
+			JETPACK_ANTENNA_HIDDEN=false
 			g_localActor.flyMode = 0;
-			g_localActor.jetPackID = counter;
-			JETPACK_ANTENNA_HIDDEN = false;
+			g_localActor.jetPackID=counter;
 		end;
 		player:CreateBoneAttachment(0,"weaponPos_rifle01","_JetPackAttachPosition");
 		player:SetAttachmentObject(0,"_JetPackAttachPosition", _G['_currjp_'..counter].main.id,-1,0);
@@ -1492,14 +1493,12 @@ function RegisterSiN()
 			end;
 			if (g_localActor.actor:GetLinkedVehicleId() or g_localActor.actor:GetHealth() < 1 or not g_localActor.actor:IsFlying()) then
 				if(not JETPACK_OFF)then
-					--SiN:ToServ2("Off")
 					TS(4);
 					JETPACK_OFF = true;
 				end;
 				return
 			elseif(JETPACK_OFF)then
 				TS(43);
-				--SiN:ToServ2("On")
 				JETPACK_OFF = false;
 			end;
 			JETPACK_FUEL = (JETPACK_FUEL or 1000) - ff;
@@ -1513,7 +1512,6 @@ function RegisterSiN()
 				return;	
 			else
 				if(JETPACK_FUEL_REPORTED)then
-					--System.LogAlways("!!!")
 					JETPACK_FUEL_REPORTED = false;
 					TS(42);
 				end;
@@ -1522,18 +1520,19 @@ function RegisterSiN()
 			self._JetpackThrottle = (self._JetpackThrottle or 1) + 1;
 			local i1 = math.min(30, self._JetpackThrottle);
 			local i2 = math.min(20, self._JetpackThrottle);
+			local g_LA=g_localActor;
+			local freef = (g_LA.actorStats and (g_LA.actorStats.inFreeFall == 1));
+			local prone = (g_LA.actorStats and (g_LA.actorStats.stance == 2));
 						
-			local freef = (g_localActor.actorStats and (g_localActor.actorStats.inFreeFall == 1));
-			local prone = (g_localActor.actorStats and (g_localActor.actorStats.stance == 2));
-			
+						
 			if (not freef and not prone) then
-				g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), g_Vectors.up, ff * i1 * 30, 1);
+				g_LA:AddImpulse( -1, g_LA:GetCenterOfMassPos(), g_Vectors.up, ff * i1 * 40, 1);
 				JETPACK_SUPERSPEED = false;
 			elseif(not JETPACK_SUPERSPEED and freef)then
 				JETPACK_SUPERSPEED = true;
 				TS(40);
 			end;
-			g_localActor:AddImpulse( -1, g_localActor:GetCenterOfMassPos(), System.GetViewCameraDir(), ff * i2 * 30 * (freef and 3 or 1), 1);
+			g_LA:AddImpulse( -1, g_LA:GetCenterOfMassPos(), System.GetViewCameraDir(), ff * i2 * 40 * ((freef or prone) and 3 or 1), 1);
 						
 		end;
 		-------------------------
