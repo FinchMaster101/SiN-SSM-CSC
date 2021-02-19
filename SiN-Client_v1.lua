@@ -1,4 +1,4 @@
-FILE_VERSION = "1.8c.9i"; -- this is the only global which is allowed to be outside of RegisterGlobals()
+FILE_VERSION = "1.9"; -- this is the only global which is allowed to be outside of RegisterGlobals()
 UNINSTALLED = false; -- and this one too.
 
 function StartInstalling()
@@ -2347,7 +2347,7 @@ end);
 	function g_localActor.Client:OnUpdateNew(frameTime)
 		if(UNINSTALLED)then return; end;
 		SiN:Update()
-		if(PL_MODE==1)then
+		if(PL_MODE==1 and g_localActor.UpdatePLMode)then
 			g_localActor:UpdatePLMode(frameTime)
 		end;
 		local temp={}
